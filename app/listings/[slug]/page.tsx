@@ -21,7 +21,7 @@ import {
   SpecRow,
 } from "@/components/ui";
 import { getCommunity } from "@/lib/communities";
-import { feetInches, money, num, priceText, PRICE_ON_REQUEST } from "@/lib/format";
+import { feetInches, money, priceText, PRICE_ON_REQUEST, sqftText } from "@/lib/format";
 import {
   getListing,
   getPlan,
@@ -50,7 +50,9 @@ export async function generateMetadata(
   const build = listing.sections ? ` ${sectionLabels[listing.sections].toLowerCase()}` : "";
   const price = listing.price === undefined ? PRICE_ON_REQUEST : `from ${money(listing.price)}`;
   const description = [
-    `${listing.beds} bed, ${listing.baths} bath, ${num(listing.sqft)} sq ft${build} manufactured home — ${price}.`,
+    `${listing.beds} bed, ${listing.baths} bath${
+      sqftText(listing.sqft) ? `, ${sqftText(listing.sqft)}` : ""
+    }${build} manufactured home — ${price}.`,
     listing.tagline,
   ]
     .filter(Boolean)
@@ -86,7 +88,8 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
   const index = () => String(n++).padStart(2, "0");
   const community = listing.communitySlug ? getCommunity(listing.communitySlug) : undefined;
   const related = relatedListings(listing);
-  const perSqFt = listing.price === undefined ? undefined : listing.price / listing.sqft;
+  const perSqFt =
+    listing.price === undefined || listing.sqft <= 0 ? undefined : listing.price / listing.sqft;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -95,7 +98,9 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
     description: listing.tagline,
     numberOfRooms: listing.beds,
     numberOfBathroomsTotal: listing.baths,
-    floorSize: { "@type": "QuantitativeValue", value: listing.sqft, unitCode: "FTK" },
+    ...(listing.sqft > 0
+      ? { floorSize: { "@type": "QuantitativeValue", value: listing.sqft, unitCode: "FTK" } }
+      : {}),
     address: {
       "@type": "PostalAddress",
       addressLocality: community?.city ?? site.address.city,
@@ -296,8 +301,10 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
               <div className="mt-16" id="floor-plan">
                 <Eyebrow index={index()}>Floor plan</Eyebrow>
                 <h2 className="mt-5 font-display text-title text-ink">
-                  {listing.dimensions ?? `${num(listing.sqft)} sq ft`}
-                  {listing.dimensions ? ` · ${num(listing.sqft)} sq ft` : ""}
+                  {listing.dimensions ?? sqftText(listing.sqft) ?? "Dimensions on request"}
+                  {listing.dimensions && sqftText(listing.sqft)
+                    ? ` · ${sqftText(listing.sqft)}`
+                    : ""}
                 </h2>
                 <p className="mt-4 max-w-xl leading-relaxed text-muted">
                   {listing.builder}&rsquo;s drawing for this plan. Interior walls
@@ -326,7 +333,8 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
             <div className="mt-16" id="floor-plan">
               <Eyebrow index={index()}>Floor plan</Eyebrow>
               <h2 className="mt-5 font-display text-title text-ink">
-                {plan.width}′ × {plan.length}′ · {num(listing.sqft)} sq ft
+                {plan.width}′ × {plan.length}′
+                {sqftText(listing.sqft) ? ` · ${sqftText(listing.sqft)}` : ""}
               </h2>
               <p className="mt-4 max-w-xl leading-relaxed text-muted">
                 Drawn to scale, with every room dimensioned. Interior walls are not
@@ -395,7 +403,9 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
                   {listing.style && <SpecRow label="Style" value={styleLabels[listing.style]} />}
                   <SpecRow label="Bedrooms" value={listing.beds} />
                   <SpecRow label="Bathrooms" value={listing.baths} />
-                  <SpecRow label="Living area" value={`${num(listing.sqft)} sq ft`} />
+                  {sqftText(listing.sqft) && (
+                    <SpecRow label="Living area" value={sqftText(listing.sqft)!} />
+                  )}
                   {(listing.dimensions ??
                     (listing.widthFt !== undefined && listing.lengthFt !== undefined
                       ? `${listing.widthFt}′ × ${listing.lengthFt}′`
