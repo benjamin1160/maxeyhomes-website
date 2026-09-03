@@ -21,7 +21,22 @@ export const site = {
    * site trades as `name` above.
    */
   legalName: "Maxey Homes & Land, LLC",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.maxeycustomhomes.com",
+  /**
+   * `?.trim() ||` and not `??`, which is not a style preference.
+   *
+   * `??` only falls back on null and undefined, and a Vercel project with the
+   * variable declared but left blank hands the build an EMPTY STRING. That
+   * sails through `??`, `metadataBase: new URL("")` throws `ERR_INVALID_URL`,
+   * and the whole build dies on `/_not-found` with a stack trace that names
+   * neither this file nor the variable. `||` treats blank as absent, which is
+   * what a blank variable means, and `.trim()` catches the stray-space
+   * version of the same mistake.
+   *
+   * Every env var read in this codebase wants this shape — see `GHL_API_BASE`
+   * and `GHL_API_VERSION` in `lib/ghl/client.ts`.
+   */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.maxeycustomhomes.com",
   phone: "405-288-1093",
   phoneHref: "tel:+14052881093",
   /**

@@ -34,7 +34,11 @@
  */
 import { CONTACT_FIELDS, FIELD_KEY_PREFIX, type GhlFieldDef } from "./fields";
 
-const BASE = process.env.GHL_API_BASE ?? "https://services.leadconnectorhq.com";
+/* `?.trim() ||`, not `??`: a variable declared and left blank arrives as an
+   empty string, which `??` accepts and every request then fails against. Same
+   reasoning as `site.url` in `lib/site.ts`. */
+const BASE =
+  process.env.GHL_API_BASE?.trim() || "https://services.leadconnectorhq.com";
 
 /**
  * GHL renamed the custom-field value key between API versions: `field_value`
