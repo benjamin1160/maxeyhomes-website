@@ -16,11 +16,20 @@
  * business does not trade from is worse than no map. Moving it means
  * regenerating the county boundaries; see `scripts/generate-county-shapes.py`.
  */
-export const HQ = {
-  lat: 44.2896,
-  lon: -69.7736,
-  city: "Chelsea",
-  state: "ME",
+export const HQ: {
+  readonly lat: number;
+  readonly lon: number;
+  readonly city: string;
+  /** Postal abbreviation. Deliberately `string` and not a literal: the county
+      boundaries are generated per market, so the states they carry are a
+      different set for every deployment, and `HQ.state` must be comparable to
+      whichever set is in `./county-shapes.generated.ts` today. */
+  readonly state: string;
+} = {
+  lat: 35.1926,
+  lon: -97.4395,
+  city: "Norman",
+  state: "OK",
 } as const;
 
 /** Radius of the service area, in miles. */

@@ -17,6 +17,7 @@ import { communities } from "@/lib/communities";
 import { listings } from "@/lib/homes";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "No land? Start here",
@@ -423,7 +424,7 @@ export default function StartHerePage() {
               you are.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
-              <ButtonLink href="/contact" className="!px-7 !py-4 !text-base">
+              <ButtonLink href={contactHref} className="!px-7 !py-4 !text-base">
                 Book a walkthrough
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>

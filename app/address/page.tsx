@@ -7,6 +7,7 @@ import { communities } from "@/lib/communities";
 import { company } from "@/lib/company";
 import { pages } from "@/lib/page-config";
 import { site } from "@/lib/site";
+import { contactHref } from "@/lib/navigation";
 
 const where = `${site.address.city}, ${site.address.region}`;
 
@@ -96,13 +97,15 @@ export default function AddressPage() {
               >
                 {site.phone}
               </a>
-              <a
-                href={`mailto:${site.email}`}
-                className="text-[0.95rem] text-muted underline-offset-4 hover:text-ink hover:underline"
-              >
-                {site.email}
-              </a>
-              <ButtonLink href="/contact" variant="outline" className="mt-auto">
+              {site.email && (
+                <a
+                  href={`mailto:${site.email}`}
+                  className="text-[0.95rem] text-muted underline-offset-4 hover:text-ink hover:underline"
+                >
+                  {site.email}
+                </a>
+              )}
+              <ButtonLink href={contactHref} variant="outline" className="mt-auto">
                 Book a walkthrough
               </ButtonLink>
             </div>

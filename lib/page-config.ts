@@ -47,10 +47,13 @@ export type LandingSection =
 /** Landing-page bands, in render order. */
 export const sections: Record<LandingSection, boolean> = {
   /* ---- The conversion path, in the order a stranger meets it ----------
-     This is the short arrangement: eight bands, one scroll, and a phone
-     number or a form never more than half a screen away. It is what a lot
-     selling homes wants. The long editorial read is still here — see the
-     block below — and is four `true`s away.                              */
+     This is the arrangement maxeycustomhomes.com runs today, band for band
+     and in this order: the hero, the wide photograph, the three steps, the
+     catalogue, the closing call and form, and the hours. One scroll, and a
+     phone number or a form never more than half a screen away.
+
+     The long editorial read is still here — see the block below — and is
+     four `true`s away.                                                    */
 
   /** Opening scene: the headline, the two calls to action, the licence and
       promises row, and the quote form, all in one band. */
@@ -58,21 +61,29 @@ export const sections: Record<LandingSection, boolean> = {
   /** Current offer, drawn from `lib/promotions.ts`. Hidden when none is live. */
   promotion: true,
   /** One photograph the width of the screen, and one sentence over it. */
-  /* Off: the wide photograph band under the hero. It carried a stock picture
-     of somebody else's home under the words "imagine pulling into a home like
-     this", which is the one place on the page that reads as a promise about
-     a specific house. Turn it back on once there is a photograph of the yard
-     on River Road to put in it. */
-  valueProp: false,
-  /** What buyers said afterwards, and a link to where they said it. */
-  socialProof: true,
+  /* On, because Maxey's own site runs this band. Read the caveat, though:
+     the photograph under it is a stock exterior carried over from the
+     template, and the sentence over it ("imagine pulling into a home like
+     this") is the one place on the page that reads as a promise about a
+     specific house. Photograph the lot on Melba Ln and repoint
+     `page/home-closing` in `lib/photos.ts` — that is a first-week job, not a
+     nice-to-have. */
+  valueProp: true,
+  /* Off, and it would hide itself anyway. Maxey publishes no reviews profile
+     and no customer quotes, and this band is the one place on the page where
+     a visitor is deciding whether to believe us — so it stays empty until
+     there are real quotes and a public profile to check them against. Put
+     `reviewsUrl` in `lib/company.ts` and real quotes in `TESTIMONIALS`
+     (`components/landing.tsx`), then turn this on. */
+  socialProof: false,
   /** Three steps, numbered. */
   howItWorks: true,
   /** The catalogue, entered by size. */
   listings: true,
   /** Three recent projects, from `lib/projects.ts`. Data-gated: it needs both
       this switch and a project in that file, and `pages.projects` on. */
-  projects: true,
+  /* Off: `lib/projects.ts` is empty and Maxey's site has no equivalent. */
+  projects: false,
   /** Closing band: the call on one side, the enquiry form on the other. */
   contact: true,
   /** Where the lot is, when it is open, and how to reach it. */
@@ -131,34 +142,67 @@ export type OptionalPage =
 export const pages: Record<OptionalPage, boolean> = {
   listings: true,
   /* Off because `lib/projects.ts` is empty. Past projects are the evidence
-     behind the turnkey claim, so this is worth filling first: add a project
-     and turn this on, and `/projects`, the nav links and the landing band all
-     appear together. */
+     behind everything else on the site, so this is worth filling first: add a
+     project and turn this on, and `/projects`, the nav links and the landing
+     band all appear together. */
   projects: false,
   /* Off because `lib/videos.ts` is empty. Turn on once the explainers — the
      process, construction loan versus end loan — are up. */
   videos: false,
-  /* Off because `lib/communities.ts` is empty — NERTO publishes no
+  /* Off because `lib/communities.ts` is empty — Maxey publishes no
      communities. Write real properties into that file, then turn this on. */
   communities: false,
-  /* Off because `lib/land/areas.ts` carries no county pricing — NERTO
-     publishes none, and the page is nothing but priced counties. Price the
-     delivery radius, then turn this on. */
+  /* Off because `lib/land/areas.ts` carries no county pricing — Maxey
+     publishes no service area at all, and the page is nothing but priced
+     counties. Price the delivery radius, then turn this on. */
   landDeals: false,
-  startHere: true,
-  financing: true,
-  whyManufactured: true,
+
+  /* ---- Matched to maxeycustomhomes.com -------------------------------
+     Maxey's site is three routes and a landing page: Home, About Us, and
+     the pre-qualify page, plus the two legal pages that have no switch. So
+     the routes it does not have are off here, which redirects each to `/`
+     and drops it from the header, the drawer, the footer and the sitemap in
+     one move.
+
+     Off is not deleted. Every page below is written, styled and one `true`
+     from coming back — including the whole editorial argument for a
+     manufactured home on `/why-manufactured`, `/financing` and
+     `/start-here`, which is the site's best organic-search surface and the
+     thing most worth switching back on once somebody is ready to own it.
+     Read the `voice` skill before you do: that copy ships identically on
+     every site built from this template.                                */
+
+  /* Off: Maxey has no equivalent page. The three routes onto ground for a
+     buyer who has none. */
+  startHere: false,
+  /* Off: Maxey has no equivalent page, and its financing message is the
+     "Financing available" badge in the hero plus the pre-qualify page. */
+  financing: false,
+  /* Off: Maxey has no equivalent page. */
+  whyManufactured: false,
   about: true,
-  contact: true,
-  saved: true,
-  faq: true,
+  /* Off: Maxey takes contact on the landing page's closing band rather than
+     on a route of its own, so `sections.contact` carries this instead. */
+  contact: false,
+  /* Off: Maxey's site has no saved-homes list, so the heart in the header
+     and the one on every listing card go with it — see the `pages.saved`
+     guard in `components/site-header.tsx` and `components/listing-card.tsx`. */
+  saved: false,
+  /* Off: Maxey publishes no FAQ. `lib/faq.ts` is written for this market and
+     ready, so this is a cheap page to turn on. */
+  faq: false,
   /** No posts ship with the template, so the blog is off until one is written. */
   blog: false,
-  /** Hidden until `lib/promotions.ts` holds a live offer. */
-  promotions: true,
+  /* Off: `lib/promotions.ts` is empty and Maxey advertises no offer. */
+  promotions: false,
+  /* On, and it is the third item in Maxey's own header — "Get Prequaled with
+     0 Impact". */
   prequalify: true,
-  buildAHome: true,
-  address: true,
+  /* Off: Maxey has no equivalent page. */
+  buildAHome: false,
+  /* Off: Maxey has no separate location page — the landing page's
+     `locationHours` band carries the address and the opening hours. */
+  address: false,
 };
 
 /**
@@ -196,6 +240,12 @@ export const floatingCall = true;
  * The `CHAT_WIDGET` environment variable overrides this: set it to GHL's own
  * embed snippet and that widget loads instead of this one, switch or no
  * switch. See `lib/ghl/chat-embed.ts` for the trade between them.
+ *
+ * Maxey's live site runs GoHighLevel's own LeadConnector widget, which is
+ * exactly the `CHAT_WIDGET` case: set that variable to the snippet from the
+ * sub-account and this site loads the same bubble, so a visitor gets one
+ * chat and the conversations land in the CRM the business already reads.
+ * Left unset, the built-in guided intake below answers instead.
  */
 export const chatWidget = true;
 

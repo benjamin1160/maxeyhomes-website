@@ -43,7 +43,6 @@ import {
 import { communities } from "@/lib/communities";
 import { company } from "@/lib/company";
 import { featuredListings, listings } from "@/lib/homes";
-import { market } from "@/lib/market";
 import { pages, sections, videoShowcase, type LandingSection } from "@/lib/page-config";
 import { projectCover, publishedProjects } from "@/lib/projects";
 import { featuredPromotion } from "@/lib/promotions";
@@ -166,41 +165,29 @@ const NO_LAND_PATHS = [
 /**
  * Customer quotes, and they have to be real ones.
  *
- * Every quote below is a contiguous verbatim excerpt from a review the
- * customer published on NERTO's own Google listing, which the band links to
- * underneath so a sceptic can read the whole thing — and the rest of them —
- * against a source we do not control. Obvious typing slips in the originals
- * are corrected and nothing else is touched: no compression, no stitching
- * two sentences together, no rewriting for tone.
+ * Shipped EMPTY, and `sections.socialProof` is off to match. The quotes that
+ * used to be here were verbatim excerpts from reviews on a different
+ * dealership's Google listing, published under that dealership's name, with a
+ * link to that profile underneath so a sceptic could check them. None of that
+ * survives a rebrand: a quote is a specific person saying a specific thing
+ * about a specific company.
  *
- * The profile stood at 4.1 across 119 reviews when these were taken, and it
- * is not all praise. That is the point of the link.
+ * Maxey publishes no reviews profile and no customer quotes on its own site,
+ * so there is nothing to carry over, and the band hides itself rather than
+ * announcing an empty shelf.
  *
- * To add one: take it from a review the customer actually published, or with
- * their written permission. Never draft one to fill the row — three quotes
- * nobody said are worth less than an empty band, because the band is the one
- * place on the page a visitor is deciding whether to believe us.
+ * To fill it: take each quote from a review the customer actually published,
+ * or with their written permission, as a contiguous excerpt — no compression,
+ * no stitching two sentences together, no rewriting for tone. Then put the
+ * profile they published it on in `company.reviewsUrl` (`lib/company.ts`) so
+ * the band can link out to a source we do not control, and turn
+ * `sections.socialProof` on.
+ *
+ * Never draft one to fill the row. Three quotes nobody said are worth less
+ * than an empty band, because this band is the one place on the page where a
+ * visitor is deciding whether to believe us.
  */
-const TESTIMONIALS: { quote: string; name: string; detail: string }[] = [
-  {
-    quote:
-      "NERTO exceeded our family's expectations and truly delivered our dream home. Construction started early, communication was top notch, and the guys even let our family come visit and hang out while they did work. Without NERTO we truly would never be able to own a home with this much quality and land.",
-    name: "Skylar Martin",
-    detail: "Google review",
-  },
-  {
-    quote:
-      "Not even sure where to start, but let me just say what a wonderful experience we had with this amazing team!! From finding us a beautiful piece of property, and helping us have our dream home!! Always answered all the questions, kept us in the loop about everything!!",
-    name: "Cathy Nguyen",
-    detail: "Google review",
-  },
-  {
-    quote:
-      "As a local Realtor, I always appreciate working with Jonathan. He is honest, professional, and incredibly responsive, qualities that are becoming harder to find in this industry. He has a wonderful way of making buyers feel comfortable throughout the process.",
-    name: "Michelle Gosselin",
-    detail: "Google review · local Realtor",
-  },
-];
+const TESTIMONIALS: { quote: string; name: string; detail: string }[] = [];
 
 export type LandingProps = {
   /** Show only this series in the listings band. Omitted: the featured slice. */
@@ -254,18 +241,21 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               <div className="text-center md:text-left">
                 <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
                   <Icon.Star className="size-4 shrink-0 text-accent" />
-                  {/* The state, not the town: NERTO works the whole of Maine,
-                      and naming Chelsea alone reads as a Chelsea-only lot. */}
-                  Trusted by {site.stateName} families
+                  {/* Maxey names the town rather than the state in its own
+                      badge — "Trusted by Families in Norman, OK" — because
+                      the lot is the thing a local is being asked to trust.
+                      Widen this to `site.stateName` the day the business
+                      publishes a service area bigger than Norman. */}
+                  Trusted by families in {site.address.city},{" "}
+                  {site.address.region}
                 </p>
 
-                {/* The state, not the delivery radius. `market.regionName` is
-                    still "Central Maine" and still correct about where a home
-                    is trucked from — but the headline is a claim about who
-                    NERTO serves, and that is the whole state. */}
+                {/* Maxey's own headline, and it is deliberately about the
+                    reader rather than about the dealership — no superlative,
+                    no ranking claim, nothing that would need substantiating.
+                    That is a good headline to inherit. */}
                 <h1 className="mb-4 text-4xl font-bold uppercase leading-tight text-white md:text-5xl lg:text-6xl">
-                  The top choice for mobile and modular homes in{" "}
-                  {site.stateName}
+                  Find your perfect manufactured home
                 </h1>
 
                 <p className="mx-auto mb-8 max-w-xl text-lg text-white/85 md:mx-0 md:text-xl">
@@ -471,7 +461,13 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
     },
     {
       key: "listings",
-      show: sections.listings && featured.length > 0,
+      /* Two halves, and they are gated separately on purpose. The size
+         buckets need a catalogue and nothing else; the four cards under them
+         need somebody to have *chosen* four, which is `featured` in
+         `lotState`. A lot that has not picked its four yet still wants the
+         buckets — that is how a stranger enters the catalogue — so the band
+         shows the way in and drops the shelf, rather than vanishing whole. */
+      show: sections.listings && (featured.length > 0 || (!listingSeries && listings.length > 0)),
       render: () => (
         <section id="listings" className="relative overflow-hidden bg-surface">
           <Container className="py-8 md:py-12">
@@ -495,29 +491,43 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               </div>
             )}
 
-            <div className="mb-6 flex items-center justify-between gap-4">
-              {/* Counts the cards actually below it, not the filter behind
-                  them — a band that says seven and shows four is the kind of
-                  small lie a visitor notices and generalises from. */}
-              <p className="text-sm text-muted">
-                <span className="font-semibold text-ink">
-                  {Math.min(featured.length, 4)}
-                </span>{" "}
-                of {listings.length} homes
-              </p>
-              <ButtonLink href="/listings" variant="outline" className="!py-2.5 !text-sm">
-                See all {listings.length}
-                <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-              </ButtonLink>
-            </div>
+            {featured.length > 0 ? (
+              <>
+                <div className="mb-6 flex items-center justify-between gap-4">
+                  {/* Counts the cards actually below it, not the filter behind
+                      them — a band that says seven and shows four is the kind
+                      of small lie a visitor notices and generalises from. */}
+                  <p className="text-sm text-muted">
+                    <span className="font-semibold text-ink">
+                      {Math.min(featured.length, 4)}
+                    </span>{" "}
+                    of {listings.length} homes
+                  </p>
+                  <ButtonLink href="/listings" variant="outline" className="!py-2.5 !text-sm">
+                    See all {listings.length}
+                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </ButtonLink>
+                </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-              {featured.slice(0, 4).map((listing, i) => (
-                <Reveal key={listing.slug} delay={i * 90}>
-                  <ListingCard listing={listing} priority={i === 0} className="h-full" />
-                </Reveal>
-              ))}
-            </div>
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                  {featured.slice(0, 4).map((listing, i) => (
+                    <Reveal key={listing.slug} delay={i * 90}>
+                      <ListingCard listing={listing} priority={i === 0} className="h-full" />
+                    </Reveal>
+                  ))}
+                </div>
+              </>
+            ) : (
+              /* Nothing flagged `featured` in `lotState`, so there is no
+                 honest four to put on a shelf. The buckets above are still
+                 the way in, and this is the door at the end of them. */
+              <div className="flex justify-center">
+                <ButtonLink href="/listings" className="!py-3">
+                  See all {listings.length} homes
+                  <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                </ButtonLink>
+              </div>
+            )}
           </Container>
         </section>
       ),

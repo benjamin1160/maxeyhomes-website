@@ -11,7 +11,7 @@
  * header, the drawer and the footer all pick it up together.
  */
 
-import { pages, type OptionalPage } from "./page-config";
+import { pages, sections, type OptionalPage } from "./page-config";
 
 /**
  * The icon beside a link in the header bar. Names index `Icon` in
@@ -37,12 +37,22 @@ export type NavItem = {
 
 /* Five, and short ones. The bar is a single row beside a logo and a phone
    button, and a sixth item is what makes it wrap on a 1280-wide laptop.
-   Everything else lives in `SECONDARY` and reaches the drawer. */
+   Everything else lives in `SECONDARY` and reaches the drawer.
+
+   Every entry is filtered through `pages` below, so this list is the full
+   set the bar *can* show, not the set it does. With the switches Maxey's
+   deployment currently carries it resolves to three — Homes, About us and
+   Get pre-qualified — which is the header its own site runs. */
 const PRIMARY: NavItem[] = [
   { href: "/listings", label: "Homes", page: "listings", icon: "House" },
   { href: "/land-deals", label: "Land", page: "landDeals", icon: "Pin" },
   { href: "/financing", label: "Financing", page: "financing", icon: "Dollar" },
   { href: "/about", label: "About us", page: "about", icon: "Info" },
+  /* Maxey's own third item, which it words "Get Prequaled with 0 Impact" —
+     the hook is that a soft pull does not touch the score. The bar has room
+     for the promise but not the sentence, so the sentence is the page's own
+     headline and this is the short form of it. */
+  { href: "/prequalify", label: "Get pre-qualified", page: "prequalify", icon: "Shield" },
   { href: "/contact", label: "Contact us", page: "contact", icon: "Mail" },
 ];
 
@@ -55,7 +65,6 @@ const SECONDARY: NavItem[] = [
   { href: "/start-here", label: "No land? Start here", page: "startHere" },
   { href: "/why-manufactured", label: "Why manufactured", page: "whyManufactured" },
   { href: "/faq", label: "Questions", page: "faq" },
-  { href: "/prequalify", label: "Get pre-approved", page: "prequalify" },
   { href: "/promotions", label: "Offers", page: "promotions" },
   { href: "/blog", label: "Notes", page: "blog" },
   { href: "/address", label: "Find us", page: "address" },
@@ -73,3 +82,26 @@ export const legalNav = [
   { href: "/privacy-policy", label: "Privacy policy" },
   { href: "/terms", label: "Terms & conditions" },
 ];
+
+/**
+ * Where "get in touch" goes.
+ *
+ * Half the pages on this site end in a button that means "talk to us", and
+ * they used to all hard-code `/contact` — which is fine until a deployment
+ * takes its enquiries on the landing page instead and switches that route
+ * off, at which point every one of those buttons quietly bounces the visitor
+ * to the home page and loses them.
+ *
+ * So they read this instead. With `/contact` on it is that page; with it off
+ * it is the landing page's own closing band, which is the same form. The one
+ * place that must NOT use it is the `/contact` page itself.
+ *
+ * If a deployment turns off both the route and `sections.contact`, this falls
+ * back to the hero, where the quote form lives — there is no arrangement of
+ * the switches that leaves this pointing at nothing.
+ */
+export const contactHref = pages.contact
+  ? "/contact"
+  : sections.contact
+    ? "/#contact"
+    : "/#hero";

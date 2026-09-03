@@ -1,27 +1,31 @@
-# NERTO Homes — newenglandrenttoown.com
+# Maxey Custom Homes — maxeycustomhomes.com
 
-The website for NERTO Homes (New England Rent To Own, LLC), 65 River Road,
-Chelsea, Maine — mobile and modular homes, sheds, camps and horse barns.
+The website for Maxey Custom Homes (Maxey Homes & Land, LLC), 2548 Melba Ln,
+Norman, Oklahoma — manufactured and modular homes, with financing, delivery
+and setup handled for you.
 
 Built on a Next.js 16 dealership template: a filterable listing catalogue,
 scale floor plans, a financing calculator that tells the truth about chattel
 loans, and an editorial content layer built to dismantle the "trailer park"
 stereotype rather than tiptoe around it.
 
-`lib/homes.ts` carries twenty real, published plans, browsed by size —
-tiny, single, double, triple. Each names its `sourceUrl`, none carries a
-price, and they are Clayton-built rather than confirmed against NERTO's own
-line-up: check which of them the business actually orders before quoting
-anybody. Empty the array and the whole site reads honestly at zero — the
-listings band, the size buttons and `/listings` all handle it.
+`lib/catalogue.generated.ts` carries 348 real, published plans, browsed by
+size — tiny, single, double, mods. Each names its `sourceUrl` and none
+carries a price. **They were imported for a different dealership**, from Pine
+Grove Homes and Pleasant Valley Homes, and Maxey publishes no manufacturer
+list of its own: confirm the lines the business actually retails and
+re-import before quoting anybody. `lotState` in `lib/homes.ts` is empty, so
+nothing on the site claims to be standing on the lot.
 
-`lib/communities.ts` ships empty, because NERTO publishes no communities, so
+`lib/communities.ts` ships empty, because Maxey publishes no communities, so
 `/communities` is switched off in `lib/page-config.ts`.
 
-`/land-deals` is switched off for the same reason: it is nothing but priced
-counties, and `lib/land/areas.ts` carries none. The geography under it is
-real and points at Chelsea — moving the page from "off" to "on" is a matter
-of pricing the delivery radius, not of rebuilding anything.
+`/land-deals` is switched off for two reasons: it is nothing but priced
+counties, and `lib/land/areas.ts` carries none — and the county boundaries
+under it are still Maine and its neighbours from the previous deployment.
+`HQ` in `lib/land/geo.ts` now points at Norman, so turning the page on means
+regenerating the boundaries for Oklahoma with
+`scripts/generate-county-shapes.py` and then pricing the delivery radius.
 
 The page heroes are still stock photographs of manufactured homes rather than
 pictures of this lot; the footer says so, and the head of `lib/photos.ts`

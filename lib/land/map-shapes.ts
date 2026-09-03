@@ -7,7 +7,9 @@
  * the road network, traced roughly through its major exits — enough for a
  * local to orient themselves, not survey data.
  *
- * These are the three roads a buyer in Central Maine actually navigates by:
+ * These are the three roads a buyer in Central Maine actually navigates by
+ * (STALE — regenerate for Oklahoma along with the county boundaries;
+ * `/land-deals` is switched off until that happens):
  * I-95 up the spine from Portland through Augusta to Bangor, I-295 along the
  * coast from Portland to Gardiner, and US 1 up the Midcoast. Retrace them if
  * the map ever moves.

@@ -17,7 +17,7 @@
  */
 import type { Attribution } from "./ghl/lead";
 
-const KEY = "nerto:attribution";
+const KEY = "maxey:attribution";
 
 /** Query parameters worth keeping, and the field each becomes. */
 const PARAMS: [param: string, field: keyof Attribution][] = [

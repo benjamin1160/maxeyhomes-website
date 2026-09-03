@@ -28,7 +28,7 @@ export type Community = {
 /* ------------------------------------------------------------------ *
  * The communities — empty
  *
- * NERTO does not publish a list of communities it places homes into, so
+ * Maxey does not publish a list of communities it places homes into, so
  * there is not one here. A community entry is a claim about a property run
  * by somebody else — its tenure, its rent, its amenities — and carrying
  * another market's communities over is exactly the mistake this file exists

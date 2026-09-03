@@ -1,5 +1,5 @@
 /**
- * Claims NERTO Homes makes about itself.
+ * Claims Maxey Custom Homes makes about itself.
  *
  * Everything in here is a statement a *specific* business makes — how long
  * it has traded, who works there, what the price includes, what it warrants.
@@ -13,14 +13,20 @@
  * `founded` and nothing anywhere claims a founding year. A shorter page is
  * always the correct outcome. Inventing a plausible-sounding number is not.
  *
- * What is filled in below is what NERTO publishes about itself: the dealer
- * licence number and the two promises in its hero, the founding story and
- * the three service cards from its About page, and the Google place its
- * reviews live on. Everything the business does not publish — a founding
- * year, a headcount, named staff, a warranty term, a deposit schedule, a
- * mileage a delivery is included to — is absent rather than guessed at, and
- * the sections that read those fields hide themselves. Fill one in only from
- * something NERTO has actually put in writing.
+ * What is filled in below is what Maxey publishes about itself: the three
+ * promises in its hero, the Our Story text and the three cards beneath it on
+ * its About page. Everything the business does not publish — a founding year,
+ * a headcount, named staff, a dealer licence number, a warranty term, a
+ * deposit schedule, a mileage a delivery is included to, a public reviews
+ * profile — is absent rather than guessed at, and the sections that read
+ * those fields hide themselves. Fill one in only from something Maxey has
+ * actually put in writing.
+ *
+ * Note the one number Maxey does publish is a span of experience, not a
+ * founding year: "over 85 years of combined experience" across "three
+ * generations". Combined experience is a sum across people and cannot be
+ * turned into a `founded`, so it lives in `experienceClaim` below and
+ * `founded` stays absent.
  */
 
 /** Icon keys from `components/ui.tsx`, referenced by name so this file stays free of components. */
@@ -43,6 +49,22 @@ export type Principle = {
 export type Company = {
   /** Year the business started trading. Drives the About hero, the story and the "Years" stat. */
   founded?: number;
+  /**
+   * Experience stated as a sum across people rather than a date — "over 85
+   * years of combined experience", "three generations". Plenty of family
+   * businesses publish this and no founding year, and the two are different
+   * claims: a `founded` of 1941 says the doors opened in 1941, while 85
+   * combined years says nothing at all about when they opened.
+   *
+   * So it gets its own field, and the copy that reads it always says
+   * "combined". Never convert one into the other.
+   */
+  experienceClaim?: {
+    /** Combined years across the team, e.g. 85. Rendered as "85+ years". */
+    years: number;
+    /** Generations the business spans, where it claims one. */
+    generations?: number;
+  };
   /** Homes sold or set to date, written out for prose, e.g. "four thousand".
       Becomes the first line of the About headline. */
   homesSoldWords?: string;
@@ -93,65 +115,63 @@ export type Company = {
 };
 
 export const company: Company = {
-  /* Shown in the trust row under the hero, exactly as NERTO publishes it. */
-  licenseId: "452769500",
-  badges: ["Financing available", "Delivery included"],
-  /* The four models standing on River Road, open to walk through. Keep this
-     in step with `onLot` in `lotState` (lib/homes.ts) — they are the same
-     fact, and a visitor who finds them disagreeing will believe neither. */
-  homesOpenOnLot: 4,
-  /* The Google place NERTO's own site links its reviews to. */
-  reviewsUrl: "https://search.google.com/local/reviews?placeid=ChIJLR4eJnwCskwRZU1grVk6HLk",
-  reviewsLabel: "Google",
+  /* The three promises in Maxey's hero, in its own order and wording. Each
+     one is a promise the business already advertises. */
+  badges: ["Licensed dealer", "Financing available", "Delivery included"],
 
-  /* NERTO's own mission statement, as the business writes it today. It
-     deliberately replaces the rent-to-own storage story the company started
-     from: the homes side of the business is the business now, and the shed
-     history was reading as the headline. Every sentence below is NERTO's own
-     words — do not embroider it. */
+  /* Maxey publishes a span of combined experience rather than a founding
+     year — "over 85 years of combined experience" across "three
+     generations" — so it is stated as what it is. */
+  experienceClaim: {
+    years: 85,
+    generations: 3,
+  },
+
+  /* Maxey's own Our Story text, as the About page on maxeycustomhomes.com
+     words it today. Every sentence below is the business's own — do not
+     embroider it. Note it names the registered entity, Maxey Homes & Land,
+     rather than the trading name the rest of the site uses. */
   story: {
-    eyebrow: "Our mission",
-    heading: "Built on hard work. Focused on Maine families.",
+    eyebrow: "Our story",
+    heading: "Built on generations of trust.",
     paragraphs: [
-      "At NERTO Homes, our mission is to make quality homeownership more attainable for families throughout Maine. We understand that purchasing and building a new home can feel complicated and overwhelming, especially when trying to coordinate land, financing, permits, site work and multiple contractors.",
-      "That is why we provide a complete turnkey homebuilding experience. Whether you already own property or need help finding the right piece of land, our team will help guide you through the entire process. We coordinate permitting, code requirements, surveys, septic design, earthwork, driveways, foundations or slabs, wells, septic systems, electrical work, utility connections, home delivery, setup and finishing work.",
-      "Our customers do not have to figure everything out on their own. We work closely with lenders, real estate professionals, town officials, manufacturers, and trusted contractors to bring every part of the project together and keep it moving forward.",
-      "Our company is built on hard work, determination, quality, and a commitment to doing everything we can to help our customers succeed. When challenges arise, we work to find solutions, overcome obstacles, and help families reach the finish line.",
-      "At NERTO Homes, we are not just delivering houses. We are helping Maine families navigate the entire journey and create a place they can proudly call home.",
+      "At Maxey Homes & Land we believe finding the right home should be simple, honest, and stress-free. Backed by three generations of hard work and integrity, our team brings over 85 years of combined experience in the manufactured housing industry.",
+      "We specialize in helping individuals and families find quality manufactured homes and land solutions that fit their needs, lifestyle, and budget. Whether you're purchasing your first home, upgrading, or searching for the right piece of land, we guide you every step of the way with clear communication and dependable service.",
+      "What sets us apart is our commitment to honesty, transparency, and long-term relationships. We don't just sell homes — we help people build a future they can feel confident in.",
+      "At Maxey Homes & Land, LLC, you're not just another customer — you're part of a legacy built on trust.",
     ],
   },
 
-  /* Drawn from the mission above rather than written fresh, so the page says
-     one thing in two lengths instead of two things. */
+  /* The three cards under Our Story on Maxey's About page, verbatim. They
+     restate the story in a shorter form rather than adding to it, which is
+     what this section is for. */
   principles: [
     {
-      icon: "Plan",
-      title: "Turnkey, start to finish",
-      body: "Permitting, code requirements, surveys, septic design, earthwork, driveways, foundations, wells, utilities, delivery and setup — coordinated by us, not handed to you as a list of contractors to chase.",
+      icon: "Shield",
+      title: "Generations of experience",
+      body: "Built on three generations and over 85 years of combined experience in manufactured housing. We know what works — and what doesn't.",
     },
     {
       icon: "Pin",
-      title: "With land or without",
-      body: "Already own property, or still looking for the right piece? Either way our team guides you through the whole process from where you actually are.",
+      title: "Homes + land made simple",
+      body: "We help you find the right home, the right land, and the right setup — without confusion or guesswork.",
     },
     {
       icon: "Wrench",
-      title: "We keep it moving",
-      body: "We work closely with lenders, real estate professionals, town officials, manufacturers and trusted contractors to bring every part of a project together and keep it going forward.",
-    },
-    {
-      icon: "Shield",
-      title: "We get you to the finish line",
-      body: "When challenges arise we work to find solutions and overcome obstacles. Hard work, determination and quality are what this company is built on.",
+      title: "No pressure. Just real help.",
+      body: "Straight answers, honest guidance, and a team that actually cares about getting it right for you.",
     },
   ],
 
-  /* Deliberately absent, because NERTO does not publish them: `founded`,
+  /* Deliberately absent, because Maxey does not publish them: `founded`,
      `homesSoldWords`, `teamSize`, `homesOpenOnLot`, `team`, `teamNote`,
-     `warrantyMonths`, `transportIncludedMiles` and `cashDepositSchedule`.
-     Each one hides its own section. Do not fill one in from a directory
-     listing or an estimate — only from something the business has put in
-     writing itself. */
+     `licenseId`, `reviewsUrl`, `reviewsLabel`, `warrantyMonths`,
+     `transportIncludedMiles` and `cashDepositSchedule`. Each one hides its
+     own section. Maxey's hero says "Licensed dealer" but publishes no licence
+     number, so the badge stands and `licenseId` does not — an unverifiable
+     licence number is the single worst field on this list to guess at. Do not
+     fill one in from a directory listing or an estimate; only from something
+     the business has put in writing itself. */
 };
 
 const SMALL_NUMBERS = [

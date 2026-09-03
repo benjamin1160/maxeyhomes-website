@@ -9,6 +9,7 @@ import { listings } from "@/lib/homes";
 import { pages } from "@/lib/page-config";
 import { livePromotions } from "@/lib/promotions";
 import { site } from "@/lib/site";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Current offers",
@@ -76,7 +77,7 @@ export default function PromotionsPage() {
                   See the homes
                   <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </ButtonLink>
-                <ButtonLink href="/contact" variant="outline">
+                <ButtonLink href={contactHref} variant="outline">
                   Ask us
                 </ButtonLink>
               </div>

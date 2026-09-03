@@ -21,7 +21,7 @@ import { cx, Icon } from "./ui";
 const HIDDEN_ON = ["/new-home", "/prequalify"];
 
 /** Where the thread is kept, so navigating the site does not restart it. */
-const STORE_KEY = "nerto:chat";
+const STORE_KEY = "maxey:chat";
 
 type Turn = { from: "us" | "them"; text: string };
 
@@ -152,7 +152,7 @@ export function ChatWidget() {
         topic: next.topic,
         landStatus: next.landStatus,
         notes: next.notes,
-        transcript: transcript.map((t) => `${t.from === "us" ? "NERTO" : "Them"}: ${t.text}`).join("\n"),
+        transcript: transcript.map((t) => `${t.from === "us" ? site.short : "Them"}: ${t.text}`).join("\n"),
         savedHomes: savedRef.current.slice(0, 30).join(","),
         attribution: attribution(),
         /* One conversation is one inbound. If the opening post already

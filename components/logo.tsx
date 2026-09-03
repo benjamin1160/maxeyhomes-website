@@ -4,11 +4,22 @@ import logo from "@/public/logo.png";
 import { cx } from "./ui";
 
 /**
- * NERTO's own mark — the three grey houses, "N.E.R.T.O." in blue with the
- * orange house icons, "MOBILES • MODULARS" beneath — as the business uses it
- * on its existing site. `public/logo.png` is that artwork with the white
- * plate knocked out, so it sits on the header ground; in the dark theme the
- * black wordmark would vanish, so it gets its plate back.
+ * Maxey's own mark — a ranch home under an Oklahoma sunset inside a dome,
+ * "MAXEY" in navy over "HOMES AND LAND, LLC" in green, with the telephone
+ * number on a green pill beneath — the artwork the business already uses on
+ * maxeycustomhomes.com, taken from that site rather than redrawn.
+ *
+ * It is a square lockup on a white ground, so it is sized by height like any
+ * other mark here; the header gives it the same 3.5rem it gave the last one.
+ * The white ground is part of the artwork rather than transparency, which the
+ * light theme does not notice and the dark theme handles the same way it
+ * always did — the plate the wordmark needs is already there.
+ *
+ * The phone number is inside the image, so it is not selectable and not a
+ * `tel:` link. That is fine: the number is a real link three times over in
+ * the chrome around it (the call bar, the header button, the floating
+ * button), all of them reading `site.phone`. Reset the number in
+ * `lib/site.ts` and remember this file holds a fourth copy of it in pixels.
  */
 export function Logo({ className }: { className?: string }) {
   return (
@@ -20,7 +31,7 @@ export function Logo({ className }: { className?: string }) {
     >
       <Image
         src={logo}
-        alt={`${site.name} — Mobiles · Modulars`}
+        alt={`${site.name} — ${site.legalName}`}
         priority
         sizes="260px"
         className="h-14 w-auto sm:h-16"

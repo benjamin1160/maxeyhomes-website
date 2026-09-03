@@ -6,7 +6,7 @@
  *                   `{{contact.land_status}}`
  *   custom VALUE  — one string for the whole sub-account, written once and
  *                   read by every email, SMS and workflow.
- *                   `{{custom_values.nerto_phone}}`
+ *                   `{{custom_values.maxey_phone}}`
  *
  * Everything below is a fact this site already publishes, which means the
  * site and the CRM's templates can stop disagreeing: change the phone number
@@ -21,10 +21,13 @@
 export type SiteFacts = {
   name: string;
   short: string;
+  /** The registered entity, where it differs from the trading name. */
+  legalName?: string;
   tagline: string;
   url: string;
   phone: string;
-  email: string;
+  /** Optional: a business that publishes no inbox writes no email value. */
+  email?: string;
   hours: string;
   address: {
     street: string;
@@ -49,59 +52,64 @@ export type CustomValueDef = {
 export function customValues(site: SiteFacts): CustomValueDef[] {
   const addr = `${site.address.street}, ${site.address.city}, ${site.address.region} ${site.address.postalCode}`;
   const url = site.url.replace(/\/$/, "");
+  /* GHL shows these by name in its template picker, so they are prefixed to
+     sort together and to read as this business's values rather than as loose
+     strings. The prefix is `site.short`, not a literal, so a rebrand does not
+     leave the last dealership's initials all over the CRM. */
+  const p = site.short;
   return [
     {
-      name: "NERTO Business Name",
+      name: `${p} Business Name`,
       value: site.name,
       note: "Trading name, as the site says it.",
     },
     {
-      name: "NERTO Legal Name",
-      value: "New England Rent To Own, LLC",
+      name: `${p} Legal Name`,
+      value: site.legalName ?? "",
       note: "The registered entity, for anything contractual.",
     },
     {
-      name: "NERTO Tagline",
+      name: `${p} Tagline`,
       value: site.tagline,
       note: "One line, for email headers and SMS sign-offs.",
     },
     {
-      name: "NERTO Phone",
+      name: `${p} Phone`,
       value: site.phone,
       note: "The number as a human reads it.",
     },
     {
-      name: "NERTO Email",
-      value: site.email,
+      name: `${p} Email`,
+      value: site.email ?? "",
       note: "The inbox the site publishes.",
     },
     {
-      name: "NERTO Lot Address",
+      name: `${p} Lot Address`,
       value: addr,
       note: "Where a walkthrough happens.",
     },
     {
-      name: "NERTO Hours",
+      name: `${p} Hours`,
       value: site.hours,
       note: "Opening hours, in one line.",
     },
     {
-      name: "NERTO Website",
+      name: `${p} Website`,
       value: url,
       note: "Canonical site URL.",
     },
     {
-      name: "NERTO Catalogue URL",
+      name: `${p} Catalogue URL`,
       value: `${url}/listings`,
       note: "The home catalogue — the link to send when somebody asks what you have.",
     },
     {
-      name: "NERTO Prequalify URL",
+      name: `${p} Prequalify URL`,
       value: `${url}/prequalify`,
       note: "The pre-approval form, for nurture sequences.",
     },
     {
-      name: "NERTO Directions URL",
+      name: `${p} Directions URL`,
       value: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr)}`,
       note: "Directions to the lot, for the confirmation text before a walkthrough.",
     },

@@ -17,6 +17,14 @@
  * `{name}`, `{email}`, `{phone}` and `{state}` are substituted from
  * `lib/site.ts` at render time; a clause whose placeholder has no value is
  * dropped rather than printed with a hole in it.
+ *
+ * That dropping rule is a trap for `{email}`, which is optional in
+ * `lib/site.ts` — a business that publishes no inbox would silently lose the
+ * clause telling people how to see, correct or delete what we hold about
+ * them, which is the one clause in a privacy policy that must never go
+ * missing. So the clauses below that have to survive are written against
+ * `{phone}`, which is always set, and mention email only as an alternative
+ * where an address exists. Keep it that way.
  */
 
 export type LegalSection = {
@@ -69,7 +77,7 @@ export const privacy: LegalSection[] = [
   {
     heading: "Your choices",
     body: [
-      "Write to {email} to see what we hold, correct it, or have it deleted. Ask us to stop contacting you and we stop — one message, no retention offer.",
+      "Ring us on {phone}, or write to us at the address at the foot of this page, to see what we hold, correct it, or have it deleted. Ask us to stop contacting you and we stop — one message, no retention offer.",
       "Depending on where you live you may have further rights over your personal information under state law. We honour those requests whether or not the statute strictly applies to us.",
     ],
   },
@@ -88,7 +96,7 @@ export const privacy: LegalSection[] = [
   {
     heading: "Contact",
     body: [
-      "Questions about any of this go to {email}, or {phone} during opening hours.",
+      "Questions about any of this go to {phone} during opening hours.",
     ],
   },
 ];
@@ -148,7 +156,7 @@ export const terms: LegalSection[] = [
   {
     heading: "Contact",
     body: [
-      "Questions about these terms go to {email}, or {phone} during opening hours.",
+      "Questions about these terms go to {phone} during opening hours.",
     ],
   },
 ];

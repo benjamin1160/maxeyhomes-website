@@ -15,7 +15,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     const next = !document.documentElement.classList.contains("dark");
     document.documentElement.classList.toggle("dark", next);
     try {
-      window.localStorage.setItem("nerto:theme", next ? "dark" : "light");
+      window.localStorage.setItem("maxey:theme", next ? "dark" : "light");
     } catch {
       /* no-op */
     }

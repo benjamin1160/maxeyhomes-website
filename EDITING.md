@@ -61,8 +61,10 @@ The catalogue is every plan Pine Grove Homes and Pleasant Valley Homes
 publish — 348 of them, imported straight from the manufacturers' own sites,
 so every spec on this site can be checked against the page it came from.
 Almost all of them read "Available to order", because that is what they are:
-homes NERTO builds for you. The four standing on River Road read "On our
-lot".
+homes the dealership builds for you. A home standing on Melba Ln reads "On
+our lot" — flag it in `lotState`, which currently names none. Note the
+catalogue was imported for a previous deployment: confirm the manufacturers
+Maxey retails and re-import before launch.
 
 > The G-3465 on the lot is the standard one, not the NETR. Fix it.
 
@@ -80,13 +82,13 @@ importer is fixed so the correction survives the next re-import.
 
 ## Past projects
 
-Homes NERTO has actually delivered and set, as against plans it could build.
-This is the evidence behind the turnkey claim, and it ships empty — nothing
-appears until there is something real to show.
+Homes Maxey has actually delivered and set, as against plans it could build.
+This is the evidence behind everything else on the site, and it ships empty —
+nothing appears until there is something real to show.
 
-> Here are photos from the Windsor job. Make it a project: 2025, we found the
-> land, pulled the permits, did the septic and the foundation, set a NETR
-> G-3157. Write it up.
+> Here are photos from the Blanchard job. Make it a project: 2025, we found
+> the land, pulled the permits, did the septic and the foundation, set a
+> double wide. Write it up.
 
 > Add the Litchfield project and quote the Hargreaves on it.
 
@@ -155,14 +157,15 @@ Every figure on it comes from `lib/land/areas.ts`.
 > Rates moved. Re-estimate every county at 25% down and update the
 > assumptions line under the map to match.
 
-> Here are our numbers for Kennebec, Somerset, Waldo and Lincoln. Put them on
+> Here are our numbers for Cleveland, McClain, Grady and Pottawatomie. Put them on
 > the map and switch `/land-deals` back on.
 
-That last one is the big one, and it is the state this site is in: the map's
-geography is already Chelsea and the county boundaries are already Maine and
-its neighbours, but no county is priced, so the page is switched off. It
-comes back on the moment you supply real payments and lot prices. Nobody will
-invent them for you.
+That last one is the big one, and this site is two steps short of it: `HQ` in
+`lib/land/geo.ts` points at Norman, but the county boundaries are still Maine
+and its neighbours from the previous deployment, and no county is priced. So
+the page is switched off. It comes back on once the boundaries are
+regenerated for Oklahoma (`scripts/generate-county-shapes.py`) and you supply
+real payments and lot prices. Nobody will invent those for you.
 
 > Send the pre-approval form to our CRM.
 
@@ -208,12 +211,13 @@ lines are not merely generic; they are false statements about your staff,
 your trading history and what your price includes.
 
 **This deployment is past that point.** `lib/site.ts` and `lib/company.ts`
-carry NERTO's own published details — the licence number, the two promises in
-the hero, the New England Rent To Own story, the three service cards from the
-About page, and the Google listing the reviews live on. Everything NERTO does
-not publish is deleted rather than guessed at: no founding year, no
-headcount, no named staff, no warranty term, no deposit schedule. Add one
-only from something the business has actually put in writing.
+carry Maxey's own published details — the three promises in the hero, the
+"over 85 years of combined experience" across three generations, the Our
+Story text and the three cards from the About page. Everything Maxey does not
+publish is deleted rather than guessed at: no founding year, no headcount, no
+named staff, no dealer licence number, no email address, no warranty term, no
+deposit schedule, no reviews profile. Add one only from something the
+business has actually put in writing.
 
 Everything of that kind lives in `lib/company.ts`, and every field in it is
 optional. Whatever you can fill in from what the business already says about
@@ -241,8 +245,10 @@ not placeholders you can leave in — which is why there are none, and why the
 page is off.
 
 The photographs are the outstanding item. The page heroes are stock pictures
-of manufactured homes, not of the yard on River Road, and the footer says so
-in as many words. Photograph the lot, drop the files under `public/photos`,
+of manufactured homes, not of the yard on Melba Ln, and the footer says so in
+as many words. The one that matters most is `page/home-closing`, which sits
+under the words "imagine pulling into a home like this every day" on the
+landing page. Photograph the lot, drop the files under `public/photos`,
 repoint the keys in `lib/photos.ts` and delete that footer paragraph.
 
 What does *not* need *correcting*: the HUD Code history, the chattel-versus-

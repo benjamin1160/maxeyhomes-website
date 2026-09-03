@@ -9,7 +9,7 @@ import { useSavedHomes } from "./saved-homes";
 import { ThemeToggle } from "./theme-toggle";
 import { cx, Icon } from "./ui";
 import { drawerNav, primaryNav } from "@/lib/navigation";
-import { callBar } from "@/lib/page-config";
+import { callBar, pages } from "@/lib/page-config";
 import { site } from "@/lib/site";
 
 /**
@@ -97,18 +97,24 @@ export function SiteHeader() {
             </nav>
 
             <div className="ml-auto flex items-center gap-2 lg:ml-2">
-              <Link
-                href="/saved"
-                className={cx(iconButton, "relative")}
-                aria-label={`Saved homes${ready && saved.length ? ` (${saved.length})` : ""}`}
-              >
-                <Icon.Heart className="size-[1.1rem]" filled={ready && saved.length > 0} />
-                {ready && saved.length > 0 && (
-                  <span className="absolute -right-0.5 -top-0.5 grid size-[1.15rem] place-items-center rounded-full bg-ember text-[0.6rem] font-bold text-on-ember">
-                    {saved.length}
-                  </span>
-                )}
-              </Link>
+              {/* The heart is a link to `/saved`, so it lives and dies with
+                  that page's switch — a page turned off drops its links
+                  everywhere, and an icon that bounces you to the home page is
+                  worse than no icon. */}
+              {pages.saved && (
+                <Link
+                  href="/saved"
+                  className={cx(iconButton, "relative")}
+                  aria-label={`Saved homes${ready && saved.length ? ` (${saved.length})` : ""}`}
+                >
+                  <Icon.Heart className="size-[1.1rem]" filled={ready && saved.length > 0} />
+                  {ready && saved.length > 0 && (
+                    <span className="absolute -right-0.5 -top-0.5 grid size-[1.15rem] place-items-center rounded-full bg-ember text-[0.6rem] font-bold text-on-ember">
+                      {saved.length}
+                    </span>
+                  )}
+                </Link>
+              )}
 
               <ThemeToggle className={iconButton} />
 

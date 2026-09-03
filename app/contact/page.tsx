@@ -11,7 +11,7 @@ import { pages } from "@/lib/page-config";
 export const metadata: Metadata = {
   title: "Book a walkthrough",
   description:
-    "Come down to the yard on River Road in Chelsea, Maine. No appointment needed, but booking gets you a home unskirted so you can get underneath it.",
+    `Come down to the lot at ${site.address.street} in ${site.address.city}, ${site.stateName}. No appointment needed, but booking gets you a home unskirted so you can get underneath it.`,
 };
 
 const REASONS = [
@@ -104,17 +104,19 @@ export default function ContactPage() {
                       </a>
                     </dd>
                   </div>
-                  <div>
-                    <dt className="text-sm text-muted">Email</dt>
-                    <dd className="mt-1.5 break-all font-mono text-ink">
-                      <a
-                        href={`mailto:${site.email}`}
-                        className="transition-colors hover:text-ember"
-                      >
-                        {site.email}
-                      </a>
-                    </dd>
-                  </div>
+                  {site.email && (
+                    <div>
+                      <dt className="text-sm text-muted">Email</dt>
+                      <dd className="mt-1.5 break-all font-mono text-ink">
+                        <a
+                          href={`mailto:${site.email}`}
+                          className="transition-colors hover:text-ember"
+                        >
+                          {site.email}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
                 </dl>
 
                 <div className="mt-8 border-t border-line pt-6">
