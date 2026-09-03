@@ -26,14 +26,16 @@ const seriesInUse = new Set(
   [...catalogue.matchAll(/^\s{4}series: "([^"]+)",$/gm)].map((m) => m[1]),
 );
 
-if (slugs.size === 0) {
-  problems.push(
-    "lib/catalogue.generated.ts holds no plans. Run `node scripts/import-manufacturers.mjs homes`.",
-  );
-}
+/* An empty catalogue used to be an error here, on the assumption that it
+   only ever happened by accident — a failed import, a half-run script. It is
+   also a legitimate state: a dealership that has not published its line-up
+   yet has no plans, and inventing some to satisfy a lint rule is the exact
+   failure this whole template is built to avoid. The site is built to read
+   honestly at zero, so this reports and passes rather than failing. */
+const emptyCatalogue = slugs.size === 0;
 
-/* `lotState` — what NERTO says is standing on River Road. A key that matches
-   nothing means a home the site believes is on the lot and silently is not. */
+/* `lotState` — what the dealership says is standing on the lot. A key that
+   matches nothing means a home the site believes is on the lot and is not. */
 const homes = await read("lib/homes.ts");
 const lotBlock = homes.match(/const lotState[^=]*= \{([\s\S]*?)\n\};/)?.[1] ?? "";
 for (const [, slug] of lotBlock.matchAll(/^\s*"([^"]+)":/gm)) {
@@ -76,6 +78,14 @@ for (const [, path] of manifest.matchAll(/: "(\/photos\/[^"]+)"/g)) {
   }
 }
 
+if (emptyCatalogue) {
+  console.log(
+    "check:data — the catalogue is empty, so the site shows no homes. That is a\n" +
+      "  supported state (see the note at the head of lib/catalogue.generated.ts).\n" +
+      "  To fill it: node scripts/import-manufacturers.mjs homes\n",
+  );
+}
+
 if (problems.length > 0) {
   console.error("check:data — problems found:\n");
   for (const p of problems) console.error(`  • ${p}`);
@@ -83,4 +93,8 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-console.log(`check:data — clean. ${slugs.size} plans, all cross-references resolve.`);
+console.log(
+  emptyCatalogue
+    ? "check:data — clean. No plans in the catalogue; all other cross-references resolve."
+    : `check:data — clean. ${slugs.size} plans, all cross-references resolve.`,
+);

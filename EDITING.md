@@ -57,24 +57,27 @@ header, the drawer, the footer and the sitemap together.
 
 ## Homes
 
-The catalogue is every plan Pine Grove Homes and Pleasant Valley Homes
-publish — 348 of them, imported straight from the manufacturers' own sites,
-so every spec on this site can be checked against the page it came from.
-Almost all of them read "Available to order", because that is what they are:
-homes the dealership builds for you. A home standing on Melba Ln reads "On
-our lot" — flag it in `lotState`, which currently names none. Note the
-catalogue was imported for a previous deployment: confirm the manufacturers
-Maxey retails and re-import before launch.
+The catalogue is **empty**, and the site says so: three size buttons over "0
+homes available", the same as maxeycustomhomes.com. It previously held 348
+Pine Grove and Pleasant Valley plans imported for a previous deployment, each
+reading "Available to order" — a claim that this dealership can order that
+plan, which nobody could check.
 
-> The G-3465 on the lot is the standard one, not the NETR. Fix it.
+When it is filled, a plan reads "Available to order" because that is what it
+is: a home the dealership builds for you. A home standing on Melba Ln reads
+"On our lot" — flag it in `lotState`.
 
-> We have taken delivery of a second G-3002. Put it on the lot too.
+> Here are the manufacturers we carry. Import their catalogues.
 
-> Mark ZK-1100 as sale pending.
+> We have a double wide on the lot now. Put it on the site.
 
-> Pine Grove has added new plans. Re-import the catalogue.
+> Mark the 28x56 on the lot as sale pending.
 
-> We have stopped carrying the Pleasant Valley ADUs. Drop them.
+> Our manufacturer has added new plans. Re-import the catalogue.
+
+> We have stopped carrying the ADUs. Drop them.
+
+> We do not sell triple wides. Take that button off.
 
 If a spec looks wrong, say so and it gets checked against the manufacturer's
 own page rather than patched — if their sheet says something different, the

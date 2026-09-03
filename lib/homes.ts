@@ -395,10 +395,52 @@ export const sizeCategoryOrder: SizeCategory[] = [
   "modular",
 ];
 
+/**
+ * Which buckets this dealership shows, independent of what is in them.
+ *
+ * Visibility used to be derived purely from the counts: a bucket with no
+ * homes in it was not rendered. That is the right default — it stops a lot
+ * with no triple-wides advertising a button that leads to an empty page —
+ * but it cannot express the state this site is actually in. With the
+ * catalogue empty, every count is zero, so a count-driven row renders
+ * nothing at all and a visitor is given no way into the catalogue and no idea
+ * what kind of homes are sold here.
+ *
+ * maxeycustomhomes.com answers this the same way, and this list is its
+ * `homeTypeConfig` read off the live site: Tiny Home, Single Wide and Double
+ * Wide are enabled, Triple Wide is disabled, and it has no modular category
+ * at all. Its buttons render over "0 homes available" — the shape of the
+ * range is a standing claim about what the business sells, and it survives
+ * having nothing in stock this week.
+ *
+ * So the two rules compose: a bucket appears when it is enabled here, and an
+ * enabled bucket shows its footprint range and count only once it has homes
+ * to measure. Turning one off is how you stop advertising a size you do not
+ * sell; leaving one on with nothing in it says "we sell these, none in stock
+ * today", which is a different and equally honest statement.
+ */
+export const sizeCategoryEnabled: Record<SizeCategory, boolean> = {
+  tiny: true,
+  single: true,
+  double: true,
+  /* Off, as on Maxey's own site. */
+  triple: false,
+  /* Off: Maxey has no modular category. Turn this on if the dealership starts
+     retailing state-code modulars — the bucket keys off `construction`
+     rather than width, so it needs no other change. */
+  modular: false,
+};
+
+/** The buckets this deployment shows, in order. */
+export const enabledSizeCategories: SizeCategory[] = sizeCategoryOrder.filter(
+  (id) => sizeCategoryEnabled[id],
+);
+
 export type SizeCategoryFacet = {
   id: SizeCategory;
   label: string;
-  /** How many homes are in it. Zero means the button is not worth showing. */
+  /** How many homes are in it. Zero is a real answer — see the note on
+      `sizeCategoryEnabled` — and the button still renders, without a count. */
   count: number;
   /** The real footprint range of the homes in it, e.g. "812–1,144 sq ft". */
   range?: string;
@@ -406,9 +448,15 @@ export type SizeCategoryFacet = {
   glyph: string;
 };
 
-/** The buckets, measured against whatever catalogue is passed in. */
+/**
+ * The buckets, measured against whatever catalogue is passed in.
+ *
+ * Only the enabled ones — see `sizeCategoryEnabled`. A `count` of zero is a
+ * real answer here rather than a reason to drop the bucket, so callers get
+ * every enabled bucket and decide for themselves what to draw at zero.
+ */
 export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFacet[] {
-  return sizeCategoryOrder.map((id) => {
+  return enabledSizeCategories.map((id) => {
     const inBucket = from.filter((l) => sizeCategoryOf(l) === id);
     const sizes = inBucket.map((l) => l.sqft);
     const low = Math.min(...sizes);

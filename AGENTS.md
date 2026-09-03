@@ -18,12 +18,12 @@ lib/homes.ts        The catalogue's types, and `lotState` — the ONE
                     two composed. Also the size buckets, including `Mods`,
                     which keys off `construction` rather than width.
 lib/catalogue.generated.ts
-                    GENERATED — 348 plans from Pine Grove and Pleasant
-                    Valley, every one carrying the `sourceUrl` it was read
-                    from. No prices; neither manufacturer publishes any.
-                    CAVEAT: these were imported for a previous deployment.
-                    Maxey publishes no manufacturer list, so confirm the
-                    lines it retails and re-import before launch.
+                    GENERATED, and currently EMPTY — the site shows no homes,
+                    which is what maxeycustomhomes.com shows too. It held 348
+                    Pine Grove and Pleasant Valley plans imported for a
+                    previous deployment, each reading "Available to order",
+                    which is a claim Maxey could not stand behind. Read the
+                    header of that file before repopulating it.
                     Rewritten by `node scripts/import-manufacturers.mjs
                     homes`; never hand-edit it, edit `lotState` instead.
 lib/projects.ts     Past projects — houses Maxey has actually delivered.
@@ -126,15 +126,21 @@ bucket comes from `sections` where the home has one, never from square
 footage alone, because "single wide" is a claim about width and filing a
 1,000 sq ft double-section home under it would be false. `Mods` is checked
 before any width rule and keys off `construction: "modular"`: a modular is a
-build standard, not a width, and Pleasant Valley's plans belong there
-whatever their footprint. Buckets with no homes in them are not rendered, so
-the site currently shows four — there are no triple-section plans.
+build standard, not a width.
+
+WHICH buckets appear is `sizeCategoryEnabled` in `lib/homes.ts`, not the
+counts — Maxey shows tiny, single and double, which is its own site's
+`homeTypeConfig`, and an enabled bucket renders whether or not it has homes
+in it. That is the difference between "we do not sell these" and "we sell
+these, none in stock today", and a count cannot tell them apart. An enabled
+bucket shows its footprint range and count only once there is something to
+measure.
 
 Two statuses matter. `to-order` — "Available to order" — is the catalogue's
-default and currently true of everything: a plan the dealership can build for
-you. `onLot` says a home is standing on Melba Ln, open to walk through, and it
-is the strongest thing a card can say — `lotState` is empty, so nothing says
-it yet. Both are set in `lotState`.
+default: a plan the dealership can build for you. `onLot` says a home is
+standing on Melba Ln, open to walk through, and it is the strongest thing a
+card can say. Both are set in `lotState`, which is empty, as is the catalogue
+it points into — so no home on this site claims either today.
 
 Re-importing the catalogue is three commands, in this order:
 

@@ -9,13 +9,18 @@ scale floor plans, a financing calculator that tells the truth about chattel
 loans, and an editorial content layer built to dismantle the "trailer park"
 stereotype rather than tiptoe around it.
 
-`lib/catalogue.generated.ts` carries 348 real, published plans, browsed by
-size — tiny, single, double, mods. Each names its `sourceUrl` and none
-carries a price. **They were imported for a different dealership**, from Pine
-Grove Homes and Pleasant Valley Homes, and Maxey publishes no manufacturer
-list of its own: confirm the lines the business actually retails and
-re-import before quoting anybody. `lotState` in `lib/homes.ts` is empty, so
-nothing on the site claims to be standing on the lot.
+`lib/catalogue.generated.ts` is **empty**, and so is the site's inventory —
+which is what maxeycustomhomes.com shows too: its size buttons sit over "0
+homes available". It previously held 348 Pine Grove and Pleasant Valley plans
+imported for a different dealership, every one of them rendering as a home
+Maxey could order, which is a claim nobody here could check.
+
+The site is built to read honestly at zero. The size buttons still render —
+tiny, single and double, set by `sizeCategoryEnabled` in `lib/homes.ts` from
+Maxey's own site config — `/listings` says plainly that nothing is listed yet,
+and the landing band shows the count instead of an empty shelf. Repopulate it
+by pointing `scripts/import-manufacturers.mjs` at the manufacturers Maxey
+actually retails; the header of the generated file has the three commands.
 
 `lib/communities.ts` ships empty, because Maxey publishes no communities, so
 `/communities` is switched off in `lib/page-config.ts`.
