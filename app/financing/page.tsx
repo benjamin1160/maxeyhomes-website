@@ -16,6 +16,7 @@ import { company } from "@/lib/company";
 import { hasPrices, priceBounds } from "@/lib/homes";
 import { money } from "@/lib/format";
 import { pages } from "@/lib/page-config";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Financing",
@@ -49,7 +50,7 @@ const PATHS = [
     down: "0% down",
     tone: "moss" as const,
     needs: "Eligible service · owned land · permanent foundation",
-    body: "No down payment and no mortgage insurance. Fewer lenders write VA on manufactured homes, so the shortlist is short — ask us who is writing them in Maine this month before you spend six weeks with the wrong originator.",
+    body: "No down payment and no mortgage insurance. Fewer lenders write VA on manufactured homes, so the shortlist is short — ask us who is writing them in Oklahoma this month before you spend six weeks with the wrong originator.",
   },
   {
     name: "Cash / construction",
@@ -71,7 +72,7 @@ const ORDER = [
   {
     n: "01",
     title: "Call or visit the team",
-    body: "Before a lender, before a floor plan. Ten minutes on the phone, or a walk through the homes standing on River Road, tells us where you are — land or no land, credit, budget — and tells you which of the paths above is actually open to you. If you do not own land yet, the buyer's guide at /start-here walks through the three ways onto ground.",
+    body: "Before a lender, before a floor plan. Ten minutes on the phone, or a walk through the homes standing on the lot, tells us where you are — land or no land, credit, budget — and tells you which of the paths above is actually open to you. If you do not own land yet, the buyer's guide at /start-here walks through the three ways onto ground.",
   },
   {
     n: "02",
@@ -194,7 +195,8 @@ export default function FinancingPage() {
           <Reveal className="mt-12">
             <div className="mx-auto max-w-3xl">
               {/* No listing here to take a price from, so the visitor sets
-                  one. Seeded at NERTO's own example, not a home's sticker. */}
+                  one. Seeded at the calculator's own worked example, not a
+                  home's sticker. */}
               <PaymentCalculator price={240000} editablePrice />
             </div>
           </Reveal>
@@ -272,7 +274,7 @@ export default function FinancingPage() {
                   a lender quote and a written development cost in front of you.
                 </p>
               </div>
-              <ButtonLink href="/contact" className="shrink-0 !px-7 !py-4 !text-base">
+              <ButtonLink href={contactHref} className="shrink-0 !px-7 !py-4 !text-base">
                 Start there
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>

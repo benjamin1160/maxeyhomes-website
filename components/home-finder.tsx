@@ -7,6 +7,7 @@ import { buttonStyles, Icon } from "./ui";
 import { listings, sectionLabels, type Listing } from "@/lib/homes";
 import { money } from "@/lib/format";
 import { site } from "@/lib/site";
+import { contactHref } from "@/lib/navigation";
 
 /**
  * The Build-A-Home wizard behind `/new-home`.
@@ -192,7 +193,7 @@ export function HomeFinder() {
           )}
 
           <div className="mt-12 flex flex-wrap gap-3">
-            <Link href="/contact" className={buttonStyles.primary}>
+            <Link href={contactHref} className={buttonStyles.primary}>
               Book a walkthrough
               <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </Link>

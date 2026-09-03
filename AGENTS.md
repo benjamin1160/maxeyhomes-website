@@ -4,25 +4,29 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-# NERTO Homes — where things live
+# Maxey Custom Homes — where things live
 
-This is the NERTO Homes site (New England Rent To Own, LLC, Chelsea, Maine). Almost every change is a data
+This is the Maxey Custom Homes site (Maxey Homes & Land, LLC, Norman, Oklahoma). Almost every change is a data
 change; routes derive from the data and should rarely be edited directly.
 
 ```
 lib/homes.ts        The catalogue's types, and `lotState` — the ONE
                     hand-maintained part: which plans are standing on
-                    River Road, what is featured, what is sold. The plans
+                    Melba Ln, what is featured, what is sold. It ships
+                    EMPTY — nothing claims to be on the lot. The plans
                     themselves are generated (below) and `listings` is the
                     two composed. Also the size buckets, including `Mods`,
                     which keys off `construction` rather than width.
 lib/catalogue.generated.ts
-                    GENERATED — 348 plans from the two manufacturers NERTO
-                    retails, every one carrying the `sourceUrl` it was read
+                    GENERATED — 348 plans from Pine Grove and Pleasant
+                    Valley, every one carrying the `sourceUrl` it was read
                     from. No prices; neither manufacturer publishes any.
+                    CAVEAT: these were imported for a previous deployment.
+                    Maxey publishes no manufacturer list, so confirm the
+                    lines it retails and re-import before launch.
                     Rewritten by `node scripts/import-manufacturers.mjs
                     homes`; never hand-edit it, edit `lotState` instead.
-lib/projects.ts     Past projects — houses NERTO has actually delivered.
+lib/projects.ts     Past projects — houses Maxey has actually delivered.
                     Evidence, as against the catalogue's plans. Ships
                     EMPTY and `/projects` is switched off to match.
 lib/videos.ts       Informational videos — the process, construction loan
@@ -64,9 +68,10 @@ lib/land/           Everything behind /land-deals: `areas.ts` prices each
                     coordinates and the projection, and the generated file
                     holds the county boundaries. Market data in the sense
                     above — true of one radius and of no other. `geo.ts`
-                    points at the yard in Chelsea and the boundaries are
-                    Maine and its neighbours, but `areas.ts` prices nothing,
-                    so `/land-deals` is switched off until it does.
+                    points at the lot in Norman, but the boundaries are
+                    STILL Maine and its neighbours and `areas.ts` prices
+                    nothing, so `/land-deals` is switched off until both are
+                    regenerated and priced for Oklahoma.
 lib/chat.ts         Every word the chat widget says, in order — the
                     greeting, the five questions, the buttons on the first
                     one, the sign-off. `components/chat-widget.tsx` reads
@@ -126,9 +131,10 @@ whatever their footprint. Buckets with no homes in them are not rendered, so
 the site currently shows four — there are no triple-section plans.
 
 Two statuses matter. `to-order` — "Available to order" — is the catalogue's
-default and true of almost everything: a plan NERTO can build for you.
-`onLot` is the four homes standing on River Road, open to walk through, and
-it is the strongest thing a card can say. Both are set in `lotState`.
+default and currently true of everything: a plan the dealership can build for
+you. `onLot` says a home is standing on Melba Ln, open to walk through, and it
+is the strongest thing a card can say — `lotState` is empty, so nothing says
+it yet. Both are set in `lotState`.
 
 Re-importing the catalogue is three commands, in this order:
 

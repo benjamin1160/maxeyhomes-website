@@ -42,28 +42,34 @@ export type Market = {
 };
 
 export const market: Market = {
-  regionName: "Central Maine",
-  /* The towns NERTO names on its own site are Chelsea, Augusta and Portland,
-     which is Kennebec and Cumberland. Rent-to-own buildings go further —
-     "throughout New England" — but that is a different product from a home
-     on a lot, so it does not widen this list. Add a county here only when
-     the business says it delivers homes there. */
-  countiesServed: ["Kennebec", "Cumberland"],
-  /* Inland Maine is HUD Wind Zone I; only the coast reaches Zone II. */
+  regionName: "Central Oklahoma",
+  /* Absent on purpose. Maxey names one place on its own site — Norman — and
+     publishes no county list, no delivery radius and no service-area map. A
+     county here is a promise to deliver there, so add one only when the
+     business says it does. Norman itself sits in Cleveland County. */
+  // countiesServed: [],
+  /* Oklahoma is HUD Wind Zone I. Worth knowing what that does and does not
+     mean here: the HUD wind zones model sustained hurricane-force wind, so
+     Zone I is a statement about the Gulf coast being somewhere else, not a
+     statement about tornadoes. Anchoring and the installation are what carry
+     a home through Oklahoma weather, and those are set-crew work. */
   windZone: "I",
-  /* Maine is the coldest HUD insulation zone, which is why an envelope
-     specified for a southern market is the wrong home to buy here. */
-  thermalZone: 3,
+  /* Oklahoma is HUD Thermal Zone 2 — the middle band, with Arkansas, Kansas,
+     Missouri, New Mexico and Tennessee. An envelope specified for Zone 1 is
+     under-insulated for a Norman summer and a Norman January both. */
+  thermalZone: 2,
   realPropertyConversion:
-    "Maine issues a manufactured home its own certificate of title. Once the home is permanently affixed to land the owner also owns, that title is cancelled and the home is conveyed with the real estate — which is the step that makes a mortgage, rather than a chattel loan, possible.",
+    "Oklahoma issues a manufactured home its own certificate of title, the way it does a vehicle. Once the home is permanently affixed to land the owner also owns, the owner files to cancel that title — the county assessor certifies the land description first, and the cancellation has to follow within 60 days — under 47 O.S. § 1110. From then on the home is conveyed with the real estate. A title cannot be surrendered while a security interest on the home is unreleased.",
   usdaNote:
-    "Most of Kennebec County outside the Augusta and Gardiner city limits sits inside USDA-eligible tracts, and so does a great deal of the ground between here and the coast. It is worth ten minutes with the eligibility map before you assume you do not qualify — and note it applies to land you own, not a leased pad.",
-  /* Central Maine builds to a 48-inch frost line; the northern counties go
-     deeper. Confirm with the code officer for the town you are setting in. */
-  frostDepthInches: 48,
+    "USDA lending is a rural-eligibility test on the parcel, not on the buyer's idea of rural, and a great deal of the ground around Norman passes it even though Norman itself does not. It is worth ten minutes with the USDA eligibility map before you assume you do not qualify — and note it applies to land you own, not a leased pad.",
+  /* Norman, Oklahoma City and Tulsa all build to an 18-inch frost line;
+     southern Oklahoma counties go to 12. Confirm with the building
+     department for the jurisdiction you are setting in — the city and county
+     amendments are where the real number lives. */
+  frostDepthInches: 18,
 };
 
-/** "Kennebec and Cumberland" — for prose that lists the service area. */
+/** "Cleveland and McClain" — for prose that lists the service area. */
 export function countyList(): string | undefined {
   const c = market.countiesServed;
   if (!c || c.length === 0) return undefined;

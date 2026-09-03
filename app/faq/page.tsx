@@ -7,6 +7,7 @@ import { ButtonLink, Container, Icon, Section, SectionHeading } from "@/componen
 import { faq } from "@/lib/faq";
 import { pages } from "@/lib/page-config";
 import { site } from "@/lib/site";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Questions",
@@ -66,7 +67,7 @@ export default function FaqPage() {
               title="Ask us the one that isn't on this page."
               lede="Somebody who has set a few thousand of these will answer it, and will tell you when the answer is “it depends on your parcel”."
               action={
-                <ButtonLink href="/contact">
+                <ButtonLink href={contactHref}>
                   Book a walkthrough
                   <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </ButtonLink>

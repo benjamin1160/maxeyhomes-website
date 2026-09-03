@@ -189,7 +189,7 @@ export function InquiryForm({
             name="message"
             rows={3}
             defaultValue={was.message}
-            placeholder="We have a half-acre outside Chelsea and no idea whether it will perc."
+            placeholder="We have a half-acre outside Norman and no idea whether it will perc."
             className={cx(field, "mt-2.5 resize-y")}
           />
         </label>

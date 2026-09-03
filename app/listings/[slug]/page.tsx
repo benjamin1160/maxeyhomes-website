@@ -32,6 +32,7 @@ import {
   statusLabels,
   styleLabels,
 } from "@/lib/homes";
+import { pages } from "@/lib/page-config";
 import { photoFor } from "@/lib/photos";
 import { site } from "@/lib/site";
 
@@ -148,8 +149,9 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
               {/* "On our lot" is the strongest thing this page can say, so it
-                  leads. Everything else in the catalogue is a plan NERTO
-                  orders in, which the status badge says plainly. */}
+                  leads. Everything else in the catalogue is a plan the
+                  dealership orders in, which the status badge says
+                  plainly. */}
               {listing.onLot ? (
                 <Badge tone="ember">On our lot — walk through it</Badge>
               ) : (
@@ -231,7 +233,9 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
             </a>
           )}
           <div className="ml-auto">
-            <SaveButton slug={listing.slug} name={listing.name} variant="inline" />
+            {pages.saved && (
+              <SaveButton slug={listing.slug} name={listing.name} variant="inline" />
+            )}
           </div>
         </div>
 

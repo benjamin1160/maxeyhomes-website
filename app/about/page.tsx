@@ -17,6 +17,7 @@ import { company, spellCount, yearsTrading } from "@/lib/company";
 import { listings, seriesList } from "@/lib/homes";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
+import { contactHref } from "@/lib/navigation";
 
 /* Every section below is conditional on the matching field in
    `lib/company.ts`. A dealership that publishes nothing about its staff or
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     company.founded
       ? `${site.name} has been setting manufactured and modular homes since ${company.founded}.`
       : `${site.name} sets manufactured and modular homes for families across ${site.stateName}.`,
-    "A complete turnkey homebuilding experience — land, permitting, site work, delivery and setup.",
+    "Homes and land made simple — the right home, the right land and the right setup, without the guesswork.",
   ].join(" "),
 };
 
@@ -56,9 +57,33 @@ export default function AboutPage() {
 
   const stats = [
     ...(years ? [{ v: <CountUp to={years} />, k: "Years" }] : []),
-    /* "Plans we build", not "homes on the lot": the catalogue is what NERTO
-       can order, and only the handful flagged `onLot` are standing on River
-       Road. Counting the catalogue as lot stock would be a lie a visitor
+    /* Combined experience, where that is what the business publishes instead
+       of a founding year. The label has to carry the word "combined" — 85
+       years across a team is not 85 years of trading, and a bare "Years"
+       here would quietly turn one claim into the other. */
+    ...(company.experienceClaim
+      ? [
+          {
+            v: (
+              <>
+                <CountUp to={company.experienceClaim.years} />+
+              </>
+            ),
+            k: "Years combined",
+          },
+        ]
+      : []),
+    ...(company.experienceClaim?.generations
+      ? [
+          {
+            v: <CountUp to={company.experienceClaim.generations} />,
+            k: "Generations",
+          },
+        ]
+      : []),
+    /* "Plans we build", not "homes on the lot": the catalogue is what the
+       dealership can order, and only the ones flagged `onLot` are standing in
+       the yard. Counting the catalogue as lot stock would be a lie a visitor
        finds out on arrival. */
     ...(listings.length ? [{ v: <CountUp to={listings.length} />, k: "Plans we build" }] : []),
     ...(onLot ? [{ v: <CountUp to={onLot} />, k: "Open to walk through" }] : []),
@@ -71,9 +96,14 @@ export default function AboutPage() {
       <PageHero
         photoKey="page/about"
         index={index()}
-        /* The state, not the town — NERTO works throughout Maine, and the lot
-           address is on `/address` where somebody actually wants it. */
-        eyebrow={[company.founded && `Since ${company.founded}`, `Throughout ${site.stateName}`]
+        /* The state, not the town — Maxey sells throughout Oklahoma, and the
+           lot address is on `/address` where somebody actually wants it. */
+        eyebrow={[
+          company.founded && `Since ${company.founded}`,
+          company.experienceClaim &&
+            `${company.experienceClaim.years}+ years combined`,
+          `Throughout ${site.stateName}`,
+        ]
           .filter(Boolean)
           .join(" · ")}
         title={
@@ -88,13 +118,13 @@ export default function AboutPage() {
                it lands two screens down. A hero that repeats the next
                headline verbatim reads as a page that stuttered. */
             <>
-              We are not just
+              You are not just
               <br />
-              delivering houses.
+              another customer.
             </>
           )
         }
-        lede="Buying and building a home means coordinating land, financing, permits, site work and a stack of contractors. We do that part, so you do not have to."
+        lede="Finding the right home should be simple, honest and stress-free. We help you find the right home, the right land and the right setup — without confusion or guesswork."
         kind="exterior"
         size="tall"
         breadcrumb={[
@@ -250,7 +280,7 @@ export default function AboutPage() {
               </p>
               <div className="mt-10 flex flex-wrap gap-3">
                 <ButtonLink
-                  href="/contact"
+                  href={contactHref}
                   className="!bg-paper !px-7 !py-4 !text-base !text-ink hover:!bg-ember hover:!text-on-ember dark:!bg-ink dark:!text-paper"
                 >
                   Book a walkthrough
@@ -281,17 +311,22 @@ export default function AboutPage() {
                     </a>
                   </dd>
                 </div>
-                <div>
-                  <dt className="eyebrow !text-current opacity-60">Email</dt>
-                  <dd className="mt-3 font-mono break-all">
-                    <a
-                      href={`mailto:${site.email}`}
-                      className="transition-opacity hover:opacity-70"
-                    >
-                      {site.email}
-                    </a>
-                  </dd>
-                </div>
+                {/* Only where there is an inbox to print. `site.email` is
+                    optional, and a business that publishes none gets one
+                    fewer definition rather than an empty one. */}
+                {site.email && (
+                  <div>
+                    <dt className="eyebrow !text-current opacity-60">Email</dt>
+                    <dd className="mt-3 font-mono break-all">
+                      <a
+                        href={`mailto:${site.email}`}
+                        className="transition-opacity hover:opacity-70"
+                      >
+                        {site.email}
+                      </a>
+                    </dd>
+                  </div>
+                )}
               </dl>
             </Reveal>
           </div>

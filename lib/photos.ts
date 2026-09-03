@@ -30,16 +30,15 @@ import { importedPhotos } from "./photos.generated";
  *   The map below is hand-written, and holds the page heroes and one-offs.
  *
  * READ THIS BEFORE THE SITE GOES LIVE. Nothing registered here is a
- * photograph of the yard on River Road, and none of it is NERTO's to
+ * photograph of the yard on Melba Ln, and none of it is Maxey's to
  * license:
  *
  *   Pleasant Valley's exterior renderings, one per modular plan. A rendering
  *   is a drawing of a house that has not been built yet — it pictures the
  *   plan honestly, but it is not a photograph.
  *
- *   Pine Grove's photographs of the four models NERTO keeps on the lot. They
- *   picture that model at Pine Grove, not the particular house standing on
- *   River Road.
+ *   Pine Grove's photographs of four of its models. They picture that model
+ *   at Pine Grove, not a house standing on Melba Ln.
  *
  *   The page heroes under `/photos/pages/`, which are stock exteriors carried
  *   over from the template and picture nobody's home in particular.

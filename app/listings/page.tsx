@@ -9,11 +9,12 @@ import { hasPrices, listings, priceBounds } from "@/lib/homes";
 import { money } from "@/lib/format";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Homes for sale",
   description:
-    "Mobile and modular homes from NERTO Homes in Chelsea, Maine — sizes, specs and what it takes to put one on your land.",
+    `Manufactured and modular homes from ${site.name} in ${site.address.city}, ${site.stateName} — sizes, specs and what it takes to put one on your land.`,
 };
 
 /**
@@ -35,7 +36,7 @@ function BrowserFallback() {
           We are not publishing inventory on this site at the moment. Tell us the size, the
           budget and where the home is going, and we will tell you what we can put on it.
         </p>
-        <ButtonLink href="/contact" className="mt-8">
+        <ButtonLink href={contactHref} className="mt-8">
           Tell us what you&apos;re after
         </ButtonLink>
       </div>

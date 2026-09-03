@@ -15,6 +15,7 @@ import {
 import { faq } from "@/lib/faq";
 import { listings } from "@/lib/homes";
 import { pages } from "@/lib/page-config";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Why manufactured",
@@ -413,7 +414,7 @@ export default function WhyPage() {
                 and a flashlight.
               </p>
             </div>
-            <ButtonLink href="/contact" className="shrink-0 !px-7 !py-4 !text-base">
+            <ButtonLink href={contactHref} className="shrink-0 !px-7 !py-4 !text-base">
               Book a walkthrough
               <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </ButtonLink>

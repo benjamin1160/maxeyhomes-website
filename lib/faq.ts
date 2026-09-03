@@ -15,13 +15,14 @@
  * titled. Check it against your own market before you ship it — wind zone,
  * snow load and titling are all state and county business.
  *
- * The answers here are written for Central Maine and for NERTO specifically:
- * HUD Wind Zone I inland, a serious ground-snow load, and Maine's own
- * title-cancellation route onto real property (see `lib/market.ts`). Where an
- * answer would have to promise something NERTO does not publish — a lead
- * time, a price inclusion, a spec on a home that is not on the lot — it says
- * to ask instead. That is the honest answer, and it is also the one that
- * gets somebody to pick up the phone.
+ * The answers here are written for Central Oklahoma and for Maxey
+ * specifically: HUD Wind Zone I, Thermal Zone 2, an 18-inch frost line in
+ * Norman, and Oklahoma's title-cancellation route onto real property under
+ * 47 O.S. § 1110 (see `lib/market.ts`). Where an answer would have to
+ * promise something Maxey does not publish — a lead time, a price inclusion,
+ * a delivery radius, a spec on a home that is not on the lot — it says to
+ * ask instead. That is the honest answer, and it is also the one that gets
+ * somebody to pick up the phone.
  */
 
 export type FaqItem = {
@@ -41,7 +42,7 @@ export const faq: FaqItem[] = [
   {
     question: "What is the difference between a manufactured home and a modular home?",
     answer: [
-      "Both are built indoors and finished on your site, and that is where the similarity ends. A manufactured home is built to the federal HUD Code and carries a HUD certification label. A modular home is built to the same state building code as a house framed on site — in Maine, MUBEC — and once it is set, a code officer inspects it as a house.",
+      "Both are built indoors and finished on your site, and that is where the similarity ends. A manufactured home is built to the federal HUD Code and carries a HUD certification label; in Oklahoma the dealers, installers and inspectors on that side of the line are licensed by the Used Motor Vehicle, Dismantler and Manufactured Housing Commission. A modular home is built to the same building code as a house framed on site, and once it is set a code officer inspects it as a house.",
       "That difference decides financing, titling, appraisal and sometimes whether a town will permit it at all. We sell both, so ask us which one your parcel and your lender actually want before you fall in love with a floor plan.",
     ],
   },
@@ -52,9 +53,9 @@ export const faq: FaqItem[] = [
     ],
   },
   {
-    question: "How does a home in Maine become real property?",
+    question: "How does a home in Oklahoma become real property?",
     answer: [
-      "Maine issues a manufactured home its own certificate of title, the way it does a vehicle. Once the home is permanently affixed to land the owner also owns, that title is cancelled and the home is conveyed with the real estate from then on.",
+      "Oklahoma issues a manufactured home its own certificate of title, the way it does a vehicle. Once the home is permanently affixed to land you also own, you file to cancel that title: the county assessor certifies the land description and owner of record first, and the cancellation has to follow within sixty days. From then on the home is conveyed with the real estate. One catch worth knowing early — the title cannot be surrendered while a security interest on the home is still unreleased.",
       "That step is the one that puts the home on the same appreciation curve — and the same lending shelf — as the house next door. It is worth doing in the right order, and it is one of the first things we will ask you about.",
     ],
   },
@@ -65,16 +66,17 @@ export const faq: FaqItem[] = [
     ],
   },
   {
-    question: "What about wind and snow up here?",
+    question: "What about the wind out here?",
     answer: [
-      "Every home is certified to a wind zone, a roof-load zone and a thermal zone, printed on the data plate inside a kitchen cabinet. Inland Maine is HUD Wind Zone I; only the coast reaches Zone II. Snow is the number that actually matters here, and the roof-load rating on the plate is the one to read.",
-      "Maine is also the coldest HUD insulation zone, which is why an envelope specified for a southern market is the wrong home to buy in Kennebec County. Ask us for the data plate on any home before you sign anything — it is a photograph, and it takes us a minute to send.",
+      "Every home is certified to a wind zone, a roof-load zone and a thermal zone, printed on the data plate inside a kitchen cabinet. Oklahoma is HUD Wind Zone I — and it is worth being straight about what that means, because it sounds like the wrong answer for this state. The HUD wind zones model sustained hurricane-force wind, so Zone I says the Gulf coast is somewhere else. It is not a tornado rating, and no manufactured home carries one.",
+      "What actually carries a home through Oklahoma weather is the installation: the anchors, the ties, the pier spacing and the pad under it, all of it inspected work. Ask about the install and the anchoring before you ask about the wind zone.",
+      "Oklahoma is HUD Thermal Zone 2, the middle insulation band. An envelope specified for the Gulf states is under-built for a Norman January. Ask us for the data plate on any home before you sign anything — it is a photograph, and it takes us a minute to send.",
     ],
   },
   {
     question: "Can I put one on my own land?",
     answer: [
-      "Usually. The constraints are the town's zoning and any deed restrictions, minimum square footage or roof-pitch covenants, access for a wide load down the road you are on, frost-depth footings — 48 inches through most of Central Maine — and utilities. Send us the parcel and we will look at it with you before you spend anything.",
+      "Usually. The constraints are the city or county zoning and any deed restrictions, minimum square footage or roof-pitch covenants, access for a wide load down the road you are on, frost-depth footings — Norman, Oklahoma City and Tulsa all build to 18 inches, and the southern counties to 12 — and utilities. Send us the parcel and we will look at it with you before you spend anything.",
     ],
   },
   {
@@ -91,17 +93,10 @@ export const faq: FaqItem[] = [
     ],
   },
   {
-    question: "Do you do rent to own?",
-    answer: [
-      "On buildings, yes — that is where NERTO started, and it is still the only rent-to-own storage company of its kind in Maine. Sheds, wood sheds, horse runs and mini-camps go out on rent to own right across New England.",
-      "Homes are a different product with different paperwork. Tell us your situation and we will tell you plainly which financing path is open to you rather than which one we would rather sell.",
-    ],
-  },
-  {
     question: "Where do you deliver?",
     answer: [
-      "The yard is at 65 River Road in Chelsea, and we work through Augusta, the Kennebec valley and down to Portland. Rent-to-own buildings go further than that — throughout New England.",
-      "If you are not sure whether you are inside the radius, ring us. The answer is usually yes, and where it is not, we will tell you straight away rather than at the end.",
+      "The lot is at 2548 Melba Ln in Norman. We have not put a radius on this page because the honest answer depends on the road to your parcel as much as the mileage to it — a wide load and a narrow bridge is a different question from a hundred miles of highway.",
+      "So ring us with the address. If you are outside what we can do, we will tell you at the start rather than at the end.",
     ],
   },
   {

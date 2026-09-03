@@ -24,7 +24,7 @@
  * name here.
  */
 
-export type SkinId = "hearthline" | "nerto";
+export type SkinId = "hearthline" | "nerto" | "maxey";
 
 /**
  * Font stacks a skin can choose between. All but `system` are self-hosted by
@@ -329,12 +329,142 @@ export const skins: Record<SkinId, Skin> = {
     fonts: { display: "system", sans: "system", mono: "system" },
     radius: { button: "0.75rem", card: "1rem" },
   },
+
+  /**
+   * Maxey Custom Homes' own look, taken from the live site at
+   * maxeycustomhomes.com rather than approximated: white ground, slate type,
+   * and a blue-to-cyan gradient on every primary button. It is the "Modern"
+   * skin of the engine that site runs on, with its values read off that
+   * deployment.
+   *
+   * One deliberate departure. That engine's primary is #3B82F6 and it draws
+   * white on it, which measures 3.7:1 — fine for the large semibold button
+   * label it is actually used for, and short of the 4.5:1 this template's
+   * `onEmber` contract requires, because here `ember` is also link text and
+   * section numbers at body size. So the accent token is #2563EB (5.2:1
+   * against white, and the engine's own `primaryHover`) and #3B82F6 stays
+   * exactly where the eye actually sees it — the first stop of the gradient,
+   * and `emberSoft`. The buttons come out looking identical; the small type
+   * comes out readable.
+   */
+  maxey: {
+    id: "maxey",
+    name: "Modern",
+    description:
+      "White ground, slate type, a blue-to-cyan gradient on every primary button, set in the system sans. Maxey Custom Homes' own look.",
+    light: {
+      paper: "#ffffff",
+      surface: "#f8fafc",
+      surface2: "#f1f5f9",
+      ink: "#0f172a",
+      /* Not published by the engine, which has no token between `text` and
+         `textMuted`. Slate 700 is the step between them. */
+      inkSoft: "#334155",
+      muted: "#64748b",
+      line: "#e2e8f0",
+      lineStrong: "#cbd5e1",
+      /* See the note above: the readable half of the blue carries text. */
+      ember: "#2563eb",
+      emberSoft: "#3b82f6",
+      emberWash: "#eff6ff",
+      /* The cyan the gradient runs to. */
+      accent: "#06b6d4",
+      accentSoft: "#0891b2",
+      moss: "#10b981",
+      mossSoft: "#34d399",
+      sky: "#0ea5e9",
+      gold: "#f59e0b",
+      onEmber: "#ffffff",
+      shadowColor: "15 23 42",
+    },
+    /**
+     * Maxey's site is light only — it ships no dark palette, because the
+     * engine behind it has no theme toggle. This template does, so the dark
+     * half is built here in the same hues.
+     *
+     * On dark ground the accent has to invert: a blue dark enough to carry
+     * white text is too dark to read *as* text against a navy page. So dark
+     * takes the light blue and puts the page's own navy on top of it, which
+     * clears 7:1 both directions — the button reads, and so does a link.
+     */
+    dark: {
+      paper: "#0b1220",
+      surface: "#111a2e",
+      surface2: "#1a2540",
+      ink: "#e2e8f0",
+      inkSoft: "#cbd5e1",
+      muted: "#94a3b8",
+      line: "#1e293b",
+      lineStrong: "#334155",
+      ember: "#60a5fa",
+      emberSoft: "#93c5fd",
+      emberWash: "#12203a",
+      accent: "#22d3ee",
+      accentSoft: "#67e8f9",
+      moss: "#34d399",
+      mossSoft: "#6ee7b7",
+      sky: "#38bdf8",
+      gold: "#fbbf24",
+      onEmber: "#0b1220",
+      shadowColor: "0 0 0",
+    },
+    landLight: {
+      water: "#e6eef8",
+      unserved: "#e2e8f0",
+      outside: "#cbd5e1",
+      overBudget: "#eef2f7",
+      stroke: "#ffffff",
+      price: "#2563eb",
+      tier1: "#1e3a8a",
+      tier2: "#2563eb",
+      tier3: "#3b82f6",
+      tier4: "#7dabf8",
+      tier5: "#bfd7fd",
+    },
+    landDark: {
+      water: "#070d18",
+      unserved: "#1a2540",
+      outside: "#131c30",
+      overBudget: "#121a2c",
+      stroke: "#0b1220",
+      price: "#22d3ee",
+      tier1: "#93c5fd",
+      tier2: "#60a5fa",
+      tier3: "#3b82f6",
+      tier4: "#2563eb",
+      tier5: "#1e40af",
+    },
+    /* Primary buttons wear the gradient below rather than a flat fill, so
+       these two are only what a plain `bg-[var(--btn-bg)]` falls back to. */
+    button: { bg: "#2563eb", fg: "#ffffff", hoverBg: "#1d4ed8", hoverFg: "#ffffff" },
+    buttonDark: { bg: "#60a5fa", fg: "#0b1220", hoverBg: "#93c5fd", hoverFg: "#0b1220" },
+    /* The engine's own `gradient`, `gradientHover`, `buttonShadow` and
+       `cardShadow`, character for character. */
+    gradient: {
+      gradient: "linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)",
+      gradientHover: "linear-gradient(135deg, #2563EB 0%, #0891B2 100%)",
+      buttonShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)",
+      cardShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    },
+    gradientDark: {
+      gradient: "linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)",
+      gradientHover: "linear-gradient(135deg, #93c5fd 0%, #67e8f9 100%)",
+      buttonShadow: "0 10px 25px -5px rgba(96, 165, 250, 0.45)",
+      cardShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.5)",
+    },
+    /* The engine loads no webfont: headings and body are both the reader's
+       own UI sans. Nothing to download on a phone on a rural connection. */
+    fonts: { display: "system", sans: "system", mono: "system" },
+    /* `lg` and `xl` from the engine's radius scale, which is what its buttons
+       and cards actually use. */
+    radius: { button: "0.75rem", card: "1rem" },
+  },
 };
 
 /**
  * The skin this deployment wears. One line to change the whole look.
  */
-export const activeSkin: SkinId = "nerto";
+export const activeSkin: SkinId = "maxey";
 
 export const skin = skins[activeSkin];
 

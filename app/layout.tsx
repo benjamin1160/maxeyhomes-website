@@ -68,8 +68,9 @@ export const metadata: Metadata = {
   applicationName: site.name,
   keywords: [
     "manufactured homes",
-    "modular homes Maine",
-    "Augusta manufactured homes",
+    "manufactured homes Norman OK",
+    "manufactured homes Oklahoma",
+    "mobile homes Norman",
     "modular homes",
     "mobile homes",
     "factory-built housing",
@@ -101,15 +102,15 @@ export const viewport: Viewport = {
  * Applies the stored theme before first paint. Kept tiny and inline so there
  * is no flash of the wrong palette on a cold load.
  *
- * The default is **light**, not the reader's system setting. NERTO's brand is
+ * The default is **light**, not the reader's system setting. Maxey's brand is
  * a white ground — it is what the business's own site wears and what its
- * printed material matches — and a visitor whose phone is in dark mode was
+ * logo is drawn on — and a visitor whose phone is in dark mode was
  * otherwise served a navy site that looked like a different company. The
  * toggle in the header still works and is still remembered; it just has to be
  * asked for. Change `"dark"` to `matchMedia(...).matches` here to follow the
  * system again.
  */
-const THEME_BOOT = `(function(){try{var s=localStorage.getItem("nerto:theme");document.documentElement.classList.toggle("dark",s==="dark");}catch(e){}})();`;
+const THEME_BOOT = `(function(){try{var s=localStorage.getItem("maxey:theme");document.documentElement.classList.toggle("dark",s==="dark");}catch(e){}})();`;
 
 export default function RootLayout({
   children,

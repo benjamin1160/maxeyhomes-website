@@ -8,7 +8,7 @@ import { cx, Icon } from "./ui";
  * One financing path: the buyer owns the ground, the home sits on a
  * permanent foundation and titles as real property, and a conventional, FHA
  * or VA lender writes a mortgage on the whole thing. The seed values are
- * NERTO's own — a $240,000 home on a $40,000 parcel at 3.5% with 3.5% down —
+ * a worked example — a $240,000 home on a $40,000 parcel at 3.5% with 3.5% down —
  * and every one of them is a slider.
  */
 const LOAN = {

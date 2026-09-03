@@ -9,15 +9,18 @@ import { milesFromHQ } from "./geo";
  *  dealership's delivery radius and of nowhere else.
  *
  *  IT IS CURRENTLY EMPTY, and `/land-deals` is switched off in
- *  `lib/page-config.ts` to match. NERTO publishes no county-by-county land
+ *  `lib/page-config.ts` to match. Maxey publishes no county-by-county land
  *  prices or starting payments, and a monthly figure printed next to a county
  *  name is a claim a shopper will act on — so there are none here rather than
  *  estimates. The geography around it is real and points at the right place:
- *  `HQ` in `./geo.ts` is the lot on River Road in Chelsea, and the county
- *  boundaries in `./county-shapes.generated.ts` are Maine, New Hampshire,
+ *  `HQ` in `./geo.ts` is now the lot on Melba Ln in Norman, but the county
+ *  boundaries in `./county-shapes.generated.ts` are STILL Maine, New
+ *  Hampshire,
  *  Vermont and Massachusetts.
  *
- *  To turn the page on: price the counties NERTO actually delivers homes to,
+ *  To turn the page on: regenerate the boundaries for Oklahoma with
+ *  `scripts/generate-county-shapes.py`, then price the counties Maxey
+ *  actually delivers homes to,
  *  add an `Area` per county below, list them in `PRICED` in
  *  `scripts/generate-county-shapes.py` and regenerate so each county's shape
  *  carries its slug, then flip `landDeals` in `lib/page-config.ts`. Check the

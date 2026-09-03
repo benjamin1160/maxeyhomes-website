@@ -1,9 +1,9 @@
 /**
- * Past projects — homes NERTO has actually delivered and set.
+ * Past projects — homes this dealership has actually delivered and set.
  *
  * This is the one part of the site that is evidence rather than catalogue.
  * Everything under `/listings` is a plan a manufacturer publishes; a project
- * is a house that exists, on ground in Maine, that this company put there.
+ * is a house that exists, on real ground, that this company put there.
  * For a turnkey builder that is the whole argument, so it gets its own route
  * and its own band on the landing page.
  *
@@ -19,12 +19,12 @@
  * files under `public/photos/projects/<slug>/` and list them here in the
  * order they should be shown. The first is the cover.
  *
- * Never write a project NERTO did not do, and never illustrate one with a
+ * Never write a project this business did not do, and never illustrate one with a
  * photograph of a different house. An absent field hides itself — that is
  * the rule everywhere in this codebase and it matters most here.
  */
 
-/** What NERTO handled on a project. Free text — these are the usual ones. */
+/** What the dealership handled on a project. Free text — these are the usual ones. */
 export type ProjectScope =
   | "Land search"
   | "Permitting"
@@ -61,7 +61,7 @@ export type Project = {
    * by `npm run lint`.
    */
   homeSlug?: string;
-  /** What NERTO did on this one. The turnkey claim, made specific. */
+  /** What the dealership did on this one, made specific. */
   scope?: ProjectScope[];
   /** Paths under `public/`. The first is the cover image. */
   photos?: string[];

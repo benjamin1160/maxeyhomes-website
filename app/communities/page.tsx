@@ -19,6 +19,7 @@ import { money, num } from "@/lib/format";
 import { market } from "@/lib/market";
 import { pages } from "@/lib/page-config";
 import { site } from "@/lib/site";
+import { contactHref } from "@/lib/navigation";
 
 export const metadata: Metadata = {
   title: "Communities",
@@ -262,7 +263,7 @@ export default function CommunitiesPage() {
               permits, the lot — usually within two business days.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
-              <ButtonLink href="/contact" className="!px-7 !py-4 !text-base">
+              <ButtonLink href={contactHref} className="!px-7 !py-4 !text-base">
                 Send us the parcel
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>

@@ -7,6 +7,7 @@ import { SizeCategories } from "./size-categories";
 import { ListingCard, ListingRow } from "./listing-card";
 import { buttonStyles, cx, Icon } from "./ui";
 import { money } from "@/lib/format";
+import { contactHref } from "@/lib/navigation";
 import {
   constructionLabels,
   constructionOrder,
@@ -390,7 +391,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
           We are not publishing inventory on this site at the moment. Tell us the size, the
           budget and where the home is going, and we will tell you what we can put on it.
         </p>
-        <Link href="/contact" className={cx(buttonStyles.primary, "mt-8")}>
+        <Link href={contactHref} className={cx(buttonStyles.primary, "mt-8")}>
           Tell us what you&apos;re after
         </Link>
       </div>

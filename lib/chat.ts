@@ -40,7 +40,7 @@ export type ChatStep = {
 
 /** The first thing on screen when the panel opens. */
 export const CHAT_GREETING = [
-  "Hi — you're through to the lot on River Road.",
+  "Hi — you're through to the lot on Melba Ln.",
   "This is a short form wearing a chat's clothes: four questions, then a real person calls you back. Nobody is typing at the other end right now.",
 ];
 

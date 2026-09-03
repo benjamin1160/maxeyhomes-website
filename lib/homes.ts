@@ -16,8 +16,8 @@ export type Sections = "single" | "double" | "triple";
  * `manufactured` is HUD-code — built to the federal standard, titled and
  * financed as such. `modular` is built to the same state and local building
  * code as a site-built house, inspected by the state, and appraised and
- * titled as real property. NERTO retails both: Pine Grove builds the
- * manufactured homes, Pleasant Valley the modulars.
+ * titled as real property. The catalogue below carries both: Pine Grove
+ * builds the manufactured homes, Pleasant Valley the modulars.
  *
  * This drives its own bucket in the size categories below — "Mods" — because
  * a buyer shopping for a modular is not shopping by width at all.
@@ -103,9 +103,9 @@ export type Listing = {
   hers?: number;
   featured?: boolean;
   /**
-   * Standing on the lot on River Road, skirted and open to walk through.
-   * Everything else in the catalogue is a plan NERTO orders in, which is a
-   * different promise and gets a different badge.
+   * Standing on the lot on Melba Ln, skirted and open to walk through.
+   * Everything else in the catalogue is a plan the dealership orders in,
+   * which is a different promise and gets a different badge.
    */
   onLot?: boolean;
   /** Days the listing has been on market, used for the "new" badge. */
@@ -119,25 +119,32 @@ export type Listing = {
 /**
  * What the importer is allowed to write: the manufacturer's published facts
  * and nothing else. Lot state — status, what is featured, what is standing on
- * River Road — is decided by NERTO, lives in `lotState` below, and is applied
- * over the generated file so re-running the import never overwrites it.
+ * Melba Ln — is decided by the dealership, lives in `lotState` below, and is
+ * applied over the generated file so re-running the import never overwrites
+ * it.
  */
 export type CatalogueEntry = Omit<Listing, "status">;
 
 /* ------------------------------------------------------------------ *
  * The catalogue
  *
- * Every plan NERTO retails, imported from the two manufacturers it buys
- * from, in `lib/catalogue.generated.ts`:
+ * READ THIS BEFORE THE SITE GOES LIVE. The 348 plans in
+ * `lib/catalogue.generated.ts` were imported for a different dealership, from
+ * the two manufacturers *that* business retails:
  *
  *   Pine Grove Homes — HUD-code manufactured homes, single-section through
  *   double-section, plus the multi-family duplexes. The NETR line is the
- *   northern-states specification, which is the one that matters in Maine.
+ *   northern-states specification.
  *
- *   Pleasant Valley Homes — state-code modulars. NERTO does not stock these:
- *   every one is built to order, which is why they all carry `to-order`
- *   below. The Lake Series is excluded on NERTO's instruction and is not in
- *   the generated file at all.
+ *   Pleasant Valley Homes — state-code modulars, every one built to order,
+ *   which is why they all carry `to-order` below.
+ *
+ * Maxey publishes no manufacturer list of its own, so those two are what the
+ * catalogue still holds, and every plan in it currently reads "Available to
+ * order" — which is a claim that Maxey can order that plan. Confirm the lines
+ * Maxey actually retails and re-import against them before launch; the
+ * importer takes a manufacturer at a time. Until then the catalogue is
+ * demonstration data with real plans in it, not an order book.
  *
  * Do not edit the generated file. Re-import it with:
  *
@@ -149,11 +156,12 @@ export type CatalogueEntry = Omit<Listing, "status">;
  * ------------------------------------------------------------------ */
 
 /**
- * What is actually standing on River Road, and what NERTO wants surfaced.
+ * What is actually standing on the lot, and what the dealership wants
+ * surfaced.
  *
  * This is the one hand-maintained half of the catalogue, and the only place
- * lot state is written. Anything not named here is a plan NERTO orders in,
- * and defaults to `to-order` — "Available to order" — below.
+ * lot state is written. Anything not named here is a plan the dealership
+ * orders in, and defaults to `to-order` — "Available to order" — below.
  *
  * Keys are slugs in the generated catalogue. A key that matches no plan is
  * caught by `npm run lint` (see `scripts/check-data.mjs`), so a model code
@@ -161,27 +169,28 @@ export type CatalogueEntry = Omit<Listing, "status">;
  * the lot.
  */
 const lotState: Record<string, Partial<Listing>> = {
-  /* The four homes open to walk through on the lot. */
-  "netr-g-3157": { status: "available", onLot: true, featured: true },
-  /* CHECK THIS ONE. NERTO named it as "3465", and Pine Grove publishes two
-     plans by that number: NETR G-3465 (the northern-states specification,
-     1,493 sq ft) and G-3465 (the standard one, 1,568 sq ft). The NETR is the
-     Maine build and matches the other NETR home on the lot, so it is the one
-     flagged here — but it is a claim about which house a visitor will find in
-     the yard, so confirm it and move this line to "g-3465" if it is wrong. */
-  "netr-g-3465": { status: "available", onLot: true, featured: true },
-  "zk-1100": { status: "available", onLot: true, featured: true },
-  "g-3002": { status: "available", onLot: true, featured: true },
+  /* EMPTY, on purpose.
+     The four entries that used to be here named four homes standing in a
+     different dealership's yard, in a different state. `onLot` is the
+     strongest thing a card can say — it means a visitor can drive over today
+     and walk through this exact house — so carrying those over would have
+     been the worst kind of inherited claim.
+     Maxey's own site currently lists no inventory at all. When homes are
+     standing on Melba Ln, add one entry per home, keyed by its slug in the
+     generated catalogue, setting status to available with onLot and featured
+     both true — and keep the count in step with `homesOpenOnLot` in
+     `lib/company.ts`. A key that matches no plan in the catalogue fails
+     `npm run lint`, which is the point of writing them here. */
 };
 
 /**
  * The catalogue as the site sees it: the manufacturers' published facts, with
- * NERTO's lot state laid over the top.
+ * the dealership's lot state laid over the top.
  */
 export const listings: Listing[] = catalogue.map((entry) => ({
   ...entry,
-  /* A plan NERTO can order but does not stock. The four on the lot override
-     this from `lotState`. */
+  /* A plan the dealership can order but does not stock. Anything standing on
+     the lot overrides this from `lotState`. */
   status: "to-order" as ListingStatus,
   ...lotState[entry.slug],
 }));
@@ -221,10 +230,9 @@ export function relatedListings(listing: Listing, count = 3): Listing[] {
 
 export const statusLabels: Record<ListingStatus, string> = {
   available: "Available",
-  /* The catalogue's default. NERTO stocks four homes and orders the rest, so
-     "available to order" is the honest word for almost every plan on the
-     site — it is a home the dealership can build for you, not one standing
-     on the lot today. */
+  /* The catalogue's default, and with `lotState` empty it is currently true
+     of every plan on the site: a home the dealership can build for you, not
+     one standing on the lot today. */
   "to-order": "Available to order",
   pending: "Sale pending",
   sold: "Sold",

@@ -5,6 +5,7 @@ import { SaveButton } from "./saved-homes";
 import { Badge, cx, Icon } from "./ui";
 import { money, num, priceText } from "@/lib/format";
 import { getCommunity } from "@/lib/communities";
+import { pages } from "@/lib/page-config";
 import { photoFor } from "@/lib/photos";
 import { site } from "@/lib/site";
 import {
@@ -149,7 +150,8 @@ export function ListingCard({
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between p-4">
           <StatusBadge listing={listing} />
           <div className="pointer-events-auto">
-            <SaveButton slug={listing.slug} name={listing.name} />
+            {/* No saved-homes page, no save button — see `pages.saved`. */}
+            {pages.saved && <SaveButton slug={listing.slug} name={listing.name} />}
           </div>
         </div>
 
