@@ -461,13 +461,20 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
     },
     {
       key: "listings",
-      /* Two halves, and they are gated separately on purpose. The size
-         buckets need a catalogue and nothing else; the four cards under them
-         need somebody to have *chosen* four, which is `featured` in
-         `lotState`. A lot that has not picked its four yet still wants the
-         buckets — that is how a stranger enters the catalogue — so the band
-         shows the way in and drops the shelf, rather than vanishing whole. */
-      show: sections.listings && (featured.length > 0 || (!listingSeries && listings.length > 0)),
+      /* Three parts, gated separately on purpose: the size buttons, the count,
+         and the shelf of four cards.
+
+         The buttons are a standing claim about what this dealership sells and
+         do not need a catalogue behind them — see `sizeCategoryEnabled` in
+         `lib/homes.ts`. The cards need somebody to have *chosen* four, which
+         is `featured` in `lotState`. So an empty catalogue still gets the
+         band: the buttons, and a line saying plainly how many homes are in it.
+         That is what maxeycustomhomes.com does, and it beats a page that
+         simply omits any mention of homes.
+
+         A campaign page (`listingSeries`) is the exception — it exists to show
+         one series, so with nothing in that series there is no band. */
+      show: sections.listings && (listingSeries ? featured.length > 0 : true),
       render: () => (
         <section id="listings" className="relative overflow-hidden bg-surface">
           <Container className="py-8 md:py-12">
@@ -491,7 +498,26 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               </div>
             )}
 
-            {featured.length > 0 ? (
+            {listings.length === 0 ? (
+              /* Nothing in the catalogue. Say so, in the same place the count
+                 would otherwise go, and do not offer a button through to an
+                 empty page. The phone number is the useful thing here: a home
+                 that is not on the site can still be ordered. */
+              <div className="text-center">
+                <p className="text-sm text-muted">
+                  <span className="font-semibold text-ink">0</span> homes available
+                </p>
+                <p className="mx-auto mt-3 max-w-xl text-muted">
+                  We are still loading our current line-up onto the site. Ring us
+                  on{" "}
+                  <a href={site.phoneHref} className="font-semibold text-ember hover:underline">
+                    {site.phone}
+                  </a>{" "}
+                  and tell us the size you are after — we will tell you what we
+                  can get and what it will take to put it on your ground.
+                </p>
+              </div>
+            ) : featured.length > 0 ? (
               <>
                 <div className="mb-6 flex items-center justify-between gap-4">
                   {/* Counts the cards actually below it, not the filter behind
@@ -518,9 +544,10 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
                 </div>
               </>
             ) : (
-              /* Nothing flagged `featured` in `lotState`, so there is no
-                 honest four to put on a shelf. The buckets above are still
-                 the way in, and this is the door at the end of them. */
+              /* Homes in the catalogue, but nothing flagged `featured` in
+                 `lotState`, so there is no honest four to put on a shelf. The
+                 buttons above are still the way in; this is the door at the
+                 end of them. */
               <div className="flex justify-center">
                 <ButtonLink href="/listings" className="!py-3">
                   See all {listings.length} homes

@@ -11,11 +11,17 @@ import {
  * of big obvious buttons. This is the primary way into the catalogue on both
  * the landing page and `/listings`.
  *
- * A bucket with nothing in it is not rendered. A lot with no triple-wides
- * shows three buttons, not four with one that leads to an empty page — the
- * same rule the rest of the template follows about not advertising what is
- * not there. The footprint under each label is measured from the homes
- * actually in that bucket, so it cannot disagree with the catalogue.
+ * Which buttons exist is decided by `sizeCategoryEnabled` in `lib/homes.ts`,
+ * not by the counts — a lot that does not sell triple-wides turns that bucket
+ * off and shows three buttons rather than four, and a lot that does sell them
+ * but has none in stock this week still shows the button. The two are
+ * different statements and the counts cannot tell them apart.
+ *
+ * The footprint and count under each label are measured from the homes
+ * actually in that bucket, so they cannot disagree with the catalogue. A
+ * bucket with nothing in it has neither, and shows just the glyph and the
+ * label — which is what the caption would otherwise degrade into, and it is
+ * also exactly how maxeycustomhomes.com draws the same row.
  *
  * Two modes. Given `active`/`onSelect` it behaves as a filter control; given
  * neither it renders links to `/listings?size=<id>`, which is what the
@@ -33,7 +39,9 @@ export function SizeCategories({
   onSelect?: (id: SizeCategory | null) => void;
   className?: string;
 }) {
-  const facets = sizeCategoryFacets(from).filter((f) => f.count > 0);
+  const facets = sizeCategoryFacets(from);
+  /* One lone button is a filter with nothing to filter against, and no
+     buttons is not a row. Either way there is nothing worth drawing. */
   if (facets.length < 2) return null;
 
   const shell =
@@ -68,9 +76,14 @@ export function SizeCategories({
             >
               {facet.label}
             </span>
-            <span className="mt-0.5 text-xs text-muted">
-              {facet.range} · {facet.count} home{facet.count === 1 ? "" : "s"}
-            </span>
+            {/* Only once there is something to measure. At zero this would
+                read " · 0 homes" against a missing range, which is worse than
+                the label standing on its own. */}
+            {facet.count > 0 && (
+              <span className="mt-0.5 text-xs text-muted">
+                {facet.range} · {facet.count} home{facet.count === 1 ? "" : "s"}
+              </span>
+            )}
           </>
         );
 

@@ -67,15 +67,28 @@ export default function HomesPage() {
             : `${site.address.city}, ${site.address.region}`
         }
         title={
-          <>
-            Every home we sell,
-            <br />
-            with nothing hidden.
-          </>
+          listings.length ? (
+            <>
+              Every home we sell,
+              <br />
+              with nothing hidden.
+            </>
+          ) : (
+            /* "Every home we sell" over an empty page is a joke at our own
+               expense. At zero the heading says what the page is instead. */
+            <>
+              The homes,
+              <br />
+              and how to get one.
+            </>
+          )
         }
         lede={
+          /* Short on purpose: the card below this is the "nothing listed yet"
+             card, and it already makes the ask in full. Two paragraphs saying
+             the same thing reads as a site apologising twice. */
           !listings.length
-            ? `We are not listing inventory online yet. Tell us the size, the budget and where the home is going, and we will tell you what we can put on it — call ${site.phone} or send the form on the contact page.`
+            ? `We quote on the home, the ground and the site work together, so start with a call: ${site.phone}.`
             : hasPrices
               ? `Full specs, honest status. From ${money(priceBounds.min)} to ${money(priceBounds.max)}, and you can walk most of them this week.`
               : `Full specs and model codes, browsed by size. Pricing depends on options, delivery distance and site work, so we quote it rather than print it — call ${site.phone} and we will do it while you are on the phone.`
