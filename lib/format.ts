@@ -67,3 +67,16 @@ export function slugToTitle(slug: string): string {
     .map((w) => w[0].toUpperCase() + w.slice(1))
     .join(" ");
 }
+
+/**
+ * Square footage as a label, or `undefined` when it is not published.
+ *
+ * `Listing.sqft` is a required number, so an imported home whose feed carries
+ * no footprint arrives as `0`. Zero is not a measurement — it means nobody
+ * said — and printing "0 sq ft" on a card is the same class of error as
+ * printing a price of nothing. Callers that render footprint go through here
+ * and drop the line when it comes back undefined.
+ */
+export function sqftText(sqft: number): string | undefined {
+  return sqft > 0 ? `${num(sqft)} sq ft` : undefined;
+}

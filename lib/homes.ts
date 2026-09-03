@@ -75,6 +75,22 @@ export type Listing = {
   /** Optional pre-discount price; renders as a strikethrough. */
   wasPrice?: number;
   sections?: Sections;
+  /**
+   * The size bucket this home is filed under, where the dealership has
+   * already decided it.
+   *
+   * `sizeCategoryOf` normally derives the bucket from `sections` and square
+   * footage, which is right for a hand-authored entry. An imported feed can
+   * carry the dealership's own classification, and where it does that wins:
+   * Maxey's feed has a 737 sq ft home it calls a Single Wide, and one with no
+   * square footage at all, both of which the footprint rule would file as
+   * tiny homes. Filing a home under a width its seller does not claim is the
+   * same class of error as filing a double-section home under "Single wide".
+   *
+   * Set this only from a source that actually states it. Leave it off and the
+   * derivation runs, which is the right default.
+   */
+  sizeCategory?: SizeCategory;
   /** Nominal transport dimensions in feet, e.g. 28 × 60. */
   widthFt?: number;
   lengthFt?: number;
@@ -169,18 +185,46 @@ export type CatalogueEntry = Omit<Listing, "status">;
  * the lot.
  */
 const lotState: Record<string, Partial<Listing>> = {
-  /* EMPTY, on purpose.
-     The four entries that used to be here named four homes standing in a
-     different dealership's yard, in a different state. `onLot` is the
-     strongest thing a card can say — it means a visitor can drive over today
-     and walk through this exact house — so carrying those over would have
-     been the worst kind of inherited claim.
-     Maxey's own site currently lists no inventory at all. When homes are
-     standing on Melba Ln, add one entry per home, keyed by its slug in the
-     generated catalogue, setting status to available with onLot and featured
-     both true — and keep the count in step with `homesOpenOnLot` in
-     `lib/company.ts`. A key that matches no plan in the catalogue fails
-     `npm run lint`, which is the point of writing them here. */
+  /* Generated alongside the catalogue by `node scripts/import-maxey-listings.mjs`,
+     which prints this block, but kept here by hand because it is the half a
+     human owns — re-running the import never overwrites it.
+
+     Mapped from the status word in Maxey's own feed:
+
+       Lot Model  → on the lot, open to walk through. The strongest thing a
+                    card can say, and the only status here that promises a
+                    visitor something they can drive to today.
+       Available  → in stock, but nothing says it is standing in the yard.
+       Arriving   → coming soon.
+       On Sale    → available; the price carries the offer.
+       By Order   → the catalogue default, so it is absent from this list.
+
+     `featured` is the feed's own `isPromoted` flag plus every lot model —
+     a home somebody can walk through is the one most worth surfacing. */
+
+  /* Promoted by the dealership. */
+  "origin-series-maple": { status: "available", featured: true },
+  "mini-series-buttercup": { status: "available", featured: true },
+
+  /* Standing on Melba Ln. */
+  "prime-3276h42p03": { status: "available", onLot: true, featured: true },
+  "prime-3256h32p03": { status: "available", onLot: true, featured: true },
+  "prime-1676h32p01-042": { status: "available", onLot: true, featured: true },
+  "the-alpha": { status: "available", onLot: true, featured: true },
+  "the-red-river": { status: "available", onLot: true, featured: true },
+
+  /* In stock. */
+  "origin-series-aspen": { status: "available" },
+  "mini-series-tulip": { status: "available" },
+  "prime-series-3276h42p03": { status: "available" },
+  "prime-series-3272h52p03": { status: "available" },
+  "prime-series-2876h53p01": { status: "available" },
+  "prime-series-3276h53p03": { status: "available" },
+  "prime-series-2856h32p01": { status: "available" },
+  "dutch-elite-1440": { status: "available" },
+
+  /* On its way. */
+  "origin-series-dogwood": { status: "coming-soon" },
 };
 
 /**
@@ -349,7 +393,11 @@ const SQFT_FALLBACK: [number, SizeCategory][] = [
 ];
 
 export function sizeCategoryOf(listing: Listing): SizeCategory {
-  /* Before everything else: a modular is a build standard, not a width. */
+  /* Before everything else: the seller's own classification, where it has
+     one. See the note on `sizeCategory` — a derived bucket that contradicts
+     the dealership is a claim about width that nobody made. */
+  if (listing.sizeCategory) return listing.sizeCategory;
+  /* Then: a modular is a build standard, not a width. */
   if (listing.construction === "modular") return "modular";
   if (listing.sqft < TINY_MAX_SQFT) return "tiny";
   if (listing.sections) return listing.sections;
@@ -458,7 +506,9 @@ export type SizeCategoryFacet = {
 export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFacet[] {
   return enabledSizeCategories.map((id) => {
     const inBucket = from.filter((l) => sizeCategoryOf(l) === id);
-    const sizes = inBucket.map((l) => l.sqft);
+    /* Only homes whose footprint is actually published. A zero means nobody
+       said, and letting one into the range prints "0–1,813 sq ft". */
+    const sizes = inBucket.map((l) => l.sqft).filter((n) => n > 0);
     const low = Math.min(...sizes);
     const high = Math.max(...sizes);
     return {
@@ -466,7 +516,7 @@ export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFace
       label: sizeCategoryLabels[id],
       glyph: sizeCategoryGlyphs[id],
       count: inBucket.length,
-      range: inBucket.length
+      range: sizes.length
         ? low === high
           ? `${low.toLocaleString()} sq ft`
           : `${low.toLocaleString()}–${high.toLocaleString()} sq ft`

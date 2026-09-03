@@ -3,7 +3,7 @@ import { ViewTransition } from "react";
 import { Scene } from "./artwork/scene";
 import { SaveButton } from "./saved-homes";
 import { Badge, cx, Icon } from "./ui";
-import { money, num, priceText } from "@/lib/format";
+import { money, priceText, sqftText } from "@/lib/format";
 import { getCommunity } from "@/lib/communities";
 import { pages } from "@/lib/page-config";
 import { photoFor } from "@/lib/photos";
@@ -90,7 +90,9 @@ export function SpecStrip({
       </li>
       <li className="flex items-center gap-1.5">
         <Icon.Ruler className="size-4 text-muted" />
-        <span className="font-mono text-[0.8rem] text-ink-soft">{num(listing.sqft)} sq ft</span>
+        {sqftText(listing.sqft) && (
+          <span className="font-mono text-[0.8rem] text-ink-soft">{sqftText(listing.sqft)}</span>
+        )}
       </li>
       {/* The manufacturer's own box dimensions where it published them, which
           carry inches a nominal width rounds away — a 26'8" home is a 27-wide,
@@ -164,7 +166,7 @@ export function ListingCard({
                 listing.style && styleLabels[listing.style],
               ]
                 .filter(Boolean)
-                .join(" · ") || `${num(listing.sqft)} sq ft`}
+                .join(" · ") || sqftText(listing.sqft) || "Specs on request"}
             </p>
           </>
         )}
