@@ -219,6 +219,39 @@
   }
 }
 
+/* A scroll area whose scroll bar is always there and easy to see: a wide
+   track in the surface colour and a thumb in the brand accent. /listings
+   uses it for the filter rail and the homes, which scroll on their own. A
+   utility rather than a component class so `lg:scroll-panel` works. */
+@utility scroll-panel {
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  /* Chrome and Firefox draw the bar from these, and they override the
+     quiet one `html` sets below. The ::-webkit-scrollbar rules are for
+     Safari, which has no `scrollbar-color`. */
+  scrollbar-width: auto;
+  scrollbar-color: var(--ember) var(--surface-2);
+
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--surface-2);
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--ember);
+    border-radius: 999px;
+    border: 3px solid var(--surface-2);
+    min-height: 3rem;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--ink);
+  }
+}
+
 @layer components {
   /* Small-caps mono label used to index every section: `01 — THE MYTH` */
   .eyebrow {

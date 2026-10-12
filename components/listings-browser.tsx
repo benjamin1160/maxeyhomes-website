@@ -563,8 +563,13 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:gap-14">
+      {/* On a desktop the filter rail and the homes each scroll on their own,
+          with a scroll bar you can see (`.scroll-panel` in globals.css), so
+          neither runs past the bottom of the screen out of reach. */}
       <aside className="hidden lg:block">
-        <div className="sticky top-28">{panel}</div>
+        <div className="scroll-panel sticky top-[calc(var(--chrome-h)+1.5rem)] max-h-[calc(100dvh-var(--chrome-h)-3rem)] pr-4">
+          {panel}
+        </div>
       </aside>
 
       {drawerOpen && (
@@ -575,7 +580,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
             onClick={() => setDrawerOpen(false)}
             aria-label="Close filters"
           />
-          <div className="relative ml-auto flex h-full w-[min(22rem,88vw)] flex-col overflow-y-auto bg-paper p-6">
+          <div className="scroll-panel relative ml-auto flex h-full w-[min(22rem,88vw)] flex-col bg-paper p-6">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-2xl text-ink">Filters</h2>
               <button
@@ -669,36 +674,38 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
           </div>
         </div>
 
-        {results.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-line-strong px-8 py-24 text-center">
-            <p className="font-display text-3xl tracking-tight text-ink">
-              Nothing matches that yet.
-            </p>
-            <p className="mx-auto mt-4 max-w-md text-muted">
-              We build to order too — if the home you want isn&apos;t on the lot it can be in
-              the plant in a fortnight. Loosen a filter, or tell us what you&apos;re after.
-            </p>
-            <button
-              type="button"
-              onClick={() => setFilters(EMPTY)}
-              className={cx(buttonStyles.primary, "mt-8")}
-            >
-              Reset filters
-            </button>
-          </div>
-        ) : view === "grid" ? (
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {results.map((l) => (
-              <ListingCard key={l.slug} listing={l} className="h-full" />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {results.map((l) => (
-              <ListingRow key={l.slug} listing={l} />
-            ))}
-          </div>
-        )}
+        <div className="lg:scroll-panel lg:h-[calc(100dvh-var(--chrome-h)-9rem)] lg:pr-4">
+          {results.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-line-strong px-8 py-24 text-center">
+              <p className="font-display text-3xl tracking-tight text-ink">
+                Nothing matches that yet.
+              </p>
+              <p className="mx-auto mt-4 max-w-md text-muted">
+                We build to order too — if the home you want isn&apos;t on the lot it can be in
+                the plant in a fortnight. Loosen a filter, or tell us what you&apos;re after.
+              </p>
+              <button
+                type="button"
+                onClick={() => setFilters(EMPTY)}
+                className={cx(buttonStyles.primary, "mt-8")}
+              >
+                Reset filters
+              </button>
+            </div>
+          ) : view === "grid" ? (
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {results.map((l) => (
+                <ListingCard key={l.slug} listing={l} className="h-full" />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {results.map((l) => (
+                <ListingRow key={l.slug} listing={l} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
