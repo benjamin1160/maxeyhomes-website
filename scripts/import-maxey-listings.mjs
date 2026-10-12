@@ -69,6 +69,24 @@ const FEED = "https://www.maxeycustomhomes.com/api/listings?includeSold=1";
 const ROOT = new URL("..", import.meta.url).pathname;
 const DRY = process.argv.includes("--dry");
 
+/**
+ * The Marathon Homes plans Maxey carries — these six and no others.
+ *
+ * The feed lists Marathon's whole line, so every feed row whose model is
+ * built by Marathon is skipped, and these are read from Marathon's own plan
+ * pages instead: name, beds, baths, square footage, box size, the floor-plan
+ * drawing, the first gallery photograph and the Matterport tour. Add or
+ * remove a URL here to change the line-up.
+ */
+const MARATHON = [
+  "https://marathonhomes.com/floorplans/the-lanny/",
+  "https://marathonhomes.com/floorplans/the-chapman/",
+  "https://marathonhomes.com/floorplans/the-daniel/",
+  "https://marathonhomes.com/floorplans/the-jackson/",
+  "https://marathonhomes.com/floorplans/the-darrell/",
+  "https://marathonhomes.com/floorplans/the-terra/",
+];
+
 /* ------------------------------------------------------------------ *
  * Image classification
  * ------------------------------------------------------------------ */
@@ -150,9 +168,9 @@ const slugify = (s) =>
  *
  * Three shapes in the feed. A `Series / MODEL` title splits on the slash. A
  * title starting "Prime " is the Prime line written without the slash, and is
- * folded in rather than left as ten one-off series. Everything else — the
- * thirty-seven homes named after Oklahoma towns — gets NO series: the feed
- * does not name that line, and naming it here would be inventing one.
+ * folded in rather than left as ten one-off series. Everything else gets NO
+ * series: the feed does not name that line, and naming it here would be
+ * inventing one.
  */
 function splitTitle(title) {
   const t = title.trim();
@@ -183,6 +201,12 @@ const downloads = [];
 const stats = { photo: 0, plan: 0, junk: 0, withPhoto: 0, withPlan: 0, withNeither: 0 };
 
 for (const row of feed) {
+  /* Marathon is imported from Marathon's own pages below, and only the plans
+     in MARATHON — not the whole line the feed carries. */
+  if (row.homeModel?.manufacturer === "Marathon Homes") {
+    stats.marathonSkipped = (stats.marathonSkipped ?? 0) + 1;
+    continue;
+  }
   const { series, model } = splitTitle(row.title);
   const type = TYPE[row.homeType];
   if (!type) {
@@ -275,8 +299,86 @@ for (const row of feed) {
   entries.push(entry);
 }
 
+/* ---- Marathon ---------------------------------------------------- */
+
+const decode = (s) =>
+  s
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&#8217;|&rsquo;/g, "’")
+    .replace(/&#8221;|&quot;/g, '"')
+    .replace(/&#8242;|&#039;|&#39;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+
+for (const url of MARATHON) {
+  const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
+  if (!r.ok) throw new Error(`${url}: ${r.status}`);
+  const html = await r.text();
+  const text = decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " "));
+
+  const name = decode(html.match(/<title>([^<|]+)/)?.[1] ?? "");
+  const box = text.match(/(\d+'\s*(?:\d+")?\s*x\s*\d+'\s*(?:\d+")?)\s*Park Model\/Tiny Home(?:\s*-\s*(\d+)\s*SF)?/i);
+  const bb = text.match(/(\d+)\s*Bed\s*x\s*(\d+(?:\.\d)?)\s*Bath/i);
+  if (!name || !box || !bb) throw new Error(`${url}: could not read the spec line`);
+
+  /* Square footage is on every page but the Lanny's. Maxey's own feed lists
+     the Lanny, so its figure is the fallback; a plan in neither fails loudly
+     rather than printing a guess. */
+  const fromFeed = feed.find((row) => row.title.trim().toLowerCase() === name.toLowerCase());
+  const sqft = Number(box[2]) || fromFeed?.sqft;
+  if (!sqft) throw new Error(`${url}: no square footage on the page or in Maxey's feed`);
+
+  /* Images in page order. The lead image is the floor-plan drawing; the
+     gallery after it is photographs, exterior first. */
+  const images = [];
+  for (const [u] of html.matchAll(/https:\/\/marathonhomes\.com\/wp-content\/uploads\/[^"' )]+?\.(?:jpe?g|png|webp)/gi)) {
+    if (/-\d+x\d+\./.test(u) || /Floorplan-CTA|coming-soon/i.test(u) || images.includes(u)) continue;
+    images.push(u);
+  }
+  const stem = name.replace(/\s+/g, "-");
+  const plan = images.find((u) => u.split("/").pop().startsWith(stem));
+  const photo = images.find((u) => u !== plan);
+
+  const tour = html.match(/<iframe[^>]+src="(https:\/\/my\.matterport\.com\/[^"]+)"/)?.[1];
+  const slug = slugify(name);
+  seen.set(slug, 1);
+  const dims = box[1].trim().replace(/\s*x\s*/i, " × ").replace(/'\s+(\d)/g, "'$1");
+  const entry = {
+    slug,
+    name,
+    construction: "manufactured",
+    builder: "Marathon Homes",
+    beds: Number(bb[1]),
+    baths: Number(bb[2]),
+    sqft,
+    sections: "single",
+    sizeCategory: "tiny",
+    dimensions: dims,
+    tagline: `${dims} park model / tiny home, built by Marathon Homes.`,
+    ...(tour ? { tourUrl: tour } : {}),
+    scenes: [],
+    sourceUrl: url,
+  };
+  if (plan) {
+    entry.planImage = `/photos/plans/${slug}.webp`;
+    downloads.push([plan, entry.planImage]);
+    stats.withPlan++;
+  }
+  if (photo) {
+    entry.scenes.push({ kind: "exterior", caption: `${name} — exterior` });
+    const dest = `/photos/homes/${slug}-exterior.webp`;
+    photoKeys[`${slug}/exterior`] = dest;
+    downloads.push([photo, dest]);
+    stats.withPhoto++;
+  }
+  entries.push(entry);
+  console.log(`  marathon: ${name}, ${entry.beds} bd / ${entry.baths} ba, ${sqft} sq ft, ${dims}`);
+}
+console.log(`marathon: ${stats.marathonSkipped ?? 0} feed rows skipped, ${MARATHON.length} plans read`);
+
 console.log(
-  `pictures: ${stats.photo} photos, ${stats.plan} plans, ${stats.junk} junk dropped\n` +
+  `pictures:${stats.photo} photos, ${stats.plan} plans, ${stats.junk} junk dropped\n` +
     `homes: ${stats.withPhoto} with a photograph, ${stats.withPlan} with a plan, ` +
     `${stats.withNeither} with neither\n` +
     `lotState: ${lot.length} entries`,
@@ -373,6 +475,9 @@ await writeFile(
  * inventory feed, which its site fetches client-side:
  *
  *     ${FEED}
+ *
+ * except Marathon Homes, which is read from Marathon's own plan pages and
+ * limited to the ${MARATHON.length} plans listed in \`MARATHON\` in the import script.
  *
  * ${entries.length} homes: ${Object.entries(counts)
     .map(([k, v]) => `${v} ${k}`)
