@@ -154,16 +154,15 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">
               {/* "On our lot" is the strongest thing this page can say, so it
-                  leads. Everything else in the catalogue is a plan the
-                  dealership orders in, which the status badge says
-                  plainly. */}
+                  leads. A plan built to order is the default and carries no
+                  badge, as on the cards. */}
               {listing.onLot ? (
                 <Badge tone="ember">On our lot — walk through it</Badge>
-              ) : (
+              ) : listing.status !== "to-order" ? (
                 <Badge tone={listing.status === "available" ? "ember" : "neutral"}>
                   {statusLabels[listing.status]}
                 </Badge>
-              )}
+              ) : null}
               {listing.series && <Badge>{seriesLabel(listing.series)}</Badge>}
               {listing.model && <Badge tone="muted">{listing.model}</Badge>}
               {listing.daysListed !== undefined && listing.daysListed <= 10 && (

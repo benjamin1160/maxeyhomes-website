@@ -185,45 +185,26 @@ export type CatalogueEntry = Omit<Listing, "status">;
  * the lot.
  */
 const lotState: Record<string, Partial<Listing>> = {
-  /* Generated alongside the catalogue by `node scripts/import-maxey-listings.mjs`,
-     which prints this block, but kept here by hand because it is the half a
-     human owns — re-running the import never overwrites it.
+  /* Kept by hand: the dealership's own list of what is on Melba Ln and what
+     is on its way. Everything not named here is a plan Maxey orders in and
+     carries no badge at all — `to-order` is the silent default. */
 
-     Mapped from the status word in Maxey's own feed:
-
-       Lot Model  → on the lot, open to walk through. The strongest thing a
-                    card can say, and the only status here that promises a
-                    visitor something they can drive to today.
-       Available  → in stock, but nothing says it is standing in the yard.
-       Arriving   → coming soon.
-       On Sale    → available; the price carries the offer.
-       By Order   → the catalogue default, so it is absent from this list.
-
-     `featured` is the feed's own `isPromoted` flag plus every lot model —
-     a home somebody can walk through is the one most worth surfacing. */
-
-  /* Promoted by the dealership. */
-  "origin-series-maple": { status: "available", featured: true },
-  "mini-series-buttercup": { status: "available", featured: true },
-
-  /* Standing on Melba Ln. */
+  /* On the lot — open to walk through. Featured, so they lead the homepage. */
+  "mini-series-tulip": { status: "available", onLot: true, featured: true },
+  "mini-series-buttercup": { status: "available", onLot: true, featured: true },
+  "prime-series-2856h32p01": { status: "available", onLot: true, featured: true },
+  "prime-series-2876h53p01": { status: "available", onLot: true, featured: true },
+  /* CHPR3276H42P03. The catalogue holds this model twice — this listing and
+     "Prime Series / 3276H42P03" — and this is the one Maxey's own site marks
+     as its lot model. */
   "prime-3276h42p03": { status: "available", onLot: true, featured: true },
-  "prime-3256h32p03": { status: "available", onLot: true, featured: true },
-  "prime-1676h32p01-042": { status: "available", onLot: true, featured: true },
-  "the-swisher": { status: "available", onLot: true, featured: true },
   "the-red-river": { status: "available", onLot: true, featured: true },
-
-  /* In stock. */
-  "origin-series-aspen": { status: "available" },
-  "mini-series-tulip": { status: "available" },
-  "prime-series-3276h42p03": { status: "available" },
-  "prime-series-3272h52p03": { status: "available" },
-  "prime-series-2876h53p01": { status: "available" },
-  "prime-series-3276h53p03": { status: "available" },
-  "prime-series-2856h32p01": { status: "available" },
-  "dutch-elite-1440": { status: "available" },
+  "the-swisher": { status: "available", onLot: true, featured: true },
+  "origin-series-aspen": { status: "available", onLot: true, featured: true },
 
   /* On its way. */
+  "origin-series-sycamore": { status: "coming-soon" },
+  "origin-series-oak": { status: "coming-soon" },
   "origin-series-dogwood": { status: "coming-soon" },
 };
 
@@ -274,9 +255,9 @@ export function relatedListings(listing: Listing, count = 3): Listing[] {
 
 export const statusLabels: Record<ListingStatus, string> = {
   available: "Available",
-  /* The catalogue's default, and with `lotState` empty it is currently true
-     of every plan on the site: a home the dealership can build for you, not
-     one standing on the lot today. */
+  /* The catalogue's default: a home the dealership can build for you, not
+     one standing on the lot today. Shown in the spec table, never as a
+     badge. */
   "to-order": "Available to order",
   pending: "Sale pending",
   sold: "Sold",
