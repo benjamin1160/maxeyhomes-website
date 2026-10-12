@@ -104,6 +104,9 @@ const MARATHON = [
     "amarillo",
     "abilene",
   ].map((p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "single" })),
+  ...["archer", "stonewall", "grayson", "maverick", "liberty", "swisher", "red-river", "sterling"].map(
+    (p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "double" }),
+  ),
 ].map((m) => (m.url.endsWith("/the-midland/") ? { ...m, exterior: "Sw-dormer" } : m));
 
 /* ------------------------------------------------------------------ *
@@ -337,7 +340,7 @@ for (const { url, size, exterior } of MARATHON) {
   const text = decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " "));
 
   const name = decode(html.match(/<title>([^<|]+)/)?.[1] ?? "");
-  const box = text.match(/(\d+'\s*(?:\d+")?\s*x\s*\d+'\s*(?:\d+")?)\s*(?:Park Model\/Tiny Home|Singlewide)(?:\s*-\s*([\d,]+)\s*SF)?/i);
+  const box = text.match(/(\d+'\s*(?:\d+")?\s*x\s*\d+'\s*(?:\d+")?)\s*(?:Park Model\/Tiny Home|Singlewide|Doublewide)(?:\s*-\s*([\d,]+)\s*SF)?/i);
   const bb = text.match(/(\d+)\s*Bed\s*x\s*(\d+(?:\.\d)?)\s*Bath/i);
   if (!name || !box || !bb) throw new Error(`${url}: could not read the spec line`);
 
@@ -371,10 +374,10 @@ for (const { url, size, exterior } of MARATHON) {
     beds: Number(bb[1]),
     baths: Number(bb[2]),
     sqft,
-    sections: "single",
+    sections: size === "double" ? "double" : "single",
     sizeCategory: size,
     dimensions: dims,
-    tagline: `${dims} ${size === "tiny" ? "park model / tiny home" : "single-section home"}, built by Marathon Homes.`,
+    tagline: `${dims} ${{ tiny: "park model / tiny home", single: "single-section home", double: "double-section home" }[size]}, built by Marathon Homes.`,
     ...(tour ? { tourUrl: tour } : {}),
     scenes: [],
     sourceUrl: url,

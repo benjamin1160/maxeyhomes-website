@@ -210,6 +210,8 @@ const lotState: Record<string, Partial<Listing>> = {
   "prime-3276h42p03": { status: "available", onLot: true, featured: true },
   "prime-3256h32p03": { status: "available", onLot: true, featured: true },
   "prime-1676h32p01-042": { status: "available", onLot: true, featured: true },
+  "the-swisher": { status: "available", onLot: true, featured: true },
+  "the-red-river": { status: "available", onLot: true, featured: true },
 
   /* In stock. */
   "origin-series-aspen": { status: "available" },
