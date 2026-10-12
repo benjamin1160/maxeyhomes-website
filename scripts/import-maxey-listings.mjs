@@ -70,22 +70,41 @@ const ROOT = new URL("..", import.meta.url).pathname;
 const DRY = process.argv.includes("--dry");
 
 /**
- * The Marathon Homes plans Maxey carries — these six and no others.
+ * The Marathon Homes plans Maxey carries — these and no others.
  *
  * The feed lists Marathon's whole line, so every feed row whose model is
  * built by Marathon is skipped, and these are read from Marathon's own plan
  * pages instead: name, beds, baths, square footage, box size, the floor-plan
  * drawing, the first gallery photograph and the Matterport tour. Add or
- * remove a URL here to change the line-up.
+ * remove an entry here to change the line-up.
+ *
+ * `size` is where Maxey files the plan, and is carried over rather than
+ * derived from the footprint: the Alamo is 472 sq ft and still a single wide.
+ * `exterior` names the gallery image to use where the first one is not an
+ * exterior — the Midland's gallery opens on its kitchen.
  */
 const MARATHON = [
-  "https://marathonhomes.com/floorplans/the-lanny/",
-  "https://marathonhomes.com/floorplans/the-chapman/",
-  "https://marathonhomes.com/floorplans/the-daniel/",
-  "https://marathonhomes.com/floorplans/the-jackson/",
-  "https://marathonhomes.com/floorplans/the-darrell/",
-  "https://marathonhomes.com/floorplans/the-terra/",
-];
+  ...["lanny", "chapman", "daniel", "jackson", "darrell", "terra"].map((p) => ({
+    url: `https://marathonhomes.com/floorplans/the-${p}/`,
+    size: "tiny",
+  })),
+  ...[
+    "temple",
+    "alamo",
+    "mesquite",
+    "pearland",
+    "midland",
+    "katy",
+    "ranger",
+    "grapevine",
+    "conroe",
+    "cisco",
+    "breckenridge",
+    "beaumont",
+    "amarillo",
+    "abilene",
+  ].map((p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "single" })),
+].map((m) => (m.url.endsWith("/the-midland/") ? { ...m, exterior: "Sw-dormer" } : m));
 
 /* ------------------------------------------------------------------ *
  * Image classification
@@ -311,14 +330,14 @@ const decode = (s) =>
     .replace(/\s+/g, " ")
     .trim();
 
-for (const url of MARATHON) {
+for (const { url, size, exterior } of MARATHON) {
   const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
   if (!r.ok) throw new Error(`${url}: ${r.status}`);
   const html = await r.text();
   const text = decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " "));
 
   const name = decode(html.match(/<title>([^<|]+)/)?.[1] ?? "");
-  const box = text.match(/(\d+'\s*(?:\d+")?\s*x\s*\d+'\s*(?:\d+")?)\s*Park Model\/Tiny Home(?:\s*-\s*(\d+)\s*SF)?/i);
+  const box = text.match(/(\d+'\s*(?:\d+")?\s*x\s*\d+'\s*(?:\d+")?)\s*(?:Park Model\/Tiny Home|Singlewide)(?:\s*-\s*([\d,]+)\s*SF)?/i);
   const bb = text.match(/(\d+)\s*Bed\s*x\s*(\d+(?:\.\d)?)\s*Bath/i);
   if (!name || !box || !bb) throw new Error(`${url}: could not read the spec line`);
 
@@ -326,19 +345,19 @@ for (const url of MARATHON) {
      the Lanny, so its figure is the fallback; a plan in neither fails loudly
      rather than printing a guess. */
   const fromFeed = feed.find((row) => row.title.trim().toLowerCase() === name.toLowerCase());
-  const sqft = Number(box[2]) || fromFeed?.sqft;
+  const sqft = Number(box[2]?.replace(/,/g, "")) || fromFeed?.sqft;
   if (!sqft) throw new Error(`${url}: no square footage on the page or in Maxey's feed`);
 
   /* Images in page order. The lead image is the floor-plan drawing; the
-     gallery after it is photographs, exterior first. */
+     gallery after it is photographs, almost always exterior first. */
   const images = [];
   for (const [u] of html.matchAll(/https:\/\/marathonhomes\.com\/wp-content\/uploads\/[^"' )]+?\.(?:jpe?g|png|webp)/gi)) {
     if (/-\d+x\d+\./.test(u) || /Floorplan-CTA|coming-soon/i.test(u) || images.includes(u)) continue;
     images.push(u);
   }
-  const stem = name.replace(/\s+/g, "-");
-  const plan = images.find((u) => u.split("/").pop().startsWith(stem));
-  const photo = images.find((u) => u !== plan);
+  const [plan, ...gallery] = images;
+  const photo = exterior ? gallery.find((u) => u.split("/").pop().startsWith(exterior)) : gallery[0];
+  if (exterior && !photo) throw new Error(`${url}: no gallery image named ${exterior}`);
 
   const tour = html.match(/<iframe[^>]+src="(https:\/\/my\.matterport\.com\/[^"]+)"/)?.[1];
   const slug = slugify(name);
@@ -353,9 +372,9 @@ for (const url of MARATHON) {
     baths: Number(bb[2]),
     sqft,
     sections: "single",
-    sizeCategory: "tiny",
+    sizeCategory: size,
     dimensions: dims,
-    tagline: `${dims} park model / tiny home, built by Marathon Homes.`,
+    tagline: `${dims} ${size === "tiny" ? "park model / tiny home" : "single-section home"}, built by Marathon Homes.`,
     ...(tour ? { tourUrl: tour } : {}),
     scenes: [],
     sourceUrl: url,
