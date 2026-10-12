@@ -25,6 +25,9 @@ function StatusBadge({ listing }: { listing: Listing }) {
   if (listing.onLot) return <Badge tone="ember">On our lot</Badge>;
   if (listing.daysListed !== undefined && listing.daysListed <= 10)
     return <Badge tone="ember">Just listed</Badge>;
+  /* A plan built to order is the catalogue's default and says nothing a
+     visitor needs flagged, so it carries no badge. */
+  if (listing.status === "to-order") return null;
   return <Badge tone="neutral">{statusLabels[listing.status]}</Badge>;
 }
 
@@ -151,7 +154,7 @@ export function ListingCard({
 
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between p-4">
           <StatusBadge listing={listing} />
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto ml-auto">
             {/* No saved-homes page, no save button — see `pages.saved`. */}
             {pages.saved && <SaveButton slug={listing.slug} name={listing.name} />}
           </div>
