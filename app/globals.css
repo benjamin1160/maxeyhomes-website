@@ -219,14 +219,14 @@
   }
 }
 
-/* A scroll area whose scroll bar is always there and easy to see: a wide
+/* A scroll area whose scroll bar is easy to see when it is needed: a wide
    track in the surface colour and a thumb in the brand accent. /listings
-   uses it for the filter rail and the homes, which scroll on their own. A
-   utility rather than a component class so `lg:scroll-panel` works. */
+   uses it for the filter rail, which scrolls on its own only when it is
+   taller than the screen. A utility, so a variant like `lg:scroll-panel`
+   works. */
 @utility scroll-panel {
-  overflow-y: scroll;
+  overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
   /* Chrome and Firefox draw the bar from these, and they override the
      quiet one `html` sets below. The ::-webkit-scrollbar rules are for
      Safari, which has no `scrollbar-color`. */
