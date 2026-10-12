@@ -467,7 +467,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
 
       <FilterGroup title="Bedrooms">
         <div className="flex flex-wrap gap-2">
-          {[0, 2, 3, 4].map((n) => (
+          {[0, 2, 3, 4, 5, 6].map((n) => (
             <Pill key={n} active={filters.beds === n} onClick={() => set("beds", n)}>
               {n === 0 ? "Any" : `${n}+`}
             </Pill>

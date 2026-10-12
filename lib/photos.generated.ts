@@ -5,12 +5,12 @@
  * `public/photos/homes/`, so a key here always has a file behind it. Page
  * heroes and one-off images are hand-written in `lib/photos.ts`.
  *
- * 57 photographs, one per home that has one.
+ * 59 photographs, one per home that has one.
  * They are the manufacturers' own model photography carried in Maxey's feed —
  * pictures of that model, not of the particular house standing on Melba Ln.
  * Photograph the lot and drop the files in over these.
  *
- * The other 31 homes have no
+ * The other 41 homes have no
  * photograph and show their floor plan instead, captioned as a drawing.
  */
 
@@ -72,4 +72,6 @@ export const importedPhotos: Record<string, string> = {
   "the-swisher/exterior": "/photos/homes/the-swisher-exterior.webp",
   "the-red-river/exterior": "/photos/homes/the-red-river-exterior.webp",
   "the-sterling/exterior": "/photos/homes/the-sterling-exterior.webp",
+  "the-brewster/exterior": "/photos/homes/the-brewster-exterior.webp",
+  "the-coleman/exterior": "/photos/homes/the-coleman-exterior.webp",
 };

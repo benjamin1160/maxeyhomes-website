@@ -104,9 +104,28 @@ const MARATHON = [
     "amarillo",
     "abilene",
   ].map((p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "single" })),
-  ...["archer", "stonewall", "grayson", "maverick", "liberty", "swisher", "red-river", "sterling"].map(
-    (p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "double" }),
-  ),
+  ...[
+    "archer",
+    "stonewall",
+    "grayson",
+    "maverick",
+    "liberty",
+    "swisher",
+    "red-river",
+    "sterling",
+    "brewster",
+    "caldwell",
+    "hays",
+    "jasper",
+    "kendall",
+    "bell",
+    "bailey",
+    "trinity",
+    "fisher",
+    "dawson",
+    "coleman",
+    "jefferson",
+  ].map((p) => ({ url: `https://marathonhomes.com/floorplans/the-${p}/`, size: "double" })),
 ].map((m) => (m.url.endsWith("/the-midland/") ? { ...m, exterior: "Sw-dormer" } : m));
 
 /* ------------------------------------------------------------------ *
