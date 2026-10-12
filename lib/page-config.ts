@@ -184,10 +184,13 @@ export const pages: Record<OptionalPage, boolean> = {
   /* Off: Maxey takes contact on the landing page's closing band rather than
      on a route of its own, so `sections.contact` carries this instead. */
   contact: false,
-  /* Off: Maxey's site has no saved-homes list, so the heart in the header
-     and the one on every listing card go with it — see the `pages.saved`
-     guard in `components/site-header.tsx` and `components/listing-card.tsx`. */
-  saved: false,
+  /* On: a heart on every listing card and on each home's page saves it to a
+     shortlist at `/saved`, kept in the visitor's browser only. The heart in
+     the header links there and counts what is saved. Turning this off takes
+     every heart with it — see the `pages.saved` guards in
+     `components/site-header.tsx`, `components/listing-card.tsx` and
+     `app/listings/[slug]/page.tsx`. */
+  saved: true,
   /* Off: Maxey publishes no FAQ. `lib/faq.ts` is written for this market and
      ready, so this is a cheap page to turn on. */
   faq: false,
