@@ -15,7 +15,7 @@ import {
   SectionHeading,
 } from "@/components/ui";
 import { money, shortMoney } from "@/lib/format";
-import { AREAS, BY_PRICE, CHEAPEST, PAYMENT_ASSUMPTIONS } from "@/lib/land/areas";
+import { AREAS, BY_PRICE, CHEAPEST, PAYMENT_ASSUMPTIONS, SAMPLE_DATA } from "@/lib/land/areas";
 import { HQ, SERVICE_RADIUS_MI } from "@/lib/land/geo";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
@@ -32,7 +32,10 @@ const DEAREST_LAND = AREAS.length ? Math.max(...AREAS.map((a) => a.land.high)) :
 
 export const metadata: Metadata = {
   title: `Land + home prices near ${HQ.city}, county by county`,
-  description: CHEAPEST
+  /* Sample figures never go into a search result: a snippet outlives the page
+     that explained it. */
+  description:
+    CHEAPEST && !SAMPLE_DATA
     ? `What it takes to get into a home on land you own, in ${AREAS.length} counties within ${SERVICE_RADIUS_MI} miles of ${HQ.city}. Land and home financed as one loan, from ${money(
         CHEAPEST.startingPayment,
       )}/mo in ${CHEAPEST.county} County.`
@@ -104,7 +107,7 @@ const FAQ = [
   {
     title: "What does the land itself cost out there?",
     body:
-      CHEAPEST_LAND && DEAREST_LAND
+      CHEAPEST_LAND && DEAREST_LAND && !SAMPLE_DATA
         ? `It swings hard by county. Buildable lots start around ${shortMoney(
             CHEAPEST_LAND.land.low,
           )} in ${CHEAPEST_LAND.county} County and run past ${shortMoney(
@@ -152,7 +155,7 @@ const jsonLd = {
         },
         geoRadius: SERVICE_RADIUS_MI * 1609.34,
       },
-      makesOffer: AREAS.map((a) => ({
+      makesOffer: (SAMPLE_DATA ? [] : AREAS).map((a) => ({
         "@type": "Offer",
         name: `Land and home package in ${a.county} County`,
         priceSpecification: {
@@ -206,7 +209,7 @@ export default function LandDealsPage() {
               <p className="text-lg leading-relaxed text-muted text-pretty">
                 No land yet? Fine. Tap any county and that number is what it takes to get in
                 there, <span className="text-ink">land payment included</span>
-                {CHEAPEST ? (
+                {CHEAPEST && !SAMPLE_DATA ? (
                   <>
                     {" "}
                     — from{" "}
@@ -240,9 +243,37 @@ export default function LandDealsPage() {
             </div>
           </div>
 
-          <div className="mt-10">
+          {SAMPLE_DATA && (
+            /* Every price on this page is a placeholder until Maxey prices its
+               delivery radius — see `SAMPLE_DATA` in lib/land/areas.ts. Said
+               up front, in words nobody can miss, before the map. */
+            <div
+              role="note"
+              className="mt-10 flex flex-col gap-3 rounded-card border-2 border-dashed border-ember bg-ember-wash p-5 sm:flex-row sm:items-center sm:gap-5 sm:p-6"
+            >
+              <span className="shrink-0 self-start sm:self-auto">
+                <Badge tone="ember">Sample data</Badge>
+              </span>
+              <p className="text-[0.95rem] leading-relaxed text-ink">
+                <strong>The prices on this map are temporary placeholders, not real quotes.</strong>{" "}
+                The counties and distances are real; the monthly payments and lot prices are
+                sample figures while we put together real numbers for each county. Call{" "}
+                <a href={site.phoneHref} className="underline underline-offset-4">
+                  {site.phone}
+                </a>{" "}
+                for what a home on land actually costs today.
+              </p>
+            </div>
+          )}
+
+          <div className={SAMPLE_DATA ? "mt-6" : "mt-10"}>
             <LandMap />
             <p className="mt-5 max-w-3xl text-xs leading-relaxed text-muted">
+              {SAMPLE_DATA && (
+                <strong className="text-ink">
+                  Sample data — every price shown is a placeholder.{" "}
+                </strong>
+              )}
               Counties are shaded by starting payment; the marker sits on each county seat.{" "}
               {PAYMENT_ASSUMPTIONS}
             </p>
@@ -389,7 +420,7 @@ export default function LandDealsPage() {
 
       {/* ── Closing ── */}
       <Section className="border-t border-line bg-surface text-center">
-        {BY_PRICE[0] ? (
+        {BY_PRICE[0] && !SAMPLE_DATA ? (
           <>
             <h2 className="mx-auto max-w-4xl font-display text-headline text-balance text-ink">
               The cheapest way in right now is {money(BY_PRICE[0].startingPayment)}/mo in{" "}
@@ -418,8 +449,10 @@ export default function LandDealsPage() {
         </div>
         <p className="mx-auto mt-14 max-w-4xl text-xs leading-relaxed text-muted">
           Payment figures on this page are estimates for comparison between areas, not an offer
-          to lend or a commitment to extend credit. {PAYMENT_ASSUMPTIONS} Land prices reflect
-          recent asking prices for buildable parcels and move constantly. Zoning, minimum lot
+          to lend or a commitment to extend credit. {PAYMENT_ASSUMPTIONS}{" "}
+          {SAMPLE_DATA
+            ? "The payments and land prices currently shown are sample figures for illustration only and do not reflect real pricing in any county."
+            : "Land prices reflect recent asking prices for buildable parcels and move constantly."} Zoning, minimum lot
           size, setbacks, flood zone and utility availability vary parcel by parcel — confirm
           with us and with the county before you buy land.
         </p>

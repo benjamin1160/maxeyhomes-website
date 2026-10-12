@@ -152,10 +152,11 @@ export const pages: Record<OptionalPage, boolean> = {
   /* Off because `lib/communities.ts` is empty — Maxey publishes no
      communities. Write real properties into that file, then turn this on. */
   communities: false,
-  /* Off because `lib/land/areas.ts` carries no county pricing — Maxey
-     publishes no service area at all, and the page is nothing but priced
-     counties. Price the delivery radius, then turn this on. */
-  landDeals: false,
+  /* On, with SAMPLE prices: the counties around Norman are real, the
+     payments and lot prices are placeholders, and the page says so in a
+     banner above the map. Replace them in `lib/land/areas.ts` and set
+     `SAMPLE_DATA` to false there. */
+  landDeals: true,
 
   /* ---- Matched to maxeycustomhomes.com -------------------------------
      Maxey's site is three routes and a landing page: Home, About Us, and
@@ -175,9 +176,10 @@ export const pages: Record<OptionalPage, boolean> = {
   /* Off: Maxey has no equivalent page. The three routes onto ground for a
      buyer who has none. */
   startHere: false,
-  /* Off: Maxey has no equivalent page, and its financing message is the
-     "Financing available" badge in the hero plus the pre-qualify page. */
-  financing: false,
+  /* On: the loan types, the payment calculator and what an approval needs,
+     as on the mh-template-2 design. Its editorial copy is the template's
+     own — see the `voice` skill before another site in this market. */
+  financing: true,
   /* Off: Maxey has no equivalent page. */
   whyManufactured: false,
   about: true,

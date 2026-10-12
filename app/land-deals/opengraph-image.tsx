@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { money } from "@/lib/format";
-import { AREAS, CHEAPEST, areaBySlug } from "@/lib/land/areas";
+import { AREAS, CHEAPEST, SAMPLE_DATA, areaBySlug } from "@/lib/land/areas";
 import { HQ, SERVICE_RADIUS_MI, starPath } from "@/lib/land/geo";
 import { OG_PALETTE, pixelFor, serviceAreaDataUri } from "@/lib/land/static-map";
 import { site } from "@/lib/site";
@@ -103,7 +103,9 @@ export default function Image() {
             </div>
           </div>
 
-          {CHEAPEST && (
+          {/* A shared card travels without the page's sample-data banner, so
+              it prints no placeholder price at all. */}
+          {CHEAPEST && !SAMPLE_DATA && (
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
                 <div style={{ display: "flex", fontSize: 20, letterSpacing: 3, color: MUTED }}>

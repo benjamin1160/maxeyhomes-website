@@ -11,7 +11,8 @@ import json, math, pathlib, sys
 SRC = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "counties.json")
 OUT = pathlib.Path(__file__).parent.parent / "lib/land/county-shapes.generated.ts"
 
-HQ_LAT, HQ_LON = 44.2896, -69.7736
+# The lot on Melba Ln, Norman — must match HQ in lib/land/geo.ts.
+HQ_LAT, HQ_LON = 35.1926, -97.4395
 MI_PER_DEG_LAT = 69.0
 MI_PER_DEG_LON = 69.172 * math.cos(math.radians(HQ_LAT))
 
@@ -19,14 +20,38 @@ MI_PER_DEG_LON = 69.172 * math.cos(math.radians(HQ_LAT))
 X_MIN, X_MAX = -150, 150
 Y_MIN, Y_MAX = -140, 140
 
-HOME_STATE = "ME"
-STATES = {"23": "ME", "33": "NH", "50": "VT", "25": "MA"}
+HOME_STATE = "OK"
+# Texas is drawn for context: the Red River sits at the bottom of the window.
+STATES = {"40": "OK", "48": "TX"}
 
-# Counties that carry pricing, keyed by the slug used in lib/land/areas.ts.
-# Empty: NERTO publishes no county pricing, so `areas.ts` carries none and
-# `/land-deals` is switched off in lib/page-config.ts. Fill this in at the
-# same time as areas.ts and regenerate.
-PRICED = {}
+# Counties that carry pricing, keyed by county name → the slug used in
+# lib/land/areas.ts. Keep the two lists in step.
+PRICED = {
+    "Cleveland": "cleveland",
+    "Oklahoma": "oklahoma",
+    "McClain": "mcclain",
+    "Grady": "grady",
+    "Canadian": "canadian",
+    "Pottawatomie": "pottawatomie",
+    "Garvin": "garvin",
+    "Lincoln": "lincoln",
+    "Seminole": "seminole",
+    "Pontotoc": "pontotoc",
+    "Stephens": "stephens",
+    "Murray": "murray",
+    "Caddo": "caddo",
+    "Logan": "logan",
+    "Carter": "carter",
+    "Hughes": "hughes",
+    "Kingfisher": "kingfisher",
+    "Okfuskee": "okfuskee",
+    "Payne": "payne",
+    "Comanche": "comanche",
+    "Blaine": "blaine",
+    "Johnston": "johnston",
+    "Coal": "coal",
+    "Noble": "noble",
+}
 
 
 def project(lon, lat):
@@ -147,7 +172,7 @@ OUT.write_text(
 
 export type CountyShape = {
   name: string;
-  state: "ME" | "NH" | "VT" | "MA";
+  state: %s;
   /** Set when this county has pricing in areas.ts. */
   slug: string | null;
   /** SVG path in map units. */
@@ -158,6 +183,6 @@ export const COUNTY_SHAPES: CountyShape[] = [
 %s,
 ];
 """
-    % (TOL, body)
+    % (TOL, " | ".join(json.dumps(v) for v in sorted(STATES.values())), body)
 )
 print("wrote", OUT, OUT.stat().st_size, "bytes")

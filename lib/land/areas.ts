@@ -8,34 +8,36 @@ import { milesFromHQ } from "./geo";
  *  This is *market* data, in the sense of `lib/market.ts`: it is true of one
  *  dealership's delivery radius and of nowhere else.
  *
- *  IT IS CURRENTLY EMPTY, and `/land-deals` is switched off in
- *  `lib/page-config.ts` to match. Maxey publishes no county-by-county land
- *  prices or starting payments, and a monthly figure printed next to a county
- *  name is a claim a shopper will act on — so there are none here rather than
- *  estimates. The geography around it is real and points at the right place:
- *  `HQ` in `./geo.ts` is now the lot on Melba Ln in Norman, but the county
- *  boundaries in `./county-shapes.generated.ts` are STILL Maine, New
- *  Hampshire,
- *  Vermont and Massachusetts.
+ *  ⚠ THE FIGURES BELOW ARE SAMPLE DATA. The counties, county seats, towns and
+ *  mileages are real — every county whose seat is within about 90 miles of
+ *  the lot on Melba Ln — but the payments and lot prices are PLACEHOLDERS,
+ *  written so the page could go up before Maxey has priced its delivery
+ *  radius. They are shaped roughly like the market (dearer around Oklahoma
+ *  City, cheaper in the rural counties) and are no one's quote.
  *
- *  To turn the page on: regenerate the boundaries for Oklahoma with
- *  `scripts/generate-county-shapes.py`, then price the counties Maxey
- *  actually delivers homes to,
- *  add an `Area` per county below, list them in `PRICED` in
- *  `scripts/generate-county-shapes.py` and regenerate so each county's shape
- *  carries its slug, then flip `landDeals` in `lib/page-config.ts`. Check the
- *  bands in `PRICE_TIERS` still bracket the payments you entered.
+ *  While `SAMPLE_DATA` is true the page says so in a banner above the map, on
+ *  the detail card, in the county list, in the social image and in the fine
+ *  print, and keeps the figures out of its search-engine data. Replace every
+ *  `startingPayment`, `land` and `lotTypical` with real numbers, then set
+ *  `SAMPLE_DATA` to false — that one switch takes every notice down.
  *
  *  `startingPayment`  estimated monthly payment on a land + home package, i.e.
  *                     the cheapest realistic way into that county today.
  *  `land`             what a buildable lot actually trades for in that county.
  *  `lotTypical`       the parcel size those numbers assume.
  *
+ *  Adding a county also means adding it to `PRICED` in
+ *  `scripts/generate-county-shapes.py` and regenerating, so its shape on the
+ *  map carries its slug.
+ *
  *  Payment estimates assume one loan covering land and home, 20% down, ~20–23
  *  year term, on approved credit. Update `PAYMENT_ASSUMPTIONS` below whenever
  *  rates or programs move, and keep the disclaimer honest.
  * ─────────────────────────────────────────────────────────────────────────────
  */
+
+/** The prices below are placeholders. See the head of this file. */
+export const SAMPLE_DATA = true;
 
 export const PAYMENT_ASSUMPTIONS =
   "Estimates assume a land-and-home package financed as one loan with 20% down over a 20–23 year term, taxes and insurance escrowed, on approved credit. Your rate, term, and payment depend on credit, down payment, land cost, and site work.";
@@ -63,7 +65,322 @@ export type Area = {
   dy?: number;
 };
 
-const RAW: Area[] = [];
+/* Real counties and seats; SAMPLE payments and lot prices — see the head of
+   this file. */
+const RAW: Area[] = [
+  {
+    slug: "cleveland",
+    county: "Cleveland",
+    seat: "Norman",
+    towns: ["Moore", "Noble", "Lexington"],
+    lat: 35.2226,
+    lon: -97.4395,
+    startingPayment: 1695,
+    land: { low: 45000, high: 95000 },
+    lotTypical: "1 – 3 acres",
+    note: "Home county. Acreage east of Lake Thunderbird, city lots in Norman and Moore.",
+    labelSide: "w",
+  },
+  {
+    slug: "oklahoma",
+    county: "Oklahoma",
+    seat: "Oklahoma City",
+    towns: ["Edmond", "Midwest City", "Choctaw"],
+    lat: 35.4676,
+    lon: -97.5164,
+    startingPayment: 1745,
+    land: { low: 50000, high: 110000 },
+    lotTypical: "1 – 3 acres",
+    note: "The metro. Most acreage is out east toward Choctaw, Harrah and Luther.",
+    labelSide: "n",
+  },
+  {
+    slug: "mcclain",
+    county: "McClain",
+    seat: "Purcell",
+    towns: ["Newcastle", "Blanchard", "Washington"],
+    lat: 35.0137,
+    lon: -97.3611,
+    startingPayment: 1575,
+    land: { low: 35000, high: 80000 },
+    lotTypical: "1 – 5 acres",
+    note: "Just across the Canadian River; Newcastle and Blanchard for a short drive in.",
+    labelSide: "e",
+  },
+  {
+    slug: "grady",
+    county: "Grady",
+    seat: "Chickasha",
+    towns: ["Tuttle", "Minco", "Ninnekah"],
+    lat: 35.0526,
+    lon: -97.9364,
+    startingPayment: 1465,
+    land: { low: 25000, high: 60000 },
+    lotTypical: "2 – 5 acres",
+    note: "Tuttle on the metro side, open country toward Chickasha.",
+    labelSide: "s",
+  },
+  {
+    slug: "canadian",
+    county: "Canadian",
+    seat: "El Reno",
+    towns: ["Yukon", "Mustang", "Piedmont"],
+    lat: 35.5323,
+    lon: -97.955,
+    startingPayment: 1725,
+    land: { low: 45000, high: 100000 },
+    lotTypical: "1 – 3 acres",
+    note: "Yukon, Mustang and Piedmont on the west side of the metro.",
+    labelSide: "n",
+  },
+  {
+    slug: "pottawatomie",
+    county: "Pottawatomie",
+    seat: "Shawnee",
+    towns: ["Tecumseh", "McLoud", "Wanette"],
+    lat: 35.3273,
+    lon: -96.9253,
+    startingPayment: 1455,
+    land: { low: 25000, high: 60000 },
+    lotTypical: "2 – 5 acres",
+    note: "Shawnee and Tecumseh, an easy run up I-40 or OK-9.",
+    labelSide: "s",
+  },
+  {
+    slug: "garvin",
+    county: "Garvin",
+    seat: "Pauls Valley",
+    towns: ["Lindsay", "Wynnewood", "Maysville"],
+    lat: 34.7401,
+    lon: -97.2222,
+    startingPayment: 1360,
+    land: { low: 18000, high: 45000 },
+    lotTypical: "2 – 10 acres",
+    note: "Straight down I-35; Pauls Valley and the farm country around it.",
+    labelSide: "w",
+  },
+  {
+    slug: "lincoln",
+    county: "Lincoln",
+    seat: "Chandler",
+    towns: ["Stroud", "Prague", "Meeker"],
+    lat: 35.7017,
+    lon: -96.8809,
+    startingPayment: 1395,
+    land: { low: 20000, high: 50000 },
+    lotTypical: "2 – 10 acres",
+    note: "Route 66 towns and rolling acreage along the Turner Turnpike.",
+    labelSide: "e",
+  },
+  {
+    slug: "seminole",
+    county: "Seminole",
+    seat: "Wewoka",
+    towns: ["Seminole", "Konawa", "Bowlegs"],
+    lat: 35.1587,
+    lon: -96.4934,
+    startingPayment: 1295,
+    land: { low: 15000, high: 40000 },
+    lotTypical: "2 – 10 acres",
+    note: "Quiet county east of Shawnee with some of the cheapest acreage in range.",
+    labelSide: "n",
+  },
+  {
+    slug: "pontotoc",
+    county: "Pontotoc",
+    seat: "Ada",
+    towns: ["Allen", "Roff", "Stonewall"],
+    lat: 34.7745,
+    lon: -96.6783,
+    startingPayment: 1425,
+    land: { low: 20000, high: 50000 },
+    lotTypical: "2 – 10 acres",
+    note: "Ada and the country around it.",
+    labelSide: "e",
+  },
+  {
+    slug: "stephens",
+    county: "Stephens",
+    seat: "Duncan",
+    towns: ["Marlow", "Comanche", "Velma"],
+    lat: 34.5023,
+    lon: -97.9578,
+    startingPayment: 1375,
+    land: { low: 18000, high: 45000 },
+    lotTypical: "2 – 10 acres",
+    note: "Duncan and Marlow, off US-81.",
+    labelSide: "s",
+  },
+  {
+    slug: "murray",
+    county: "Murray",
+    seat: "Sulphur",
+    towns: ["Davis", "Dougherty"],
+    lat: 34.5076,
+    lon: -96.9684,
+    startingPayment: 1345,
+    land: { low: 18000, high: 45000 },
+    lotTypical: "2 – 10 acres",
+    note: "Sulphur and Davis, at the foot of the Arbuckles.",
+    labelSide: "w",
+  },
+  {
+    slug: "caddo",
+    county: "Caddo",
+    seat: "Anadarko",
+    towns: ["Hinton", "Apache", "Carnegie"],
+    lat: 35.0726,
+    lon: -98.2434,
+    startingPayment: 1310,
+    land: { low: 15000, high: 40000 },
+    lotTypical: "5 – 20 acres",
+    note: "Wide-open land west of Chickasha.",
+    labelSide: "n",
+  },
+  {
+    slug: "logan",
+    county: "Logan",
+    seat: "Guthrie",
+    towns: ["Crescent", "Langston", "Cashion"],
+    lat: 35.8789,
+    lon: -97.4253,
+    startingPayment: 1610,
+    land: { low: 30000, high: 75000 },
+    lotTypical: "2 – 5 acres",
+    note: "North of Edmond: Guthrie and the acreage around it.",
+    labelSide: "e",
+  },
+  {
+    slug: "carter",
+    county: "Carter",
+    seat: "Ardmore",
+    towns: ["Healdton", "Wilson", "Lone Grove"],
+    lat: 34.1743,
+    lon: -97.1436,
+    startingPayment: 1415,
+    land: { low: 20000, high: 50000 },
+    lotTypical: "2 – 10 acres",
+    note: "Ardmore and Lone Grove, near the south end of the radius.",
+    labelSide: "w",
+  },
+  {
+    slug: "hughes",
+    county: "Hughes",
+    seat: "Holdenville",
+    towns: ["Wetumka", "Calvin", "Stuart"],
+    lat: 35.0801,
+    lon: -96.3992,
+    startingPayment: 1265,
+    land: { low: 12000, high: 35000 },
+    lotTypical: "5 – 20 acres",
+    note: "Rural and inexpensive, east of Seminole.",
+    labelSide: "s",
+  },
+  {
+    slug: "kingfisher",
+    county: "Kingfisher",
+    seat: "Kingfisher",
+    towns: ["Hennessey", "Okarche", "Dover"],
+    lat: 35.8614,
+    lon: -97.9317,
+    startingPayment: 1495,
+    land: { low: 20000, high: 55000 },
+    lotTypical: "2 – 10 acres",
+    note: "Wheat country north-west of the metro.",
+    labelSide: "n",
+  },
+  {
+    slug: "okfuskee",
+    county: "Okfuskee",
+    seat: "Okemah",
+    towns: ["Weleetka", "Boley", "Paden"],
+    lat: 35.4326,
+    lon: -96.305,
+    startingPayment: 1255,
+    land: { low: 12000, high: 35000 },
+    lotTypical: "5 – 20 acres",
+    note: "Small towns off I-40, among the cheapest land in range.",
+    labelSide: "e",
+  },
+  {
+    slug: "payne",
+    county: "Payne",
+    seat: "Stillwater",
+    towns: ["Cushing", "Perkins", "Yale"],
+    lat: 36.1156,
+    lon: -97.0584,
+    startingPayment: 1560,
+    land: { low: 30000, high: 70000 },
+    lotTypical: "1 – 5 acres",
+    note: "Stillwater and the country around Perkins and Cushing.",
+    labelSide: "e",
+  },
+  {
+    slug: "comanche",
+    county: "Comanche",
+    seat: "Lawton",
+    towns: ["Elgin", "Cache", "Fletcher"],
+    lat: 34.6036,
+    lon: -98.3959,
+    startingPayment: 1445,
+    land: { low: 20000, high: 55000 },
+    lotTypical: "1 – 5 acres",
+    note: "Lawton, Elgin and the land around Fort Sill.",
+    labelSide: "s",
+  },
+  {
+    slug: "blaine",
+    county: "Blaine",
+    seat: "Watonga",
+    towns: ["Okeene", "Geary", "Hitchcock"],
+    lat: 35.8448,
+    lon: -98.4134,
+    startingPayment: 1300,
+    land: { low: 15000, high: 40000 },
+    lotTypical: "5 – 20 acres",
+    note: "Watonga and Geary, out past Roman Nose.",
+    labelSide: "s",
+  },
+  {
+    slug: "johnston",
+    county: "Johnston",
+    seat: "Tishomingo",
+    towns: ["Milburn", "Mill Creek", "Wapanucka"],
+    lat: 34.2362,
+    lon: -96.6789,
+    startingPayment: 1285,
+    land: { low: 12000, high: 35000 },
+    lotTypical: "5 – 20 acres",
+    note: "Tishomingo and the lake country above Texoma.",
+    labelSide: "e",
+  },
+  {
+    slug: "coal",
+    county: "Coal",
+    seat: "Coalgate",
+    towns: ["Tupelo", "Lehigh"],
+    lat: 34.5384,
+    lon: -96.2186,
+    startingPayment: 1240,
+    land: { low: 10000, high: 30000 },
+    lotTypical: "5 – 20 acres",
+    note: "The cheapest way in on this map, at the south-east edge of the radius.",
+    labelSide: "e",
+  },
+  {
+    slug: "noble",
+    county: "Noble",
+    seat: "Perry",
+    towns: ["Morrison", "Red Rock", "Billings"],
+    lat: 36.2895,
+    lon: -97.2881,
+    startingPayment: 1405,
+    land: { low: 15000, high: 45000 },
+    lotTypical: "2 – 10 acres",
+    note: "Perry, straight up I-35 past Stillwater's turn-off.",
+    labelSide: "n",
+  },
+];
 
 /** Every area, with mileage from the dealership computed, not typed by hand. */
 export const AREAS: (Area & { miles: number })[] = RAW.map((a) => ({

@@ -15,7 +15,7 @@ import {
   priceBounds,
   sectionLabels,
   sectionsOrder,
-  sizeCategoryOf,
+  inSizeCategory,
   styleLabels,
   styleOrder,
   type Listing,
@@ -145,7 +145,7 @@ type FacetId = "types" | "series" | "sections" | "styles";
  */
 function matches(l: Listing, f: Filters, except?: FacetId): boolean {
   if (f.availableOnly && l.status !== "available") return false;
-  if (f.size && sizeCategoryOf(l) !== f.size) return false;
+  if (f.size && !inSizeCategory(l, f.size)) return false;
   if (except !== "types" && f.types.length && !(l.construction && f.types.includes(l.construction)))
     return false;
   if (except !== "series" && f.series.length && !(l.series && f.series.includes(l.series)))
@@ -614,7 +614,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
           className="mb-8"
         />
 
-        <div className="sticky top-[var(--chrome-h)] z-20 -mx-5 mb-8 flex flex-wrap items-center gap-3 border-b border-line bg-paper/90 px-5 py-4 backdrop-blur-xl sm:-mx-8 sm:px-8 lg:mx-0 lg:rounded-full lg:border lg:px-6">
+        <div className="sticky top-[var(--chrome-h)] z-20 -mx-4 mb-8 flex flex-wrap items-center gap-3 border-b border-line bg-paper/90 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:mx-0 lg:rounded-full lg:border lg:px-6">
           <p className="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-muted">
             <span className="text-ink">{results.length}</span> of {listings.length} homes
           </p>

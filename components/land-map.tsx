@@ -13,6 +13,7 @@ import {
   UNSERVED_FILL,
   tierFill,
   type Area,
+  SAMPLE_DATA,
 } from "@/lib/land/areas";
 import { COUNTY_SHAPES } from "@/lib/land/county-shapes.generated";
 import { HQ, SERVICE_RADIUS_MI, VIEW, project, starPath, toPath } from "@/lib/land/geo";
@@ -101,7 +102,7 @@ export function LandMap() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_21rem]">
         {/* ── The map ── */}
         <figure
-          className="relative -mx-5 overflow-hidden border-y border-line sm:mx-0 sm:rounded-card sm:border"
+          className="relative -mx-4 overflow-hidden border-y border-line sm:mx-0 sm:rounded-card sm:border"
           style={{ backgroundColor: WATER }}
         >
           <svg
@@ -224,13 +225,13 @@ export function LandMap() {
               )}
 
               <text
-                x={project(30.95, -83.15).x}
-                y={project(30.95, -83.15).y}
+                x={project(33.74, -98.05).x}
+                y={project(33.74, -98.05).y}
                 className="fill-muted font-sans"
                 fontSize="4.4"
                 letterSpacing="1.2"
               >
-                GEORGIA
+                TEXAS
               </text>
 
               {/* Interstates */}
@@ -458,7 +459,11 @@ export function LandMap() {
                 {money(active.startingPayment)}
                 <span className="font-sans text-base font-normal text-muted">/mo</span>
               </p>
-              <p className="mt-1 text-xs text-muted">estimated starting payment</p>
+              <p className="mt-1 text-xs text-muted">
+                {SAMPLE_DATA
+                  ? "sample figure — placeholder, not a real price"
+                  : "estimated starting payment"}
+              </p>
             </div>
 
             <dl className="mt-4 text-sm">
@@ -506,7 +511,10 @@ export function LandMap() {
 
       {/* ── Full price list ── */}
       <div>
-        <h3 className="eyebrow mb-3">Every county, cheapest way in first</h3>
+        <h3 className="eyebrow mb-3">
+          Every county, cheapest way in first
+          {SAMPLE_DATA && " · sample figures, not real prices"}
+        </h3>
         <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
           {BY_PRICE.map((a) => {
             const dim = a.startingPayment > budget;
