@@ -196,6 +196,24 @@ const TYPE = {
   "Triple Wide": { sections: "triple", sizeCategory: "triple" },
 };
 
+/**
+ * Who built it — the `builder` the Brand filter on /listings is made from.
+ *
+ * The feed's own manufacturer field is unreliable (most of the Prime rows
+ * carry a scrap of Champion's website navigation in it), so the brand is read
+ * from the line instead: the Prime lines and Dutch Elite are Champion Homes,
+ * and the Origin and Mini series are Clayton-built — every image they carry
+ * is served from Clayton's own API. A row that matches none is left without
+ * a brand rather than guessed at.
+ */
+function brandOf(row) {
+  const t = row.title.trim();
+  const m = row.homeModel?.manufacturer ?? "";
+  if (/^Prime\b/i.test(t) || /^Dutch\b/i.test(t) || /champion/i.test(m)) return "Champion Homes";
+  if (/^(Origin|Mini) Series\b/i.test(t)) return "Clayton";
+  return undefined;
+}
+
 const slugify = (s) =>
   s
     .toLowerCase()
@@ -289,6 +307,7 @@ for (const row of feed) {
     slug,
     name: row.title,
     construction: "manufactured", // propertyType is "Manufactured Home" for all 98
+    ...(brandOf(row) ? { builder: brandOf(row) } : {}),
     ...(series ? { series } : {}),
     ...(model ? { model } : {}),
     beds: row.beds ?? 0,

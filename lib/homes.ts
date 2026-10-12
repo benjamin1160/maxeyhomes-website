@@ -220,8 +220,18 @@ const lotState: Record<string, Partial<Listing>> = {
  * The catalogue as the site sees it: the manufacturers' published facts, with
  * the dealership's lot state laid over the top.
  */
-export const listings: Listing[] = catalogue.map((entry) => ({
+/**
+ * Whether the site prints prices. Off: Maxey quotes every home by phone, so
+ * no price, sale price or payment appears anywhere — each card and page says
+ * "Call for pricing", and the price filter, the price sorts and the payment
+ * calculator drop out on their own. The figures stay in the generated
+ * catalogue; set this to true and they come back.
+ */
+export const SHOW_PRICES = false;
+
+export const listings: Listing[] = catalogue.map(({ price, wasPrice, ...entry }) => ({
   ...entry,
+  ...(SHOW_PRICES ? { price, wasPrice } : {}),
   /* A plan the dealership can order but does not stock. Anything standing on
      the lot overrides this from `lotState`. */
   status: "to-order" as ListingStatus,

@@ -47,7 +47,7 @@ type Filters = {
   size: SizeCategory | null;
   /** How it is built — manufactured or modular. A `construction` value. */
   types: string[];
-  series: string[];
+  brands: string[];
   sections: string[];
   styles: string[];
   beds: number;
@@ -62,7 +62,7 @@ const EMPTY: Filters = {
   q: "",
   size: null,
   types: [],
-  series: [],
+  brands: [],
   sections: [],
   styles: [],
   beds: 0,
@@ -87,7 +87,7 @@ function fromParams(params: URLSearchParams): Filters {
       ? (params.get("size") as SizeCategory)
       : null,
     types: list("type"),
-    series: list("series"),
+    brands: list("brand"),
     sections: list("sections"),
     styles: list("style"),
     beds: int("beds", 0),
@@ -104,7 +104,7 @@ function toParams(f: Filters): string {
   if (f.q) p.set("q", f.q);
   if (f.size) p.set("size", f.size);
   if (f.types.length) p.set("type", f.types.join(","));
-  if (f.series.length) p.set("series", f.series.join(","));
+  if (f.brands.length) p.set("brand", f.brands.join(","));
   if (f.sections.length) p.set("sections", f.sections.join(","));
   if (f.styles.length) p.set("style", f.styles.join(","));
   if (f.beds) p.set("beds", String(f.beds));
@@ -121,7 +121,7 @@ function activeCount(f: Filters) {
     (f.q ? 1 : 0) +
     (f.size ? 1 : 0) +
     f.types.length +
-    f.series.length +
+    f.brands.length +
     f.sections.length +
     f.styles.length +
     (f.beds ? 1 : 0) +
@@ -132,7 +132,7 @@ function activeCount(f: Filters) {
 }
 
 /** The multi-select facets, each of which can be lifted out when counting. */
-type FacetId = "types" | "series" | "sections" | "styles";
+type FacetId = "types" | "brands" | "sections" | "styles";
 
 /**
  * Whether a home survives the filters.
@@ -144,11 +144,11 @@ type FacetId = "types" | "series" | "sections" | "styles";
  * group widens the result the way the numbers say it will.
  */
 function matches(l: Listing, f: Filters, except?: FacetId): boolean {
-  if (f.availableOnly && l.status !== "available") return false;
+  if (f.availableOnly && !l.onLot) return false;
   if (f.size && !inSizeCategory(l, f.size)) return false;
   if (except !== "types" && f.types.length && !(l.construction && f.types.includes(l.construction)))
     return false;
-  if (except !== "series" && f.series.length && !(l.series && f.series.includes(l.series)))
+  if (except !== "brands" && f.brands.length && !(l.builder && f.brands.includes(l.builder)))
     return false;
   if (except !== "sections" && f.sections.length && !(l.sections && f.sections.includes(l.sections)))
     return false;
@@ -161,7 +161,7 @@ function matches(l: Listing, f: Filters, except?: FacetId): boolean {
   if (l.price !== undefined && (l.price < f.min || l.price > f.max)) return false;
   const q = f.q.trim().toLowerCase();
   if (q) {
-    const hay = [l.name, l.series, l.model, l.tagline, l.style && styleLabels[l.style]]
+    const hay = [l.name, l.builder, l.series, l.model, l.tagline, l.style && styleLabels[l.style]]
       .filter(Boolean)
       .join(" ")
       .toLowerCase();
@@ -202,10 +202,10 @@ function FilterGroup({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-t border-line py-6 first:border-t-0 first:pt-0">
+    <div className="border-t border-line py-4 first:border-t-0 first:pt-0">
       <h3 className="eyebrow">{title}</h3>
-      {hint && <p className="mt-1.5 text-[0.76rem] leading-snug text-muted">{hint}</p>}
-      <div className="mt-4">{children}</div>
+      {hint && <p className="mt-1 text-[0.76rem] leading-snug text-muted">{hint}</p>}
+      <div className="mt-2.5">{children}</div>
     </div>
   );
 }
@@ -292,10 +292,10 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
         constructionOrder,
         (v) => constructionLabels[v],
       ),
-      series: facetsPresent(
+      brands: facetsPresent(
         listings,
-        (l) => l.series,
-        [...new Set(listings.map((l) => l.series).filter(Boolean) as string[])].sort(),
+        (l) => l.builder,
+        [...new Set(listings.map((l) => l.builder).filter(Boolean) as string[])].sort(),
         (v) => v,
       ),
       sections: facetsPresent(
@@ -309,21 +309,17 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
     [listings],
   );
 
-  /* Two of these groups filter on a field not every plan carries — the
-     modulars publish no section count, and only some plans are filed by
-     style. Say so under the title rather than letting the numbers look
-     broken. */
-  const [sectionsHint, stylesHint] = useMemo(() => {
+  /* Style filters on a field not every plan carries — only some plans are
+     filed by style. Say so under the title rather than letting the numbers
+     look broken. */
+  const stylesHint = useMemo(() => {
     const outside = (missing: number, what: string) =>
       missing === 0
         ? undefined
         : `${missing} plan${missing === 1 ? "" : "s"} in the catalogue ${
             missing === 1 ? "has" : "have"
           } no ${what} and ${missing === 1 ? "sits" : "sit"} outside this filter.`;
-    return [
-      outside(listings.filter((l) => !l.sections).length, "published section count"),
-      outside(listings.filter((l) => !l.style).length, "style on file"),
-    ];
+    return outside(listings.filter((l) => !l.style).length, "style on file");
   }, [listings]);
 
   /* How many homes sit behind each pill, given everything else selected. */
@@ -339,7 +335,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
     };
     return {
       types: tally("types", (l) => l.construction),
-      series: tally("series", (l) => l.series),
+      brands: tally("brands", (l) => l.builder),
       sections: tally("sections", (l) => l.sections),
       styles: tally("styles", (l) => l.style),
     };
@@ -485,15 +481,15 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
         </div>
       </FilterGroup>
 
-      {facets.series.length > 1 && (
-        <FilterGroup title="Series">
+      {facets.brands.length > 1 && (
+        <FilterGroup title="Brand">
           <div className="flex flex-wrap gap-2">
-            {facets.series.map((f) => (
+            {facets.brands.map((f) => (
               <Pill
                 key={f.value}
-                active={filters.series.includes(f.value)}
-                count={counts.series.get(f.value) ?? 0}
-                onClick={() => toggleIn("series", f.value)}
+                active={filters.brands.includes(f.value)}
+                count={counts.brands.get(f.value) ?? 0}
+                onClick={() => toggleIn("brands", f.value)}
               >
                 {f.label}
               </Pill>
@@ -502,22 +498,9 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
         </FilterGroup>
       )}
 
-      {facets.sections.length > 1 && (
-        <FilterGroup title="Sections" hint={sectionsHint}>
-          <div className="flex flex-wrap gap-2">
-            {facets.sections.map((f) => (
-              <Pill
-                key={f.value}
-                active={filters.sections.includes(f.value)}
-                count={counts.sections.get(f.value) ?? 0}
-                onClick={() => toggleIn("sections", f.value)}
-              >
-                {f.label}
-              </Pill>
-            ))}
-          </div>
-        </FilterGroup>
-      )}
+      {/* No Sections group: the Tiny / Single / Double cards above the homes
+          already filter by width, and a second control for the same thing
+          made this rail taller than the screen. */}
 
       {facets.styles.length > 1 && (
         <FilterGroup title="Style" hint={stylesHint}>
@@ -536,7 +519,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
         </FilterGroup>
       )}
 
-      <FilterGroup title="Availability">
+      <FilterGroup title="On the lot">
         <label className="flex cursor-pointer items-center gap-3 text-sm text-ink-soft">
           <input
             type="checkbox"
@@ -544,7 +527,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
             onChange={(e) => set("availableOnly", e.target.checked)}
             className="size-4 accent-[var(--ember)]"
           />
-          Hide sold and pending
+          Only homes on our lot
         </label>
       </FilterGroup>
 
@@ -563,11 +546,12 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:gap-14">
-      {/* On a desktop the filter rail and the homes each scroll on their own,
-          with a scroll bar you can see (`.scroll-panel` in globals.css), so
-          neither runs past the bottom of the screen out of reach. */}
+      {/* The filter rail stays put while the homes scroll with the page. It is
+          short enough to fit a laptop screen; on a shorter one it scrolls on
+          its own, with a scroll bar you can see (`scroll-panel` in
+          globals.css), so nothing runs off the bottom out of reach. */}
       <aside className="hidden lg:block">
-        <div className="scroll-panel sticky top-[calc(var(--chrome-h)+1.5rem)] max-h-[calc(100dvh-var(--chrome-h)-3rem)] pr-4">
+        <div className="scroll-panel sticky top-[calc(var(--chrome-h)+1.5rem)] max-h-[calc(100dvh-var(--chrome-h)-3rem)] pr-2">
           {panel}
         </div>
       </aside>
@@ -674,38 +658,36 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
           </div>
         </div>
 
-        <div className="lg:scroll-panel lg:h-[calc(100dvh-var(--chrome-h)-9rem)] lg:pr-4">
-          {results.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-line-strong px-8 py-24 text-center">
-              <p className="font-display text-3xl tracking-tight text-ink">
-                Nothing matches that yet.
-              </p>
-              <p className="mx-auto mt-4 max-w-md text-muted">
-                We build to order too — if the home you want isn&apos;t on the lot it can be in
-                the plant in a fortnight. Loosen a filter, or tell us what you&apos;re after.
-              </p>
-              <button
-                type="button"
-                onClick={() => setFilters(EMPTY)}
-                className={cx(buttonStyles.primary, "mt-8")}
-              >
-                Reset filters
-              </button>
-            </div>
-          ) : view === "grid" ? (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {results.map((l) => (
-                <ListingCard key={l.slug} listing={l} className="h-full" />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {results.map((l) => (
-                <ListingRow key={l.slug} listing={l} />
-              ))}
-            </div>
-          )}
-        </div>
+        {results.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-line-strong px-8 py-24 text-center">
+            <p className="font-display text-3xl tracking-tight text-ink">
+              Nothing matches that yet.
+            </p>
+            <p className="mx-auto mt-4 max-w-md text-muted">
+              We build to order too — if the home you want isn&apos;t on the lot it can be in
+              the plant in a fortnight. Loosen a filter, or tell us what you&apos;re after.
+            </p>
+            <button
+              type="button"
+              onClick={() => setFilters(EMPTY)}
+              className={cx(buttonStyles.primary, "mt-8")}
+            >
+              Reset filters
+            </button>
+          </div>
+        ) : view === "grid" ? (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {results.map((l) => (
+              <ListingCard key={l.slug} listing={l} className="h-full" />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {results.map((l) => (
+              <ListingRow key={l.slug} listing={l} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
