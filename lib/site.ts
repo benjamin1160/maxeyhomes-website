@@ -58,7 +58,7 @@ export const site = {
       the postal abbreviation because schema.org and the postal service want
       that one. */
   stateName: "Oklahoma",
-  hours: "Mon–Sat, 8:30am–5:30pm · Closed Sunday",
+  hours: "Mon–Sat, 9am–5pm, or by appointment",
   /**
    * The same opening hours, day by day, for the table on `/address` and the
    * landing page's location band. It has to agree with `hours` above — the
@@ -69,12 +69,12 @@ export const site = {
    * a perfectly good answer for a lot that keeps the same hours all week.
    */
   hoursByDay: [
-    { day: "Monday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Tuesday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Wednesday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Thursday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Friday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Saturday", hours: "8:30 AM – 5:30 PM" },
-    { day: "Sunday", hours: "Closed" },
+    { day: "Monday", hours: "9 AM – 5 PM" },
+    { day: "Tuesday", hours: "9 AM – 5 PM" },
+    { day: "Wednesday", hours: "9 AM – 5 PM" },
+    { day: "Thursday", hours: "9 AM – 5 PM" },
+    { day: "Friday", hours: "9 AM – 5 PM" },
+    { day: "Saturday", hours: "9 AM – 5 PM" },
+    { day: "Sunday", hours: "By appointment" },
   ] as { day: string; hours: string }[] | undefined,
 } as const;

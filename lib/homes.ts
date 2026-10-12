@@ -91,6 +91,14 @@ export type Listing = {
    * derivation runs, which is the right default.
    */
   sizeCategory?: SizeCategory;
+  /**
+   * Further buckets this home also appears under. For a home that sits on
+   * the line between two, where a customer could reasonably look in either:
+   * the 790 sq ft Dogwood is a single-section Maxey files as a tiny home,
+   * and someone pressing "Single wide" for two bedrooms should still find it.
+   * Set in `lotState`; it adds to `sizeCategoryOf`, never replaces it.
+   */
+  alsoSizeCategories?: SizeCategory[];
   /** Nominal transport dimensions in feet, e.g. 28 × 60. */
   widthFt?: number;
   lengthFt?: number;
@@ -205,7 +213,7 @@ const lotState: Record<string, Partial<Listing>> = {
   /* On its way. */
   "origin-series-sycamore": { status: "coming-soon" },
   "origin-series-oak": { status: "coming-soon" },
-  "origin-series-dogwood": { status: "coming-soon" },
+  "origin-series-dogwood": { status: "coming-soon", alsoSizeCategories: ["single"] },
 };
 
 /**
@@ -386,6 +394,11 @@ export function sizeCategoryOf(listing: Listing): SizeCategory {
   return match ? match[1] : "triple";
 }
 
+/** Whether a home shows under a size bucket — its own, or one it is also filed under. */
+export function inSizeCategory(listing: Listing, id: SizeCategory): boolean {
+  return sizeCategoryOf(listing) === id || !!listing.alsoSizeCategories?.includes(id);
+}
+
 export const sizeCategoryLabels: Record<SizeCategory, string> = {
   tiny: "Tiny home",
   single: "Single wide",
@@ -486,7 +499,7 @@ export type SizeCategoryFacet = {
  */
 export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFacet[] {
   return enabledSizeCategories.map((id) => {
-    const inBucket = from.filter((l) => sizeCategoryOf(l) === id);
+    const inBucket = from.filter((l) => inSizeCategory(l, id));
     /* Only homes whose footprint is actually published. A zero means nobody
        said, and letting one into the range prints "0–1,813 sq ft". */
     const sizes = inBucket.map((l) => l.sqft).filter((n) => n > 0);

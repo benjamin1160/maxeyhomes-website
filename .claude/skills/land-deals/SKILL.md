@@ -42,10 +42,15 @@ that presents one as an offer to lend or a quote.
 
 ## Moving to another market
 
-`HQ` is the NERTO lot on River Road in Chelsea, Maine, and the boundaries in
-`county-shapes.generated.ts` are Maine, New Hampshire, Vermont and
-Massachusetts. No county is priced, so `landDeals` is `false` in
-`lib/page-config.ts` — add areas below and flip it.
+`HQ` is Maxey's lot on Melba Ln in Norman, Oklahoma, and the boundaries in
+`county-shapes.generated.ts` are Oklahoma and Texas. The 24 counties in
+`areas.ts` are real, but their payments and lot prices are **sample
+figures**: `SAMPLE_DATA` is `true`, and while it is the page shows a
+"Sample data" banner above the map, labels the detail card and the county
+list, swaps the fine print, and keeps the figures out of the JSON-LD, the
+meta description and the social image. Replace every figure with a real
+one, then set `SAMPLE_DATA` to `false` — that one switch takes every notice
+down.
 
 County pricing is market data in exactly the sense of `lib/market.ts`: true
 of one delivery radius and of no other. Moving this site to another market
@@ -66,7 +71,7 @@ means all of:
 
 4. Retrace `HIGHWAYS` in `lib/land/map-shapes.ts`, or empty the array — a map
    with another state's interstates on it is worse than a map with none.
-5. Check `VIEW` in `geo.ts` still frames the radius, and the `GEORGIA` label
+5. Check `VIEW` in `geo.ts` still frames the radius, and the `TEXAS` label
    in `components/land-map.tsx` still names the right neighbour.
 
 Do not leave one market's counties on another market's site. Prices you

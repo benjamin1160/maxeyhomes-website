@@ -67,11 +67,13 @@ lib/land/           Everything behind /land-deals: `areas.ts` prices each
                     county in the delivery radius, `geo.ts` holds the lot's
                     coordinates and the projection, and the generated file
                     holds the county boundaries. Market data in the sense
-                    above — true of one radius and of no other. `geo.ts`
-                    points at the lot in Norman, but the boundaries are
-                    STILL Maine and its neighbours and `areas.ts` prices
-                    nothing, so `/land-deals` is switched off until both are
-                    regenerated and priced for Oklahoma.
+                    above — true of one radius and of no other. The map is
+                    Oklahoma (and the Texas line) around the lot in Norman,
+                    with 24 real counties, but their payments and lot prices
+                    are SAMPLE figures: `SAMPLE_DATA` in `areas.ts` is true,
+                    and the page says so in a banner, on the detail card, in
+                    the county list and in the fine print. Put real numbers
+                    in and set it to false.
 lib/chat.ts         Every word the chat widget says, in order — the
                     greeting, the five questions, the buttons on the first
                     one, the sign-off. `components/chat-widget.tsx` reads
