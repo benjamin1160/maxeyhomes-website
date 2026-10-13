@@ -1,0 +1,182 @@
+{
+  "origin-series-maple": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/7d595397-78ad-49f8-af91-759990835777.jpg?width=992"
+  },
+  "mini-series-buttercup": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/9be7e44c-bf1b-4281-8a80-fdab64a07135.jpg?width=992"
+  },
+  "origin-series-redwood": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/6fe81c61-5109-4816-8b2b-2fc1978b75c5.png?width=992"
+  },
+  "origin-series-sycamore": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/e88be367-84d3-4595-ad8c-3ab7b3c9e37a.jpg?width=992"
+  },
+  "origin-series-cedar": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/82bceba4-802d-417a-a716-b3164d000a15.jpg?width=992"
+  },
+  "origin-series-spruce": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/e4e0866a-68d1-4c8e-a840-502d721c9679.png?width=992"
+  },
+  "origin-series-oak": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/3dc342ec-d51d-48af-b046-2a3d005befff.jpg?width=992"
+  },
+  "origin-series-birch": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/da871917-67f4-454b-b7a9-6ad2dd6141be.jpg?width=992"
+  },
+  "origin-series-aspen": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/811de9a1-a9ee-46ed-b7cc-82408b461c7d.jpg?width=992"
+  },
+  "origin-series-magnolia": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/ed255a37-94d7-4888-a241-f703cea89504.jpg?width=992"
+  },
+  "origin-series-cypress": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/42f7d010-bbe2-453c-817b-bdea477049b7.jpg?width=992"
+  },
+  "origin-series-hickory": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/f8891b8c-e4f0-4af8-b05b-c14c9e481776.jpg?width=992"
+  },
+  "origin-series-dogwood": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/e50a5fa0-b0d1-4e02-9172-3bf010412645.jpg?width=992"
+  },
+  "origin-series-elm": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/db3ce0ae-3e43-4ff9-b555-bf7cc43e1a1a.jpg?width=992"
+  },
+  "mini-series-tulip": {
+    "kind": "exterior",
+    "url": "https://api.claytonhomes.com/images/mfg/ext/78245a95-726c-41a2-a359-99575118929b.jpg?width=992"
+  },
+  "prime-series-3276h42p03": {
+    "kind": "living",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3320/floorplan/231501/mt%20vernon-The%20Williamsburg%203276H42P03-int-1.jpg"
+  },
+  "prime-series-3272h52p03": null,
+  "prime-series-3266h42p08": null,
+  "prime-series-2876h53p01": {
+    "kind": "living",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/P2876H53P01-Living-Room-1"
+  },
+  "prime-series-3276h53p03": null,
+  "prime-series-3276h63p03": null,
+  "prime-series-3272h42p03": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/232187/135-navasota_3272h52p03_exterior_web.jpg"
+  },
+  "prime-series-3266h32p08": null,
+  "prime-series-3260h32p03": {
+    "kind": "living",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/230001/Prime-3260H-2.jpg"
+  },
+  "prime-series-3260h42p03": null,
+  "prime-grand-043": {
+    "kind": "exterior",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/043-prime-grand-043-exterior-elevation"
+  },
+  "prime-series-3260h32p08": null,
+  "prime-series-3256h42p03": {
+    "kind": "living",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/232180/Prime%203256H%20Living%20Room%202.jpg"
+  },
+  "prime-series-3252h32p03": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/230000/Prime%20Series%203252H32P03%20The%20Yeso-ext-1.jpg"
+  },
+  "prime-series-2856h32p01": {
+    "kind": "exterior",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/Prime%202856H32P01%20Exterior%203%20copy"
+  },
+  "prime-series-2856h42p01": null,
+  "prime-series-3252h32p06": null,
+  "prime-series-mercer-2852h32p01": null,
+  "prime-series-churchill-2848h32p06": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/dealer/3633/inventory/41377/grandan-homes-Churchill%202848H32P06-ext-1.jpg"
+  },
+  "prime-series-1676h32p01": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/232181/135-prime-Prime-1676H32P01-exterior-1.jpg"
+  },
+  "prime-series-1676h42p01": null,
+  "prime-1666h32p01-261": {
+    "kind": "exterior",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/261-prime-Prime-1666H32P01-261-Exterior-1"
+  },
+  "prime-series-1676h32p08": {
+    "kind": "living",
+    "url": "https://res.cloudinary.com/douaer6ci/image/fetch/s--sINmrpwj--/c_fill,f_auto,fl_any_format.progressive,h_1067,q_70,w_1600/https://prd-champion-homes.s3.amazonaws.com/images/135-prime-prime-rowan-135-living-room-staged.jpg"
+  },
+  "prime-series-1476h42p01": null,
+  "prime-series-summit-1476h32p01": null,
+  "prime-series-1672h32p01": {
+    "kind": "exterior",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/261-prime-Prime-1666H32P01-261-Exterior-1"
+  },
+  "prime-series-edmonson-1666h22p01": null,
+  "prime-vertex-043": {
+    "kind": "exterior",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/043-prime-vertex-exterior2"
+  },
+  "prime-series-spire-1660h22p01": null,
+  "prime-series-1466h22902": null,
+  "prime-series-1466h32p01": {
+    "kind": "living",
+    "url": "https://assets.cdn.filesafe.space/6LeM6g9dQbOdY4tTwKJQ/media/6a67aec8f3037a82d5c9d1b6.webp"
+  },
+  "prime-series-1656h32p05": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/232185/01.jpg"
+  },
+  "prime-series-barkley-1656h22p01": {
+    "kind": "exterior",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/232186/Prime%20Series%201656H22P01%20The%20Denson-ext-1.jpg"
+  },
+  "prime-series-1456h22p02": null,
+  "prime-series-monte-1676h32p06": {
+    "kind": "living",
+    "url": "https://d132mt2yijm03y.cloudfront.net/manufacturer/3392/floorplan/236799/Belmont%201676H32P06-7.jpg"
+  },
+  "prime-series-1636h11p01": null,
+  "prime-3256h42p03": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/Prime-3256H42P03-main-image"
+  },
+  "prime-3260h32p03-042": {
+    "kind": "living",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/Prime-3260H32P03-Living-Room-3"
+  },
+  "prime-3276h42p03": {
+    "kind": "exterior",
+    "url": "https://assets.cdn.filesafe.space/6LeM6g9dQbOdY4tTwKJQ/media/69ea6dfb717d5dd4e16afb78.png"
+  },
+  "prime-3256h32p03": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/042-Prime-3256H32P03-main-image"
+  },
+  "prime-3252h32p01": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/042-Prime-3252H32P03-main-image"
+  },
+  "prime-1676h32p01-042": {
+    "kind": "living",
+    "url": "https://s7d9.scene7.com/is/image/championhomes/Prime-1676H32P01-Living-Room-3"
+  },
+  "prime-1476h42p01": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/042-Prime-1476H42P01-main-image"
+  },
+  "prime-1466h32p01-042": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/042-prime-1466h32p01-main-image"
+  },
+  "dutch-elite-1440": {
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/023-Lillington-Dutch-Elite-1440-main-image"
+  }
+}

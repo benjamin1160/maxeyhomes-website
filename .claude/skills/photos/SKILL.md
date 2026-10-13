@@ -67,6 +67,15 @@ images that arrived any other way — drop them at
 `public/photos/homes/<slug>/<kind>.webp` and run it. Check the retail
 agreement covers using a manufacturer's photographs before publishing them.
 
+**Which picture leads an imported home.** Maxey's feed is imported by
+`node scripts/import-maxey-listings.mjs`, and the one picture each feed home
+leads with is chosen by hand in `scripts/maxey-photo-selection.json`: an
+exterior wherever any image in the feed shows one, otherwise the best living
+room (`kind: "living"`), otherwise nothing and the card shows the floor plan.
+Change a home's picture by changing its URL there and re-running the import
+— delete the old file under `public/photos/homes/` first, since the import
+skips files already on disk.
+
 **A picture in a place that has none yet.** Pass `photoKey="page/<name>"` to
 that `<Scene>` (or to `<PageHero>`, which forwards it), then register the
 key. For a genuinely one-off image, `<Scene photo="/photos/x.jpg" ...>`
