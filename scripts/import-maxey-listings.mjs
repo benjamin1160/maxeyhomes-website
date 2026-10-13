@@ -57,7 +57,7 @@
  * over an order of magnitude with no visible loss at the sizes the site
  * actually renders them.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
@@ -68,6 +68,31 @@ const MAX_EDGE = 1600;
 const FEED = "https://www.maxeycustomhomes.com/api/listings?includeSold=1";
 const ROOT = new URL("..", import.meta.url).pathname;
 const DRY = process.argv.includes("--dry");
+
+/**
+ * Which picture leads each feed home, chosen by looking at every image the
+ * feed carries for it — `scripts/maxey-photo-selection.json`, keyed by slug.
+ *
+ * The feed's own order cannot be trusted for this: its first "photograph" is
+ * as often a bathroom, a bedroom, a "3D Tour" button or a floor plan as it is
+ * the house, and Champion's CDN files real photographs under a `/floorplan/`
+ * path, so the classifier above throws away exteriors it should keep. Every
+ * card in the catalogue should lead with the same thing — the outside of the
+ * house — so each entry names the image to use:
+ *
+ *   { kind: "exterior", url }   an exterior of this model
+ *   { kind: "living", url }     no exterior exists anywhere in the feed for
+ *                               this home; the best interior instead
+ *   { drawing: url }            the one image is a floor plan, misfiled as a
+ *                               photograph — use it as `planImage`
+ *   null                        reviewed, nothing usable: floor plan only
+ *
+ * A slug that is not in the file (a home new to the feed) falls back to the
+ * classifier and the feed's order. Review it and add it.
+ */
+const SELECTION = JSON.parse(
+  await readFile(new URL("./maxey-photo-selection.json", import.meta.url), "utf8"),
+);
 
 /**
  * The Marathon Homes plans Maxey carries — these and no others.
@@ -327,6 +352,9 @@ for (const row of feed) {
     sourceUrl: FEED,
   };
 
+  const pick = SELECTION[slug];
+  if (pick?.drawing && !plans.length) plans.push(pick.drawing);
+
   if (plans.length) {
     const dest = `/photos/plans/${slug}.webp`;
     entry.planImage = dest;
@@ -334,7 +362,16 @@ for (const row of feed) {
     stats.withPlan++;
   }
 
-  if (photos.length) {
+  if (pick?.url) {
+    const label = { exterior: "exterior", living: "living room" }[pick.kind] ?? pick.kind;
+    entry.scenes.push({ kind: pick.kind, caption: `${row.title} — ${label}` });
+    const dest = `/photos/homes/${slug}-${pick.kind}.webp`;
+    photoKeys[`${slug}/${pick.kind}`] = dest;
+    downloads.push([pick.url, dest]);
+    stats.withPhoto++;
+  } else if (slug in SELECTION) {
+    if (!plans.length) stats.withNeither++;
+  } else if (photos.length) {
     /* One scene, and it is the only one this feed can honestly support. The
        pictures are an unlabelled array — nothing says which is the kitchen —
        so inventing `kitchen` / `bedroom` / `bath` captions to fill the
@@ -503,7 +540,7 @@ for (const [key, dest] of Object.entries(photoKeys)) {
 }
 for (const e of entries) {
   if (e.planImage && dropped.has(e.planImage)) delete e.planImage;
-  if (e.scenes.length && !photoKeys[`${e.slug}/exterior`]) e.scenes = [];
+  if (e.scenes.length && !photoKeys[`${e.slug}/${e.scenes[0].kind}`]) e.scenes = [];
 }
 
 /* ---- write ------------------------------------------------------- */
@@ -574,8 +611,13 @@ await writeFile(
  * \`public/photos/homes/\`, so a key here always has a file behind it. Page
  * heroes and one-off images are hand-written in \`lib/photos.ts\`.
  *
- * ${Object.keys(photoKeys).length} photographs, one per home that has one.
- * They are the manufacturers' own model photography carried in Maxey's feed —
+ * ${Object.keys(photoKeys).length} photographs, one per home that has one: ${
+    Object.keys(photoKeys).filter((k) => k.endsWith("/exterior")).length
+  } exteriors, and an
+ * interior for the ${
+    Object.keys(photoKeys).filter((k) => !k.endsWith("/exterior")).length
+  } homes no source carries an exterior of. Which image leads each home
+ * is \`scripts/maxey-photo-selection.json\`. They are the manufacturers' own model photography carried in Maxey's feed —
  * pictures of that model, not of the particular house standing on Melba Ln.
  * Photograph the lot and drop the files in over these.
  *
