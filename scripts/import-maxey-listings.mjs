@@ -87,6 +87,12 @@ const DRY = process.argv.includes("--dry");
  *                               photograph — use it as `planImage`
  *   null                        reviewed, nothing usable: floor plan only
  *
+ * An entry may also carry `caption`, which replaces the room label. Every
+ * Prime Series home uses one of three shared exteriors (single, double,
+ * tiny), and on all but the model actually photographed the caption says
+ * the picture is representative rather than of that plan.
+ * `drawing` may sit beside `url` when the feed's only floor plan was misfiled.
+ *
  * A slug that is not in the file (a home new to the feed) falls back to the
  * classifier and the feed's order. Review it and add it.
  */
@@ -364,7 +370,7 @@ for (const row of feed) {
 
   if (pick?.url) {
     const label = { exterior: "exterior", living: "living room" }[pick.kind] ?? pick.kind;
-    entry.scenes.push({ kind: pick.kind, caption: `${row.title} — ${label}` });
+    entry.scenes.push({ kind: pick.kind, caption: `${row.title} — ${pick.caption ?? label}` });
     const dest = `/photos/homes/${slug}-${pick.kind}.webp`;
     photoKeys[`${slug}/${pick.kind}`] = dest;
     downloads.push([pick.url, dest]);

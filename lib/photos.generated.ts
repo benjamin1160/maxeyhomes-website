@@ -5,13 +5,13 @@
  * `public/photos/homes/`, so a key here always has a file behind it. Page
  * heroes and one-off images are hand-written in `lib/photos.ts`.
  *
- * 56 photographs, one per home that has one: 47 exteriors, and an
- * interior for the 9 homes no source carries an exterior of. Which image leads each home
+ * 79 photographs, one per home that has one: 79 exteriors, and an
+ * interior for the 0 homes no source carries an exterior of. Which image leads each home
  * is `scripts/maxey-photo-selection.json`. They are the manufacturers' own model photography carried in Maxey's feed —
  * pictures of that model, not of the particular house standing on Melba Ln.
  * Photograph the lot and drop the files in over these.
  *
- * The other 44 homes have no
+ * The other 21 homes have no
  * photograph and show their floor plan instead, captioned as a drawing.
  */
 
@@ -31,27 +31,50 @@ export const importedPhotos: Record<string, string> = {
   "origin-series-dogwood/exterior": "/photos/homes/origin-series-dogwood-exterior.webp",
   "origin-series-elm/exterior": "/photos/homes/origin-series-elm-exterior.webp",
   "mini-series-tulip/exterior": "/photos/homes/mini-series-tulip-exterior.webp",
-  "prime-series-3276h42p03/living": "/photos/homes/prime-series-3276h42p03-living.webp",
-  "prime-series-2876h53p01/living": "/photos/homes/prime-series-2876h53p01-living.webp",
+  "prime-series-3276h42p03/exterior": "/photos/homes/prime-series-3276h42p03-exterior.webp",
+  "prime-series-3272h52p03/exterior": "/photos/homes/prime-series-3272h52p03-exterior.webp",
+  "prime-series-3266h42p08/exterior": "/photos/homes/prime-series-3266h42p08-exterior.webp",
+  "prime-series-2876h53p01/exterior": "/photos/homes/prime-series-2876h53p01-exterior.webp",
+  "prime-series-3276h53p03/exterior": "/photos/homes/prime-series-3276h53p03-exterior.webp",
+  "prime-series-3276h63p03/exterior": "/photos/homes/prime-series-3276h63p03-exterior.webp",
   "prime-series-3272h42p03/exterior": "/photos/homes/prime-series-3272h42p03-exterior.webp",
-  "prime-series-3260h32p03/living": "/photos/homes/prime-series-3260h32p03-living.webp",
+  "prime-series-3266h32p08/exterior": "/photos/homes/prime-series-3266h32p08-exterior.webp",
+  "prime-series-3260h32p03/exterior": "/photos/homes/prime-series-3260h32p03-exterior.webp",
+  "prime-series-3260h42p03/exterior": "/photos/homes/prime-series-3260h42p03-exterior.webp",
   "prime-grand-043/exterior": "/photos/homes/prime-grand-043-exterior.webp",
-  "prime-series-3256h42p03/living": "/photos/homes/prime-series-3256h42p03-living.webp",
+  "prime-series-3260h32p08/exterior": "/photos/homes/prime-series-3260h32p08-exterior.webp",
+  "prime-series-3256h42p03/exterior": "/photos/homes/prime-series-3256h42p03-exterior.webp",
   "prime-series-3252h32p03/exterior": "/photos/homes/prime-series-3252h32p03-exterior.webp",
   "prime-series-2856h32p01/exterior": "/photos/homes/prime-series-2856h32p01-exterior.webp",
+  "prime-series-2856h42p01/exterior": "/photos/homes/prime-series-2856h42p01-exterior.webp",
+  "prime-series-3252h32p06/exterior": "/photos/homes/prime-series-3252h32p06-exterior.webp",
+  "prime-series-mercer-2852h32p01/exterior": "/photos/homes/prime-series-mercer-2852h32p01-exterior.webp",
   "prime-series-churchill-2848h32p06/exterior": "/photos/homes/prime-series-churchill-2848h32p06-exterior.webp",
   "prime-series-1676h32p01/exterior": "/photos/homes/prime-series-1676h32p01-exterior.webp",
+  "prime-series-1676h42p01/exterior": "/photos/homes/prime-series-1676h42p01-exterior.webp",
   "prime-1666h32p01-261/exterior": "/photos/homes/prime-1666h32p01-261-exterior.webp",
-  "prime-series-1676h32p08/living": "/photos/homes/prime-series-1676h32p08-living.webp",
+  "prime-series-1676h32p08/exterior": "/photos/homes/prime-series-1676h32p08-exterior.webp",
+  "prime-series-1476h42p01/exterior": "/photos/homes/prime-series-1476h42p01-exterior.webp",
+  "prime-series-summit-1476h32p01/exterior": "/photos/homes/prime-series-summit-1476h32p01-exterior.webp",
   "prime-series-1672h32p01/exterior": "/photos/homes/prime-series-1672h32p01-exterior.webp",
+  "prime-series-edmonson-1666h22p01/exterior": "/photos/homes/prime-series-edmonson-1666h22p01-exterior.webp",
   "prime-vertex-043/exterior": "/photos/homes/prime-vertex-043-exterior.webp",
-  "prime-series-1466h32p01/living": "/photos/homes/prime-series-1466h32p01-living.webp",
+  "prime-series-spire-1660h22p01/exterior": "/photos/homes/prime-series-spire-1660h22p01-exterior.webp",
+  "prime-series-1466h22902/exterior": "/photos/homes/prime-series-1466h22902-exterior.webp",
+  "prime-series-1466h32p01/exterior": "/photos/homes/prime-series-1466h32p01-exterior.webp",
   "prime-series-1656h32p05/exterior": "/photos/homes/prime-series-1656h32p05-exterior.webp",
   "prime-series-barkley-1656h22p01/exterior": "/photos/homes/prime-series-barkley-1656h22p01-exterior.webp",
-  "prime-series-monte-1676h32p06/living": "/photos/homes/prime-series-monte-1676h32p06-living.webp",
-  "prime-3260h32p03-042/living": "/photos/homes/prime-3260h32p03-042-living.webp",
+  "prime-series-1456h22p02/exterior": "/photos/homes/prime-series-1456h22p02-exterior.webp",
+  "prime-series-monte-1676h32p06/exterior": "/photos/homes/prime-series-monte-1676h32p06-exterior.webp",
+  "prime-series-1636h11p01/exterior": "/photos/homes/prime-series-1636h11p01-exterior.webp",
+  "prime-3256h42p03/exterior": "/photos/homes/prime-3256h42p03-exterior.webp",
+  "prime-3260h32p03-042/exterior": "/photos/homes/prime-3260h32p03-042-exterior.webp",
   "prime-3276h42p03/exterior": "/photos/homes/prime-3276h42p03-exterior.webp",
-  "prime-1676h32p01-042/living": "/photos/homes/prime-1676h32p01-042-living.webp",
+  "prime-3256h32p03/exterior": "/photos/homes/prime-3256h32p03-exterior.webp",
+  "prime-3252h32p01/exterior": "/photos/homes/prime-3252h32p01-exterior.webp",
+  "prime-1676h32p01-042/exterior": "/photos/homes/prime-1676h32p01-042-exterior.webp",
+  "prime-1476h42p01/exterior": "/photos/homes/prime-1476h42p01-exterior.webp",
+  "prime-1466h32p01-042/exterior": "/photos/homes/prime-1466h32p01-042-exterior.webp",
   "the-lanny/exterior": "/photos/homes/the-lanny-exterior.webp",
   "the-chapman/exterior": "/photos/homes/the-chapman-exterior.webp",
   "the-daniel/exterior": "/photos/homes/the-daniel-exterior.webp",
