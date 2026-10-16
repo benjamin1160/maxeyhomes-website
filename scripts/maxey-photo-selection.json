@@ -29,31 +29,38 @@
   },
   "origin-series-birch": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/da871917-67f4-454b-b7a9-6ad2dd6141be.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/da871917-67f4-454b-b7a9-6ad2dd6141be.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236872/Birch.jpg"
   },
   "origin-series-aspen": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/811de9a1-a9ee-46ed-b7cc-82408b461c7d.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/811de9a1-a9ee-46ed-b7cc-82408b461c7d.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236871/Aspen%20TRT16763A.jpg"
   },
   "origin-series-magnolia": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/ed255a37-94d7-4888-a241-f703cea89504.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/ed255a37-94d7-4888-a241-f703cea89504.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236874/Magnolia.jpg"
   },
   "origin-series-cypress": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/42f7d010-bbe2-453c-817b-bdea477049b7.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/42f7d010-bbe2-453c-817b-bdea477049b7.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236873/Cypress.jpg"
   },
   "origin-series-hickory": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/f8891b8c-e4f0-4af8-b05b-c14c9e481776.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/f8891b8c-e4f0-4af8-b05b-c14c9e481776.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236875/Hickory%20TRT14663H.jpg"
   },
   "origin-series-dogwood": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/e50a5fa0-b0d1-4e02-9172-3bf010412645.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/e50a5fa0-b0d1-4e02-9172-3bf010412645.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236876/Dogwood.jpg"
   },
   "origin-series-elm": {
     "kind": "exterior",
-    "url": "https://api.claytonhomes.com/images/mfg/ext/db3ce0ae-3e43-4ff9-b555-bf7cc43e1a1a.jpg?width=992"
+    "url": "https://api.claytonhomes.com/images/mfg/ext/db3ce0ae-3e43-4ff9-b555-bf7cc43e1a1a.jpg?width=992",
+    "drawing": "https://d132mt2yijm03y.cloudfront.net/manufacturer/2007/floorplan/236877/elm.jpg"
   },
   "mini-series-tulip": {
     "kind": "exterior",
@@ -112,7 +119,8 @@
   "prime-grand-043": {
     "kind": "exterior",
     "url": "https://s7d9.scene7.com/is/image/championhomes/261-prime-Prime-1666H32P01-261-Exterior-1",
-    "caption": "representative Prime Series single-section exterior, not this exact model"
+    "caption": "representative Prime Series single-section exterior, not this exact model",
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/043-prime-grand-043-main-image"
   },
   "prime-series-3260h32p08": {
     "kind": "exterior",
@@ -195,7 +203,8 @@
   "prime-vertex-043": {
     "kind": "exterior",
     "url": "https://s7d9.scene7.com/is/image/championhomes/261-prime-Prime-1666H32P01-261-Exterior-1",
-    "caption": "representative Prime Series single-section exterior, not this exact model"
+    "caption": "representative Prime Series single-section exterior, not this exact model",
+    "drawing": "https://s7d9.scene7.com/is/image/championhomes/043-prime-vertex-main-image"
   },
   "prime-series-spire-1660h22p01": {
     "kind": "exterior",
