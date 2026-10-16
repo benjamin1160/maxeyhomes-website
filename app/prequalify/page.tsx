@@ -4,12 +4,16 @@ import { PageHero } from "@/components/page-hero";
 import { PreApprovalForm } from "@/components/pre-approval-form";
 import { Reveal } from "@/components/reveal";
 import { ButtonLink, Container, Icon, Section, SectionHeading } from "@/components/ui";
+import { QualifyWizardFrame } from "@/components/qualify-wizard";
 import { pages } from "@/lib/page-config";
+import { qualifyWizard, qualifyWizardSrc } from "@/lib/prequalify";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Get pre-approved",
-  description: `Find out what you can borrow before you fall in love with a floor plan. ${site.name} comes back with a number, a rate range and the titling path — usually the same day.`,
+  description: qualifyWizardSrc()
+    ? `Find out what you can borrow before you fall in love with a floor plan — a soft credit check that won't affect your score, or a call back from ${site.name}.`
+    : `Find out what you can borrow before you fall in love with a floor plan. ${site.name} comes back with a number, a rate range and the titling path — usually the same day.`,
 };
 
 /* What a visitor gets for filling the form in, in the order it matters.
@@ -24,7 +28,7 @@ const PROMISES = [
   {
     icon: Icon.Clock,
     title: "Same day, usually",
-    body: "A person reads what you send and calls you back. There is no automated decision at the end of this form and no credit pull to submit it.",
+    body: "Send the form instead of running the check and a person reads it and calls you back. There is no automated decision at the end of it and no credit pull to submit it.",
   },
   {
     icon: Icon.Plan,
@@ -54,12 +58,18 @@ const STEPS = [
 export default function PreQualifyPage() {
   if (!pages.prequalify) redirect("/");
 
+  /* QualifyWizard's soft check, when `lib/prequalify.ts` configures one.
+     The call-back form stays underneath it either way: some buyers would
+     rather talk to a person than have their credit looked at, soft or not. */
+  const qwSrc = qualifyWizardSrc();
+  const qw = qwSrc && qualifyWizard ? { ...qualifyWizard, src: qwSrc } : null;
+
   return (
     <>
       <PageHero
         photoKey="page/prequalify"
         index="01"
-        eyebrow="No credit pull to ask"
+        eyebrow={qw?.softCheck ? "Won't affect your credit score" : "No credit pull to ask"}
         title={
           <>
             Find out what
@@ -67,13 +77,49 @@ export default function PreQualifyPage() {
             you can borrow first.
           </>
         }
-        lede="Sixty seconds of typing, then a person calls you back with a real number and the reasoning behind it."
+        lede={
+          qw
+            ? `${qw.subtext} Or send the form and a person calls you back with a real number and the reasoning behind it.`
+            : "Sixty seconds of typing, then a person calls you back with a real number and the reasoning behind it."
+        }
         kind="exterior"
         breadcrumb={[
           { href: "/", label: "Home" },
           { href: "/prequalify", label: "Pre-approval" },
         ]}
       />
+
+      {qw && (
+        <section id="prequalify" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-b border-line bg-surface">
+          <Container className="py-16 sm:py-20">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-3xl tracking-tight text-ink sm:text-4xl">
+                {qw.headline}
+              </h2>
+              <p className="mt-3 leading-relaxed text-muted">{qw.subtext}</p>
+              <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-ink-soft">
+                {[
+                  qw.softCheck && "Won't affect your credit score",
+                  qw.noSSN && "No SSN required",
+                  "Takes under 30 seconds",
+                ]
+                  .filter(Boolean)
+                  .map((label) => (
+                    <li key={label as string} className="flex items-center gap-2">
+                      <Icon.Check className="size-4 shrink-0 text-ember" />
+                      {label}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            {/* Not inside a Reveal: the plugin measures its container as it
+                inserts the frame, and a transformed parent throws that off. */}
+            <div className="mt-10">
+              <QualifyWizardFrame src={qw.src} dealerId={qw.dealerId} />
+            </div>
+          </Container>
+        </section>
+      )}
 
       <Section>
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
@@ -103,6 +149,11 @@ export default function PreQualifyPage() {
           </div>
 
           <div id="form">
+            {qw && (
+              <Reveal delay={100}>
+                <p className="eyebrow mb-6">Rather talk to a person first?</p>
+              </Reveal>
+            )}
             <Reveal delay={140}>
               <PreApprovalForm source="prequalify-page" />
             </Reveal>
