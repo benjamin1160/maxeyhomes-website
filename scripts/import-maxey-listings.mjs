@@ -1,7 +1,11 @@
 /**
- * Import the live inventory from maxeycustomhomes.com into the catalogue.
+ * Import Maxey's inventory feed into the catalogue.
  *
- * Maxey's own site is a Mobile Home Manager deployment. Its landing page
+ * The feed was maxeycustomhomes.com's own until this site replaced it there;
+ * the last copy is `scripts/maxey-feed.snapshot.json`, and that is what this
+ * script reads.
+ *
+ * Maxey's old site was a Mobile Home Manager deployment. Its landing page
  * server-renders "0 homes available" and a spinner, then fetches the real
  * inventory client-side from
  *
@@ -14,6 +18,9 @@
  *
  *     node scripts/import-maxey-listings.mjs          # write the files
  *     node scripts/import-maxey-listings.mjs --dry    # report, write nothing
+ *     node scripts/import-maxey-listings.mjs --refresh URL   # re-read a live feed
+ *
+ * Behind this container's proxy, run it with NODE_USE_ENV_PROXY=1.
  *
  * WHAT THE FEED IS, AND WHAT IT IS NOT
  *
@@ -66,6 +73,8 @@ import sharp from "sharp";
 const MAX_EDGE = 1600;
 
 const FEED = "https://www.maxeycustomhomes.com/api/listings?includeSold=1";
+/** The last copy of FEED, taken from old.bigtrailersavings.com in October 2026. */
+const SNAPSHOT = new URL("./maxey-feed.snapshot.json", import.meta.url);
 const ROOT = new URL("..", import.meta.url).pathname;
 const DRY = process.argv.includes("--dry");
 
@@ -83,15 +92,17 @@ const DRY = process.argv.includes("--dry");
  *   { kind: "exterior", url }   an exterior of this model
  *   { kind: "living", url }     no exterior exists anywhere in the feed for
  *                               this home; the best interior instead
- *   { drawing: url }            the one image is a floor plan, misfiled as a
- *                               photograph — use it as `planImage`
+ *   { drawing: url }            the floor plan to use as `planImage` — a
+ *                               drawing the feed misfiled as a photograph, or
+ *                               one read from the manufacturer's own listing
+ *                               where the feed carries none
  *   null                        reviewed, nothing usable: floor plan only
  *
  * An entry may also carry `caption`, which replaces the room label. Every
  * Prime Series home uses one of three shared exteriors (single, double,
  * tiny), and on all but the model actually photographed the caption says
  * the picture is representative rather than of that plan.
- * `drawing` may sit beside `url` when the feed's only floor plan was misfiled.
+ * `drawing` may sit beside `url`, and always wins over the feed's own plans.
  *
  * A slug that is not in the file (a home new to the feed) falls back to the
  * classifier and the feed's order. Review it and add it.
@@ -278,10 +289,60 @@ function splitTitle(title) {
  * Run
  * ------------------------------------------------------------------ */
 
-const res = await fetch(FEED);
-if (!res.ok) throw new Error(`feed ${res.status}`);
-const feed = await res.json();
+/* The feed is read from the snapshot beside this script, not from the
+   network. maxeycustomhomes.com now serves THIS site, and the old Mobile Home
+   Manager deployment the feed came from moved to a temporary host that is
+   being switched off — so the snapshot is the only copy. `--refresh URL`
+   re-reads a live feed of the same shape and overwrites it. */
+const refresh = process.argv[process.argv.indexOf("--refresh") + 1];
+let feed;
+if (process.argv.includes("--refresh")) {
+  const res = await fetch(refresh);
+  if (!res.ok) throw new Error(`feed ${res.status}`);
+  feed = await res.json();
+  if (!DRY) await writeFile(SNAPSHOT, JSON.stringify(feed, null, 1));
+} else {
+  feed = JSON.parse(await readFile(SNAPSHOT, "utf8"));
+}
 console.log(`feed: ${feed.length} homes`);
+
+/* ---- floor plans by model code ------------------------------------ *
+ *
+ * Champion's Prime plans are named by a model code — 3260H32P03 is a
+ * 32 x 60 three-bedroom — and the feed carries several of them twice, once
+ * as "Prime Series / 3260H32P03" and again as "Prime 3260H32P03 042". Only
+ * one copy of each pair was given the drawing. Same code, same plan, so the
+ * drawing is found across every row that carries the code and shared.
+ *
+ * Which image IS the drawing is not the feed's first `/floorplan/` image:
+ * the listing host files a model's whole gallery under that path, kitchens
+ * and all, and taking the first one put a bathroom where the plan belongs.
+ * The drawing is the one file named after the code itself
+ * (`…/floorplan/232185/1656H32P05.jpg`, `…/Monte 1676H32P06 .jpg`); the
+ * gallery photographs carry a room suffix (`-int-1`, `-kit-4`) or a number.
+ */
+const modelCode = (title) => title.match(/\b(\d{4}H\d{2}[P9]\d{2})\b/i)?.[1].toUpperCase();
+
+const imagesOf = (row) => {
+  let modelPhotos = [];
+  try {
+    modelPhotos = JSON.parse(row.homeModel?.photos ?? "[]");
+  } catch {}
+  return [row.image, row.homeModel?.image, ...(row.pictures ?? []).map((p) => p.url), ...modelPhotos].filter(Boolean);
+};
+
+const PLAN_BY_CODE = new Map();
+for (const row of feed) {
+  const code = modelCode(row.title);
+  if (!code || PLAN_BY_CODE.has(code)) continue;
+  const named = imagesOf(row).find((u) => {
+    const m = u.match(/cloudfront\.net\/manufacturer\/\d+\/floorplan\/\d+\/([^/?]+)$/);
+    if (!m) return false;
+    const file = decodeURIComponent(m[1]).replace(/\.\w+$/, "").trim();
+    return file.toUpperCase().endsWith(code) && !/_thumb|-(int|ext|kit|uti)-/i.test(file);
+  });
+  if (named) PLAN_BY_CODE.set(code, named);
+}
 
 const seen = new Map();
 const entries = [];
@@ -358,8 +419,16 @@ for (const row of feed) {
     sourceUrl: FEED,
   };
 
+  /* The plan named after this home's model code leads, from whichever feed
+     row carries it; a `drawing` chosen by hand in the selection file leads
+     over that. */
+  const named = PLAN_BY_CODE.get(modelCode(row.title));
   const pick = SELECTION[slug];
-  if (pick?.drawing && !plans.length) plans.push(pick.drawing);
+  for (const lead of [named, pick?.drawing]) {
+    if (!lead) continue;
+    if (plans.includes(lead)) plans.splice(plans.indexOf(lead), 1);
+    plans.unshift(lead);
+  }
 
   if (plans.length) {
     const dest = `/photos/plans/${slug}.webp`;
@@ -414,8 +483,18 @@ const decode = (s) =>
     .replace(/\s+/g, " ")
     .trim();
 
+/** Marathon's server drops the odd request under a run of forty; retry it. */
+async function get(url, tries = 4) {
+  for (let i = 1; ; i++) {
+    const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } }).catch((e) => e);
+    if ((r instanceof Response && (r.ok || r.status < 500)) || i === tries) return r;
+    await new Promise((ok) => setTimeout(ok, 2000 * i));
+  }
+}
+
 for (const { url, size, exterior } of MARATHON) {
-  const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
+  const r = await get(url);
+  if (r instanceof Error) throw r;
   if (!r.ok) throw new Error(`${url}: ${r.status}`);
   const html = await r.text();
   const text = decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " "));
@@ -509,7 +588,8 @@ for (const [url, dest] of downloads) {
     continue;
   }
   try {
-    const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } });
+    const r = await get(url);
+    if (r instanceof Error) throw r;
     if (!r.ok) throw new Error(String(r.status));
     const buf = Buffer.from(await r.arrayBuffer());
     if (buf.length < 1024) throw new Error(`${buf.length} bytes`);
@@ -574,10 +654,13 @@ await writeFile(
   `/**
  * THE IMPORTED CATALOGUE — GENERATED FILE, DO NOT EDIT BY HAND.
  *
- * Written by \`node scripts/import-maxey-listings.mjs\` from Maxey's own live
- * inventory feed, which its site fetches client-side:
+ * Written by \`node scripts/import-maxey-listings.mjs\` from Maxey's own
+ * inventory feed, as its old site served it from
  *
  *     ${FEED}
+ *
+ * and as kept in \`scripts/maxey-feed.snapshot.json\`, since that URL now
+ * serves this site.
  *
  * except Marathon Homes, which is read from Marathon's own plan pages and
  * limited to the ${MARATHON.length} plans listed in \`MARATHON\` in the import script.

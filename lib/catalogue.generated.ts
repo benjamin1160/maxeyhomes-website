@@ -1,10 +1,13 @@
 /**
  * THE IMPORTED CATALOGUE — GENERATED FILE, DO NOT EDIT BY HAND.
  *
- * Written by `node scripts/import-maxey-listings.mjs` from Maxey's own live
- * inventory feed, which its site fetches client-side:
+ * Written by `node scripts/import-maxey-listings.mjs` from Maxey's own
+ * inventory feed, as its old site served it from
  *
  *     https://www.maxeycustomhomes.com/api/listings?includeSold=1
+ *
+ * and as kept in `scripts/maxey-feed.snapshot.json`, since that URL now
+ * serves this site.
  *
  * except Marathon Homes, which is read from Marathon's own plan pages and
  * limited to the 40 plans listed in `MARATHON` in the import script.
@@ -165,6 +168,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/6fe7651ff5c44903887d8a269dbaa94c?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series / BIRCH — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-birch.webp",
   },
   {
     slug: "origin-series-aspen",
@@ -181,6 +185,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/4c840b26dee64f3c909b1d80511ab038?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series / ASPEN — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-aspen.webp",
   },
   {
     slug: "origin-series-magnolia",
@@ -197,6 +202,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/a79debbac097421bb0a7aeedd2accdbf?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series /  MAGNOLIA — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-magnolia.webp",
   },
   {
     slug: "origin-series-cypress",
@@ -213,6 +219,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/5fc4ebff7c30453cab9da9c451f148fa?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series /  CYPRESS — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-cypress.webp",
   },
   {
     slug: "origin-series-hickory",
@@ -229,6 +236,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/6cce54f95a064b38bcc6f3647cd2b284?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series / HICKORY — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-hickory.webp",
   },
   {
     slug: "origin-series-dogwood",
@@ -245,6 +253,7 @@ export const catalogue: CatalogueEntry[] = [
     tourUrl: "https://momento360.com/e/uc/e3440f3b0fcf4085824020a7151eb123?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
     scenes: [{"kind":"exterior","caption":"Origin Series / DOGWOOD — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-dogwood.webp",
   },
   {
     slug: "origin-series-elm",
@@ -262,6 +271,7 @@ export const catalogue: CatalogueEntry[] = [
     tagline: "All sizes and dimensions are nominal or based on approximate builder measurements. The builder reserves the right to make changes due to any changes in material, color, specifications, and features anytime without notice or obligation.",
     scenes: [{"kind":"exterior","caption":"Origin Series / ELM — exterior"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/origin-series-elm.webp",
   },
   {
     slug: "mini-series-tulip",
@@ -472,6 +482,7 @@ export const catalogue: CatalogueEntry[] = [
     tagline: "Find modern and affordable manufactured and modular homes from one of today’s most trusted home builders: Champion Homes.",
     scenes: [{"kind":"exterior","caption":"Prime Grand 043 — representative Prime Series single-section exterior, not this exact model"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/prime-grand-043.webp",
   },
   {
     slug: "prime-series-3260h32p08",
@@ -768,6 +779,7 @@ export const catalogue: CatalogueEntry[] = [
     tagline: "Find modern and affordable manufactured and modular homes from one of today’s most trusted home builders: Champion Homes.",
     scenes: [{"kind":"exterior","caption":"Prime Vertex 043 — representative Prime Series single-section exterior, not this exact model"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/prime-vertex-043.webp",
   },
   {
     slug: "prime-series-spire-1660h22p01",
@@ -940,6 +952,7 @@ export const catalogue: CatalogueEntry[] = [
     sizeCategory: "double",
     scenes: [{"kind":"exterior","caption":"Prime 3260H32P03 042 — representative Prime Series double-section exterior, not this exact model"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/prime-3260h32p03-042.webp",
   },
   {
     slug: "prime-3276h42p03",
@@ -955,6 +968,7 @@ export const catalogue: CatalogueEntry[] = [
     sizeCategory: "double",
     scenes: [{"kind":"exterior","caption":"Prime 3276H42P03 — representative Prime Series double-section exterior, not this exact model"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/prime-3276h42p03.webp",
   },
   {
     slug: "prime-3256h32p03",
@@ -1002,6 +1016,7 @@ export const catalogue: CatalogueEntry[] = [
     sizeCategory: "single",
     scenes: [{"kind":"exterior","caption":"Prime 1676H32P01 042 — representative Prime Series single-section exterior, not this exact model"}],
     sourceUrl: "https://www.maxeycustomhomes.com/api/listings?includeSold=1",
+    planImage: "/photos/plans/prime-1676h32p01-042.webp",
   },
   {
     slug: "prime-1476h42p01",
