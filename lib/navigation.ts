@@ -12,6 +12,7 @@
  */
 
 import { pages, sections, type OptionalPage } from "./page-config";
+import { qwPages } from "./prequalify";
 
 /**
  * The icon beside a link in the header bar. Names index `Icon` in
@@ -42,17 +43,15 @@ export type NavItem = {
    Every entry is filtered through `pages` below, so this list is the full
    set the bar *can* show, not the set it does. With the switches Maxey's
    deployment currently carries it resolves to three — Homes, About us and
-   Get pre-qualified — which is the header its own site runs. */
+   Pre-Qualify No SSN Required — which is the header its own site runs. */
 const PRIMARY: NavItem[] = [
   { href: "/listings", label: "Homes", page: "listings", icon: "House" },
   { href: "/land-deals", label: "Land", page: "landDeals", icon: "Pin" },
   { href: "/financing", label: "Financing", page: "financing", icon: "Dollar" },
   { href: "/about", label: "About us", page: "about", icon: "Info" },
-  /* Maxey's own third item, which it words "Get Prequaled with 0 Impact" —
-     the hook is that a soft pull does not touch the score. The bar has room
-     for the promise but not the sentence, so the sentence is the page's own
-     headline and this is the short form of it. */
-  { href: "/prequalify", label: "Get pre-qualified", page: "prequalify", icon: "Shield" },
+  /* Worded and pointed as QualifyWizard asked. Its two sibling pages in
+     `qwPages` are deliberately not linked anywhere. */
+  { href: qwPages.noSSN.path, label: qwPages.noSSN.title, page: "prequalify", icon: "Shield" },
   { href: "/contact", label: "Contact us", page: "contact", icon: "Mail" },
 ];
 

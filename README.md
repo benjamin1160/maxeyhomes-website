@@ -72,7 +72,9 @@ enquiry form — renders but sits inert, and the page says so.
 | `/land-deals` | An interactive map of every county in the delivery radius, shaded by what it takes to get into a home on land you own there, plus a pre-approval form that posts to a Server Action. `LocalBusiness` + `FAQPage` JSON-LD and its own social card |
 | `/start-here` | The buyer's guide for people who do not own land — the three routes onto ground, the order of operations, what you pay beyond the home, titling, FAQ |
 | `/new-home` | Build-a-home wizard: four questions, then the plans that actually fit. Owns the whole screen — no header CTA, no floating call button |
-| `/prequalify` | Pre-approval page — what a buyer gets for asking, the three steps, and the lead form that posts to a Server Action |
+| `/pre-qualify-no-ssn-required` | QualifyWizard's no-SSN pre-qualification, linked from the header (`/prequalify` redirects here) |
+| `/pre-qualify-no-ssn-social-media` | The same wizard under "Welcome Friends and Followers!", for social posts; linked nowhere |
+| `/pre-qualify-no-score-impact` | QualifyWizard's no-score-impact wizard; linked nowhere |
 | `/faq` | Every question in `lib/faq.ts` in full. The first six of the same list close `/why-manufactured` |
 | `/promotions` | Live offers from `lib/promotions.ts`, each with its end date. An expired offer drops off on its own; an empty page says so plainly |
 | `/blog`, `/blog/[slug]` | Notes from `lib/blog.ts`. Ships with no posts and the page switched off |

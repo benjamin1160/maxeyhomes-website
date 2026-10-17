@@ -105,8 +105,8 @@ export function customValues(site: SiteFacts): CustomValueDef[] {
     },
     {
       name: `${p} Prequalify URL`,
-      value: `${url}/prequalify`,
-      note: "The pre-approval form, for nurture sequences.",
+      value: `${url}/pre-qualify-no-ssn-required`,
+      note: "The no-SSN pre-qualification, for nurture sequences.",
     },
     {
       name: `${p} Directions URL`,

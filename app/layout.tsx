@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SavedHomesProvider } from "@/components/saved-homes";
 import { chatEmbed } from "@/lib/ghl/chat-embed";
+import { qualifyWizardSrc } from "@/lib/prequalify";
 import { callBar, chatWidget, floatingCall } from "@/lib/page-config";
 import { skin, skinStyles, type FontChoice } from "@/lib/skin";
 import { site } from "@/lib/site";
@@ -119,6 +120,9 @@ export default function RootLayout({
      `lib/ghl/chat-embed.ts`. It replaces the built-in widget rather than
      joining it: one chat bubble in the corner, never two. */
   const embed = chatEmbed();
+  /* QualifyWizard's plugin, once on every page as QualifyWizard asked — see
+     `lib/prequalify.ts`. It fills a wizard container wherever a page has one. */
+  const qwSrc = qualifyWizardSrc();
 
   return (
     <html
@@ -151,6 +155,7 @@ export default function RootLayout({
           </main>
           <SiteFooter />
           {floatingCall && <FloatingCall />}
+          {qwSrc && <Script id="qualify-wizard" src={qwSrc} strategy="afterInteractive" />}
           {embed ? (
             <Script
               id="ghl-chat-widget"

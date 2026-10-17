@@ -19,7 +19,7 @@ const STATIC_ROUTES: { path: string; priority: number; page?: OptionalPage }[] =
   { path: "/start-here", priority: 0.85, page: "startHere" },
   { path: "/why-manufactured", priority: 0.8, page: "whyManufactured" },
   { path: "/financing", priority: 0.7, page: "financing" },
-  { path: "/prequalify", priority: 0.75, page: "prequalify" },
+  { path: "/pre-qualify-no-ssn-required", priority: 0.75, page: "prequalify" },
   { path: "/faq", priority: 0.7, page: "faq" },
   { path: "/projects", priority: 0.8, page: "projects" },
   { path: "/videos", priority: 0.7, page: "videos" },

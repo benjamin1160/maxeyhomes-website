@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
       { source: "/homes", destination: "/listings", permanent: true },
       { source: "/homes/:slug", destination: "/listings/:slug", permanent: true },
       // Model search is the listings band on the landing page, not a page.
+      /* The pre-qualification page moved to the URL QualifyWizard asked for. */
+      { source: "/prequalify", destination: "/pre-qualify-no-ssn-required", permanent: true },
       { source: "/model-search", destination: "/#listings", permanent: false },
     ];
   },
