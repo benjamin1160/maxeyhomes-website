@@ -200,8 +200,9 @@ export const pages: Record<OptionalPage, boolean> = {
   blog: false,
   /* Off: `lib/promotions.ts` is empty and Maxey advertises no offer. */
   promotions: false,
-  /* On, and it is the third item in Maxey's own header — "Get Prequaled with
-     0 Impact". */
+  /* On: QualifyWizard's three pre-qualification pages (`qwPages` in
+     `lib/prequalify.ts`). Only the no-SSN one is linked, as the third item in
+     the header. */
   prequalify: true,
   /* Off: Maxey has no equivalent page. */
   buildAHome: false,

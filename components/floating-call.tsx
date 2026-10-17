@@ -2,11 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import { Icon } from "./ui";
+import { qwPages } from "@/lib/prequalify";
 import { site } from "@/lib/site";
 
 /* Routes that own the whole screen. Both are forms a visitor is part-way
    through; a button floating over one is in the way rather than useful. */
-const HIDDEN_ON = ["/new-home", "/prequalify"];
+const HIDDEN_ON = ["/new-home", ...Object.values(qwPages).map((p) => p.path)];
 
 /**
  * The call button that follows a visitor down every page.

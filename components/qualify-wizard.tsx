@@ -1,7 +1,7 @@
 "use client";
 
-import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
+import { QW_CONTAINER } from "@/lib/prequalify";
 import { site } from "@/lib/site";
 
 type QwPlugin = {
@@ -17,22 +17,29 @@ declare global {
   }
 }
 
-/** The container QualifyWizard's `framePage` rule looks for. The id is set in
-    Maxey's QualifyWizard account, not here — change it there first. */
-const CONTAINER_ID = "qw-frame-page-container-id";
 const FRAME = '[data-qw-framepage="true"]';
 
 /**
  * QualifyWizard's pre-qualification, inline — see `lib/prequalify.ts`.
  *
- * The plugin's `autoInstall` finds the container and puts the wizard's iframe
- * in it, on a hard load and again after every client-side navigation (it
- * hooks `history.pushState`). If the plugin is there and the frame still is
- * not after a few seconds, `appendIframe` is called once by hand. If nothing
- * has rendered after twelve — the script blocked, the account changed — the
- * phone number shows instead of an empty box.
+ * The plugin itself is loaded once, by `app/layout.tsx`. Its `autoInstall`
+ * finds the container and puts the wizard's iframe in it, on a hard load and
+ * again after every client-side navigation (it hooks `history.pushState`).
+ * For the no-SSN container, if the plugin is there and the frame still is
+ * not after a few seconds, `appendIframe` is called once by hand; the other
+ * container is left to `autoInstall`, whose page type for it is not
+ * documented. If nothing has rendered after twelve seconds — the script
+ * blocked, the account changed — the phone number shows instead of an empty
+ * box.
  */
-export function QualifyWizardFrame({ src, dealerId }: { src: string; dealerId: string }) {
+export function QualifyWizardFrame({
+  dealerId,
+  container,
+}: {
+  dealerId: string;
+  container: keyof typeof QW_CONTAINER;
+}) {
+  const containerId = QW_CONTAINER[container];
   const box = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -48,9 +55,9 @@ export function QualifyWizardFrame({ src, dealerId }: { src: string; dealerId: s
         return;
       }
       const qw = window.qwPlugin;
-      if (qw?.appendIframe && !called && Date.now() - started > 3000) {
+      if (container === "frame" && qw?.appendIframe && !called && Date.now() - started > 3000) {
         called = true;
-        qw.appendIframe({ dealerId, pageType: "framePage" }, `#${CONTAINER_ID}`).catch((err) =>
+        qw.appendIframe({ dealerId, pageType: "framePage" }, `#${containerId}`).catch((err) =>
           console.warn("[prequalify] appendIframe failed:", err),
         );
       }
@@ -84,22 +91,21 @@ export function QualifyWizardFrame({ src, dealerId }: { src: string; dealerId: s
       inputs.forEach((e) => window.removeEventListener(e, touch));
       window.removeEventListener("scroll", onScroll);
     };
-  }, [dealerId]);
+  }, [dealerId, container, containerId]);
 
   return (
     <>
-      <Script id="qualify-wizard" src={src} strategy="afterInteractive" />
       {/* The plugin styles its container as a centred grid, which shrinks the
           frame to an iframe's default 300px on a phone; block and full-width
           let it use the column. */}
-      <div ref={box} id={CONTAINER_ID} className="mx-auto w-full !max-w-[600px] !block [&_iframe]:!w-full" />
+      <div ref={box} id={containerId} className="mx-auto w-full !max-w-[600px] !block [&_iframe]:!w-full" />
       {failed && (
         <p className="mt-3 text-center text-sm text-muted">
           The pre-qualification form didn&apos;t load. Call{" "}
           <a href={site.phoneHref} className="text-ink underline underline-offset-4">
             {site.phone}
           </a>{" "}
-          or use the form below.
+          and we&apos;ll take you through it.
         </p>
       )}
     </>

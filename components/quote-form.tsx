@@ -35,9 +35,9 @@ const BUDGETS = [
  * to fill in. Near-black gives it an edge without adding a third colour.
  *
  * Six fields is the ceiling. The long version — county, monthly payment,
- * notes — is `components/pre-approval-form.tsx` on `/prequalify` and
+ * notes — is `components/pre-approval-form.tsx` on
  * `/land-deals`; this one exists to catch somebody who is not going to click
- * through to either. All of them post to the same Server Action and are told
+ * through to it. All of them post to the same Server Action and are told
  * apart in the CRM by their `source`.
  */
 export function QuoteForm() {

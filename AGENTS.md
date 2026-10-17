@@ -94,12 +94,15 @@ lib/ghl/            The CRM. `fields.ts` is every contact custom field the
                     `chat-embed.ts` reads the `CHAT_WIDGET` variable: set it
                     to GHL's embed snippet and GHL's own chat widget loads
                     in place of this site's — one bubble, never two.
-lib/prequalify.ts   QualifyWizard, the soft-credit pre-qualification shown
-                    inline on `/prequalify` — Maxey's dealer id (18506) and
-                    the soft-check / no-SSN claims. Its leads go to
-                    QualifyWizard, not through `lib/ghl/submit.ts`; the
-                    call-back form under it still does. Set it to null and
-                    the page is the form alone.
+lib/prequalify.ts   QualifyWizard, the soft-credit pre-qualification —
+                    Maxey's dealer id (18506), and `qwPages`, its three
+                    pages: `/pre-qualify-no-ssn-required` (in the header),
+                    `/pre-qualify-no-ssn-social-media` and
+                    `/pre-qualify-no-score-impact` (linked nowhere). Each is
+                    a plain title over QualifyWizard's container; the plugin
+                    script loads once, on every page, from `app/layout.tsx`.
+                    `/prequalify` redirects to the first. Its leads go to
+                    QualifyWizard, not through `lib/ghl/submit.ts`.
 lib/attribution.ts  First-touch UTM parameters and referrer, kept in
                     sessionStorage and posted with every lead, because GHL's
                     own attribution only sees GHL's own forms.

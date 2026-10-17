@@ -11,6 +11,7 @@ import {
   CHAT_SCRIPT,
   type ChatChoice,
 } from "@/lib/chat";
+import { qwPages } from "@/lib/prequalify";
 import { site } from "@/lib/site";
 import { useSavedHomes } from "./saved-homes";
 import { cx, Icon } from "./ui";
@@ -18,7 +19,7 @@ import { cx, Icon } from "./ui";
 /* Routes that own the whole screen — the same two the floating call button
    stays off, for the same reason: a visitor part-way through a long form does
    not need a second one climbing over it. */
-const HIDDEN_ON = ["/new-home", "/prequalify"];
+const HIDDEN_ON = ["/new-home", ...Object.values(qwPages).map((p) => p.path)];
 
 /** Where the thread is kept, so navigating the site does not restart it. */
 const STORE_KEY = "maxey:chat";
