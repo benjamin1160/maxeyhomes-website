@@ -9,6 +9,7 @@ import { buttonStyles, cx, Icon } from "./ui";
 import { money } from "@/lib/format";
 import { contactHref } from "@/lib/navigation";
 import {
+  builderRank,
   constructionLabels,
   constructionOrder,
   hasPrices,
@@ -365,8 +366,13 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
         order.sort((a, b) => age(a) - age(b));
         break;
       default:
+        /* Builder first — Clayton, Marathon, then Prime — and featured homes
+           lead within each. */
         order.sort(
-          (a, b) => Number(!!b.featured) - Number(!!a.featured) || age(a) - age(b),
+          (a, b) =>
+            builderRank(a) - builderRank(b) ||
+            Number(!!b.featured) - Number(!!a.featured) ||
+            age(a) - age(b),
         );
     }
     return order;

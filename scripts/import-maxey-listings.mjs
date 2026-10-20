@@ -72,6 +72,9 @@ import sharp from "sharp";
 /** Longest edge, in pixels. The widest any of these renders is the lightbox. */
 const MAX_EDGE = 1600;
 
+/** owntru.com turns away a bare "Mozilla/5.0" with a 403; a browser's string passes. */
+const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36";
+
 const FEED = "https://www.maxeycustomhomes.com/api/listings?includeSold=1";
 /** The last copy of FEED, taken from old.bigtrailersavings.com in October 2026. */
 const SNAPSHOT = new URL("./maxey-feed.snapshot.json", import.meta.url);
@@ -110,6 +113,43 @@ const DRY = process.argv.includes("--dry");
 const SELECTION = JSON.parse(
   await readFile(new URL("./maxey-photo-selection.json", import.meta.url), "utf8"),
 );
+
+/**
+ * Clayton's TRU homes — the Origin and Mini series — are read from TRU's own
+ * model pages at owntru.com rather than from the feed: beds, baths, square
+ * footage, the model code, the box size and the floor-plan drawing, and a
+ * gallery of five rooms. `scripts/tru-selection.json`, keyed by slug, names
+ * each home's TRU page and which of its photographs is the exterior, the
+ * living room, the kitchen, a bedroom and a bath — chosen by looking at
+ * every image on the page, because TRU's own order opens on a floor plan.
+ * An entry may carry `captions`, replacing a room label (the Redwood's
+ * gallery has no living room, so its "living" scene is the dining area).
+ *
+ * A Clayton row that is not in the file keeps the feed's own data.
+ */
+const TRU = JSON.parse(await readFile(new URL("./tru-selection.json", import.meta.url), "utf8"));
+
+/**
+ * Virtual tours the feed has wrong, by slug.
+ *
+ * Maxey's feed swapped the Aspen's and the Birch's: the Aspen pointed at the
+ * Momento360 tour titled "TRT16763BH_Birch" and the Birch at the one titled
+ * "TRT16763PH_Aspen". TRU's own site cannot settle it either — it shows the
+ * Birch tour on both pages — so the tour's own title is the authority. Check
+ * a tour with `curl -s <url> | grep -o '<title>[^<]*'`.
+ */
+const TOUR_FIX = {
+  "origin-series-aspen":
+    "https://momento360.com/e/uc/6fe7651ff5c44903887d8a269dbaa94c?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
+  "origin-series-birch":
+    "https://momento360.com/e/uc/4c840b26dee64f3c909b1d80511ab038?utm_campaign=embed&utm_source=other&reset-heading=true&size=large",
+};
+
+/**
+ * The order the catalogue is written in, and so the order /listings shows it
+ * by default: Clayton first, Marathon second, Champion's Prime line after.
+ */
+const BUILDER_ORDER = ["Clayton", "Marathon Homes", "Champion Homes"];
 
 /**
  * The Marathon Homes plans Maxey carries — these and no others.
@@ -419,46 +459,96 @@ for (const row of feed) {
     sourceUrl: FEED,
   };
 
-  /* The plan named after this home's model code leads, from whichever feed
-     row carries it; a `drawing` chosen by hand in the selection file leads
-     over that. */
-  const named = PLAN_BY_CODE.get(modelCode(row.title));
-  const pick = SELECTION[slug];
-  for (const lead of [named, pick?.drawing]) {
-    if (!lead) continue;
-    if (plans.includes(lead)) plans.splice(plans.indexOf(lead), 1);
-    plans.unshift(lead);
-  }
+  if (TOUR_FIX[slug]) entry.tourUrl = TOUR_FIX[slug];
 
-  if (plans.length) {
-    const dest = `/photos/plans/${slug}.webp`;
-    entry.planImage = dest;
-    downloads.push([plans[0], dest]);
-    stats.withPlan++;
-  }
+  const tru = TRU[slug];
+  if (tru) {
+    /* See `TRU` above: TRU's page is the authority for every fact it
+       publishes, and the feed is only the list of which homes Maxey sells. */
+    const r = await get(tru.page);
+    if (r instanceof Error) throw r;
+    if (!r.ok) throw new Error(`${tru.page}: ${r.status}`);
+    const html = await r.text();
+    const text = html
+      .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ");
+    const spec = text.match(/(\d+) beds? \/ ([\d.]+) baths? \/ ([\d,]+) sq\.?\s*ft/i);
+    const code = html.match(/<title>\s*(TRT\w+)/i)?.[1];
+    const plan = html.match(/https:\/\/api\.claytonhomes\.com\/images\/mfg\/flp\/[0-9a-f-]+\.\w+/)?.[0];
+    if (!spec || !code) throw new Error(`${tru.page}: could not read the spec line`);
+    /* TRU's model code is the box: TRT16763AH is 16 wide, 76 long, 3 beds. */
+    const [, w, l] = code.match(/^TRT(\d{2})(\d{2})/);
+    const line = series?.replace(/ Series$/, "");
+    Object.assign(entry, {
+      name: row.title.replace(/\s+/g, " ").trim(),
+      model: code,
+      beds: Number(spec[1]),
+      baths: Number(spec[2]),
+      sqft: Number(spec[3].replace(/,/g, "")),
+      widthFt: Number(w),
+      lengthFt: Number(l),
+      dimensions: `${Number(w)}' × ${Number(l)}'`,
+      tagline: `${Number(w)}' × ${Number(l)}' ${entry.sections}-section home from Clayton's TRU ${line} line.`,
+      sourceUrl: tru.page,
+    });
+    if (plan) {
+      entry.planImage = `/photos/plans/${slug}.webp`;
+      downloads.push([plan, entry.planImage]);
+      stats.withPlan++;
+    }
+    const labels = { living: "living room" };
+    for (const [kind, url] of Object.entries(tru.scenes)) {
+      entry.scenes.push({ kind, caption: `${entry.name} — ${tru.captions?.[kind] ?? labels[kind] ?? kind}` });
+      const dest = `/photos/homes/${slug}-${kind}.webp`;
+      photoKeys[`${slug}/${kind}`] = dest;
+      downloads.push([url, dest]);
+    }
+    stats.withPhoto++;
+    stats.tru = (stats.tru ?? 0) + 1;
+  } else {
+    /* The plan named after this home's model code leads, from whichever feed
+       row carries it; a `drawing` chosen by hand in the selection file leads
+       over that. */
+    const named = PLAN_BY_CODE.get(modelCode(row.title));
+    const pick = SELECTION[slug];
+    for (const lead of [named, pick?.drawing]) {
+      if (!lead) continue;
+      if (plans.includes(lead)) plans.splice(plans.indexOf(lead), 1);
+      plans.unshift(lead);
+    }
 
-  if (pick?.url) {
-    const label = { exterior: "exterior", living: "living room" }[pick.kind] ?? pick.kind;
-    entry.scenes.push({ kind: pick.kind, caption: `${row.title} — ${pick.caption ?? label}` });
-    const dest = `/photos/homes/${slug}-${pick.kind}.webp`;
-    photoKeys[`${slug}/${pick.kind}`] = dest;
-    downloads.push([pick.url, dest]);
-    stats.withPhoto++;
-  } else if (slug in SELECTION) {
-    if (!plans.length) stats.withNeither++;
-  } else if (photos.length) {
-    /* One scene, and it is the only one this feed can honestly support. The
-       pictures are an unlabelled array — nothing says which is the kitchen —
-       so inventing `kitchen` / `bedroom` / `bath` captions to fill the
-       gallery would be writing captions that are wrong about a third of the
-       time. One exterior is true. */
-    entry.scenes.push({ kind: "exterior", caption: `${row.title} — exterior` });
-    const dest = `/photos/homes/${slug}-exterior.webp`;
-    photoKeys[`${slug}/exterior`] = dest;
-    downloads.push([photos[0], dest]);
-    stats.withPhoto++;
-  } else if (!plans.length) {
-    stats.withNeither++;
+    if (plans.length) {
+      const dest = `/photos/plans/${slug}.webp`;
+      entry.planImage = dest;
+      downloads.push([plans[0], dest]);
+      stats.withPlan++;
+    }
+
+    if (pick?.url) {
+      const label = { exterior: "exterior", living: "living room" }[pick.kind] ?? pick.kind;
+      entry.scenes.push({ kind: pick.kind, caption: `${row.title} — ${pick.caption ?? label}` });
+      const dest = `/photos/homes/${slug}-${pick.kind}.webp`;
+      photoKeys[`${slug}/${pick.kind}`] = dest;
+      downloads.push([pick.url, dest]);
+      stats.withPhoto++;
+    } else if (slug in SELECTION) {
+      if (!plans.length) stats.withNeither++;
+    } else if (photos.length) {
+      /* One scene, and it is the only one this feed can honestly support. The
+         pictures are an unlabelled array — nothing says which is the kitchen —
+         so inventing `kitchen` / `bedroom` / `bath` captions to fill the
+         gallery would be writing captions that are wrong about a third of the
+         time. One exterior is true. */
+      entry.scenes.push({ kind: "exterior", caption: `${row.title} — exterior` });
+      const dest = `/photos/homes/${slug}-exterior.webp`;
+      photoKeys[`${slug}/exterior`] = dest;
+      downloads.push([photos[0], dest]);
+      stats.withPhoto++;
+    } else if (!plans.length) {
+      stats.withNeither++;
+    }
+
   }
 
   const state = STATUS[row.status];
@@ -486,7 +576,7 @@ const decode = (s) =>
 /** Marathon's server drops the odd request under a run of forty; retry it. */
 async function get(url, tries = 4) {
   for (let i = 1; ; i++) {
-    const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" } }).catch((e) => e);
+    const r = await fetch(url, { headers: { "user-agent": UA } }).catch((e) => e);
     if ((r instanceof Response && (r.ok || r.status < 500)) || i === tries) return r;
     await new Promise((ok) => setTimeout(ok, 2000 * i));
   }
@@ -525,12 +615,17 @@ for (const { url, size, exterior } of MARATHON) {
   const tour = html.match(/<iframe[^>]+src="(https:\/\/my\.matterport\.com\/[^"]+)"/)?.[1];
   const slug = slugify(name);
   seen.set(slug, 1);
+  /* Marathon's model number, which it names each floor-plan drawing after:
+     the Midland is 16763B. The tiny homes' drawings carry their name
+     instead, and they get no number rather than an invented one. */
+  const code = plan?.split("/").pop().match(/^(?:floorplan-)?(\d{5}[A-Z])\b/)?.[1];
   const dims = box[1].trim().replace(/\s*x\s*/i, " × ").replace(/'\s+(\d)/g, "'$1");
   const entry = {
     slug,
     name,
     construction: "manufactured",
     builder: "Marathon Homes",
+    ...(code ? { model: code } : {}),
     beds: Number(bb[1]),
     baths: Number(bb[2]),
     sqft,
@@ -558,6 +653,7 @@ for (const { url, size, exterior } of MARATHON) {
   console.log(`  marathon: ${name}, ${entry.beds} bd / ${entry.baths} ba, ${sqft} sq ft, ${dims}`);
 }
 console.log(`marathon: ${stats.marathonSkipped ?? 0} feed rows skipped, ${MARATHON.length} plans read`);
+console.log(`tru: ${stats.tru ?? 0} Clayton homes read from owntru.com`);
 
 console.log(
   `pictures:${stats.photo} photos, ${stats.plan} plans, ${stats.junk} junk dropped\n` +
@@ -631,6 +727,14 @@ for (const e of entries) {
 
 /* ---- write ------------------------------------------------------- */
 
+/* Clayton, then Marathon, then Champion — see `BUILDER_ORDER`. Stable, so
+   each builder's homes keep the order they were read in. */
+const rank = (e) => {
+  const i = BUILDER_ORDER.indexOf(e.builder);
+  return i === -1 ? BUILDER_ORDER.length : i;
+};
+entries.sort((a, b) => rank(a) - rank(b));
+
 const ts = (v) => JSON.stringify(v);
 const body = entries
   .map((e) => {
@@ -663,7 +767,12 @@ await writeFile(
  * serves this site.
  *
  * except Marathon Homes, which is read from Marathon's own plan pages and
- * limited to the ${MARATHON.length} plans listed in \`MARATHON\` in the import script.
+ * limited to the ${MARATHON.length} plans listed in \`MARATHON\` in the import script,
+ * and Clayton's TRU homes, whose specs, floor plans and photographs are read
+ * from TRU's own model pages at owntru.com (\`scripts/tru-selection.json\`).
+ *
+ * Written in builder order — Clayton, then Marathon, then Champion — which
+ * is the order /listings shows by default.
  *
  * ${entries.length} homes: ${Object.entries(counts)
     .map(([k, v]) => `${v} ${k}`)
@@ -706,7 +815,8 @@ await writeFile(
  * interior for the ${
     Object.keys(photoKeys).filter((k) => !k.endsWith("/exterior")).length
   } homes no source carries an exterior of. Which image leads each home
- * is \`scripts/maxey-photo-selection.json\`. They are the manufacturers' own model photography carried in Maxey's feed —
+ * is \`scripts/maxey-photo-selection.json\`, and \`scripts/tru-selection.json\` for the
+ * Clayton homes, which carry a room-by-room gallery from TRU's own pages. They are the manufacturers' own model photography carried in Maxey's feed —
  * pictures of that model, not of the particular house standing on Melba Ln.
  * Photograph the lot and drop the files in over these.
  *

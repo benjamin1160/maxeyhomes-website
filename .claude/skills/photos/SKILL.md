@@ -76,6 +76,12 @@ Change a home's picture by changing its URL there and re-running the import
 — delete the old file under `public/photos/homes/` first, since the import
 skips files already on disk.
 
+The Clayton homes (Origin and Mini series) are the exception: they are read
+from TRU's own model pages at owntru.com, and `scripts/tru-selection.json`
+names each one's exterior, living room, kitchen, bedroom and bath by URL.
+The exterior always leads. Change a room the same way — edit its URL, delete
+the file, re-run.
+
 **A picture in a place that has none yet.** Pass `photoKey="page/<name>"` to
 that `<Scene>` (or to `<PageHero>`, which forwards it), then register the
 key. For a genuinely one-off image, `<Scene photo="/photos/x.jpg" ...>`
