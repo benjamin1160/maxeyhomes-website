@@ -251,8 +251,20 @@ export function getPlan(listing: Listing): FloorPlan | undefined {
   return listing.planId ? floorPlans[listing.planId] : undefined;
 }
 
+/**
+ * The order builders are shown in wherever the site lists homes without being
+ * asked to sort them: Clayton first, Marathon second, Champion's Prime line
+ * after. A builder not named here goes last.
+ */
+export const builderOrder = ["Clayton", "Marathon Homes", "Champion Homes"];
+
+export function builderRank(listing: Listing): number {
+  const i = builderOrder.indexOf(listing.builder ?? "");
+  return i === -1 ? builderOrder.length : i;
+}
+
 export function featuredListings(): Listing[] {
-  return listings.filter((l) => l.featured);
+  return listings.filter((l) => l.featured).sort((a, b) => builderRank(a) - builderRank(b));
 }
 
 /** Homes that share a series or a community, minus the one being viewed. */

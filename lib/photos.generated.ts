@@ -5,32 +5,92 @@
  * `public/photos/homes/`, so a key here always has a file behind it. Page
  * heroes and one-off images are hand-written in `lib/photos.ts`.
  *
- * 79 photographs, one per home that has one: 79 exteriors, and an
- * interior for the 0 homes no source carries an exterior of. Which image leads each home
- * is `scripts/maxey-photo-selection.json`. They are the manufacturers' own model photography carried in Maxey's feed —
+ * 138 photographs, one per home that has one: 79 exteriors, and an
+ * interior for the 59 homes no source carries an exterior of. Which image leads each home
+ * is `scripts/maxey-photo-selection.json`, and `scripts/tru-selection.json` for the
+ * Clayton homes, which carry a room-by-room gallery from TRU's own pages. They are the manufacturers' own model photography carried in Maxey's feed —
  * pictures of that model, not of the particular house standing on Melba Ln.
  * Photograph the lot and drop the files in over these.
  *
- * The other 21 homes have no
+ * The other -38 homes have no
  * photograph and show their floor plan instead, captioned as a drawing.
  */
 
 export const importedPhotos: Record<string, string> = {
   "origin-series-maple/exterior": "/photos/homes/origin-series-maple-exterior.webp",
+  "origin-series-maple/living": "/photos/homes/origin-series-maple-living.webp",
+  "origin-series-maple/kitchen": "/photos/homes/origin-series-maple-kitchen.webp",
+  "origin-series-maple/bedroom": "/photos/homes/origin-series-maple-bedroom.webp",
+  "origin-series-maple/bath": "/photos/homes/origin-series-maple-bath.webp",
   "mini-series-buttercup/exterior": "/photos/homes/mini-series-buttercup-exterior.webp",
+  "mini-series-buttercup/living": "/photos/homes/mini-series-buttercup-living.webp",
+  "mini-series-buttercup/kitchen": "/photos/homes/mini-series-buttercup-kitchen.webp",
+  "mini-series-buttercup/bedroom": "/photos/homes/mini-series-buttercup-bedroom.webp",
+  "mini-series-buttercup/bath": "/photos/homes/mini-series-buttercup-bath.webp",
   "origin-series-redwood/exterior": "/photos/homes/origin-series-redwood-exterior.webp",
+  "origin-series-redwood/living": "/photos/homes/origin-series-redwood-living.webp",
+  "origin-series-redwood/bedroom": "/photos/homes/origin-series-redwood-bedroom.webp",
+  "origin-series-redwood/bath": "/photos/homes/origin-series-redwood-bath.webp",
   "origin-series-sycamore/exterior": "/photos/homes/origin-series-sycamore-exterior.webp",
+  "origin-series-sycamore/living": "/photos/homes/origin-series-sycamore-living.webp",
+  "origin-series-sycamore/kitchen": "/photos/homes/origin-series-sycamore-kitchen.webp",
+  "origin-series-sycamore/bedroom": "/photos/homes/origin-series-sycamore-bedroom.webp",
+  "origin-series-sycamore/bath": "/photos/homes/origin-series-sycamore-bath.webp",
   "origin-series-cedar/exterior": "/photos/homes/origin-series-cedar-exterior.webp",
+  "origin-series-cedar/living": "/photos/homes/origin-series-cedar-living.webp",
+  "origin-series-cedar/kitchen": "/photos/homes/origin-series-cedar-kitchen.webp",
+  "origin-series-cedar/bedroom": "/photos/homes/origin-series-cedar-bedroom.webp",
+  "origin-series-cedar/bath": "/photos/homes/origin-series-cedar-bath.webp",
   "origin-series-spruce/exterior": "/photos/homes/origin-series-spruce-exterior.webp",
+  "origin-series-spruce/living": "/photos/homes/origin-series-spruce-living.webp",
+  "origin-series-spruce/kitchen": "/photos/homes/origin-series-spruce-kitchen.webp",
+  "origin-series-spruce/bedroom": "/photos/homes/origin-series-spruce-bedroom.webp",
+  "origin-series-spruce/bath": "/photos/homes/origin-series-spruce-bath.webp",
   "origin-series-oak/exterior": "/photos/homes/origin-series-oak-exterior.webp",
+  "origin-series-oak/living": "/photos/homes/origin-series-oak-living.webp",
+  "origin-series-oak/kitchen": "/photos/homes/origin-series-oak-kitchen.webp",
+  "origin-series-oak/bedroom": "/photos/homes/origin-series-oak-bedroom.webp",
+  "origin-series-oak/bath": "/photos/homes/origin-series-oak-bath.webp",
   "origin-series-birch/exterior": "/photos/homes/origin-series-birch-exterior.webp",
+  "origin-series-birch/living": "/photos/homes/origin-series-birch-living.webp",
+  "origin-series-birch/kitchen": "/photos/homes/origin-series-birch-kitchen.webp",
+  "origin-series-birch/bedroom": "/photos/homes/origin-series-birch-bedroom.webp",
+  "origin-series-birch/bath": "/photos/homes/origin-series-birch-bath.webp",
   "origin-series-aspen/exterior": "/photos/homes/origin-series-aspen-exterior.webp",
+  "origin-series-aspen/living": "/photos/homes/origin-series-aspen-living.webp",
+  "origin-series-aspen/kitchen": "/photos/homes/origin-series-aspen-kitchen.webp",
+  "origin-series-aspen/bedroom": "/photos/homes/origin-series-aspen-bedroom.webp",
+  "origin-series-aspen/bath": "/photos/homes/origin-series-aspen-bath.webp",
   "origin-series-magnolia/exterior": "/photos/homes/origin-series-magnolia-exterior.webp",
+  "origin-series-magnolia/living": "/photos/homes/origin-series-magnolia-living.webp",
+  "origin-series-magnolia/kitchen": "/photos/homes/origin-series-magnolia-kitchen.webp",
+  "origin-series-magnolia/bedroom": "/photos/homes/origin-series-magnolia-bedroom.webp",
+  "origin-series-magnolia/bath": "/photos/homes/origin-series-magnolia-bath.webp",
   "origin-series-cypress/exterior": "/photos/homes/origin-series-cypress-exterior.webp",
+  "origin-series-cypress/living": "/photos/homes/origin-series-cypress-living.webp",
+  "origin-series-cypress/kitchen": "/photos/homes/origin-series-cypress-kitchen.webp",
+  "origin-series-cypress/bedroom": "/photos/homes/origin-series-cypress-bedroom.webp",
+  "origin-series-cypress/bath": "/photos/homes/origin-series-cypress-bath.webp",
   "origin-series-hickory/exterior": "/photos/homes/origin-series-hickory-exterior.webp",
+  "origin-series-hickory/living": "/photos/homes/origin-series-hickory-living.webp",
+  "origin-series-hickory/kitchen": "/photos/homes/origin-series-hickory-kitchen.webp",
+  "origin-series-hickory/bedroom": "/photos/homes/origin-series-hickory-bedroom.webp",
+  "origin-series-hickory/bath": "/photos/homes/origin-series-hickory-bath.webp",
   "origin-series-dogwood/exterior": "/photos/homes/origin-series-dogwood-exterior.webp",
+  "origin-series-dogwood/living": "/photos/homes/origin-series-dogwood-living.webp",
+  "origin-series-dogwood/kitchen": "/photos/homes/origin-series-dogwood-kitchen.webp",
+  "origin-series-dogwood/bedroom": "/photos/homes/origin-series-dogwood-bedroom.webp",
+  "origin-series-dogwood/bath": "/photos/homes/origin-series-dogwood-bath.webp",
   "origin-series-elm/exterior": "/photos/homes/origin-series-elm-exterior.webp",
+  "origin-series-elm/living": "/photos/homes/origin-series-elm-living.webp",
+  "origin-series-elm/kitchen": "/photos/homes/origin-series-elm-kitchen.webp",
+  "origin-series-elm/bedroom": "/photos/homes/origin-series-elm-bedroom.webp",
+  "origin-series-elm/bath": "/photos/homes/origin-series-elm-bath.webp",
   "mini-series-tulip/exterior": "/photos/homes/mini-series-tulip-exterior.webp",
+  "mini-series-tulip/living": "/photos/homes/mini-series-tulip-living.webp",
+  "mini-series-tulip/kitchen": "/photos/homes/mini-series-tulip-kitchen.webp",
+  "mini-series-tulip/bedroom": "/photos/homes/mini-series-tulip-bedroom.webp",
+  "mini-series-tulip/bath": "/photos/homes/mini-series-tulip-bath.webp",
   "prime-series-3276h42p03/exterior": "/photos/homes/prime-series-3276h42p03-exterior.webp",
   "prime-series-3272h52p03/exterior": "/photos/homes/prime-series-3272h52p03-exterior.webp",
   "prime-series-3266h42p08/exterior": "/photos/homes/prime-series-3266h42p08-exterior.webp",

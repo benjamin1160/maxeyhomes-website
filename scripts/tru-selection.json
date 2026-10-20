@@ -1,0 +1,154 @@
+{
+  "mini-series-buttercup": {
+    "page": "https://owntru.com/models/trt12361ph/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/a829f82d-4750-4b92-9b08-edd70e853540.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/021f7b5d-a1ac-4f27-a5e9-94e4e4b0941b.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/be8d9a44-1932-4b1f-bcc6-7d29d9c89b37.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/901f0e16-9e95-45de-94fb-384194e49794.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/cefad4d7-3d61-4e29-a2f5-2babe9fd7a13.jpg"
+    }
+  },
+  "mini-series-tulip": {
+    "page": "https://owntru.com/models/trt12482ph/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/4f9d1ca5-186b-4866-a928-f02826b5612e.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/f855362b-c866-44af-9e9d-67026632b90d.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/dc3f6287-d9b3-43cf-b660-9f299a43404e.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/f810e373-b0c3-4db0-905a-1930e4fe8bff.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/beb7c855-bd1a-4125-9471-ae46b116083e.jpg"
+    }
+  },
+  "origin-series-aspen": {
+    "page": "https://owntru.com/models/trt16763ah/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/4c6ff30b-b533-48eb-9e4e-a32dd870de53.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/0cfaeead-79d9-41ac-91bf-6e72887f09a0.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/74c6a9b0-904b-43a7-9340-ae906b747897.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/825e5417-fdcd-4130-814d-6fead394bba6.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/bf38780b-a629-4913-84c2-f39617ea71dd.jpg"
+    }
+  },
+  "origin-series-birch": {
+    "page": "https://owntru.com/models/trt16763bh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/c87f75d0-2108-4a78-87a9-3073e43b8fb7.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/25de5e69-1b7b-4ddf-9f5e-d3d189fc9942.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/22e1e98f-9892-4326-926d-6ee89eefc469.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/6d25be25-a412-40d9-80af-4b6e3b2f37c5.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/223932c2-80e0-4d29-b8db-65b5b514ea9f.jpg"
+    }
+  },
+  "origin-series-cedar": {
+    "page": "https://owntru.com/models/trt28563ch/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/56c584bf-d632-489d-b632-0c6be7b7dff0.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/8031e297-e772-4be7-b06c-3ac534f91f30.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/f7a069f7-da60-4d39-b70c-b58dc0fba8fe.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/8881d1fb-7ce0-4f3d-a694-0eb9dd3f9087.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/057389e0-086e-4926-9fe3-0189ed7c7920.jpg"
+    }
+  },
+  "origin-series-cypress": {
+    "page": "https://owntru.com/models/trt14764ch/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/b1865234-6703-4537-9a1b-f87321c44d7b.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/ebd6ad96-b38a-4a07-ac36-517e68eb323d.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/d1558acd-0472-465f-adc6-21d0217e5545.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/2e590918-0c6b-4b96-b344-4f22b1528c6a.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/7aeb6f63-8d86-4b0e-9e32-d1cbf343ac55.jpg"
+    }
+  },
+  "origin-series-dogwood": {
+    "page": "https://owntru.com/models/trt14602dh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/a0229110-06b6-47f5-9f82-96c370a9e9ac.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/68687e35-a4f4-4755-9b7a-af2a0bb433c9.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/007b324f-b588-4ad7-bde4-ba4a61556911.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/431508d3-edd2-4c9c-8b3c-fdffc8356f6b.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/d0a22932-318d-4f4c-8aa3-08da4fabc32d.jpg"
+    }
+  },
+  "origin-series-elm": {
+    "page": "https://owntru.com/models/trt14562eh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/873e05a7-bb13-48f6-bda5-b7308179da6b.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/8eaf6738-e407-4d17-b21f-ae972584daf0.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/91f68bcb-32c8-4165-8f98-f85ca2deb6c3.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/4c3f12a3-d6f4-43eb-81b2-92b97ff91696.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/5e3869e0-7a1d-4765-9ea0-9d41a57e63d1.jpg"
+    }
+  },
+  "origin-series-hickory": {
+    "page": "https://owntru.com/models/trt14663hh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/a00dd086-d420-4bf9-926f-3abb1109507a.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/341d39a7-143d-43b4-91b9-681d4447f0ac.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/48d26243-5c21-477e-a783-6f9d94fd51d1.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/44e307ad-d3d8-4701-a067-5ab46bd7e836.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/c825a90e-8d52-460d-a648-39b4715d7c0e.jpg"
+    }
+  },
+  "origin-series-magnolia": {
+    "page": "https://owntru.com/models/trt14763mh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/46ca69a2-855a-4252-989c-2c0eb92037b3.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/e782fc20-484a-4cd8-847e-c19d940dd86c.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/6068f3d1-a44d-4524-a3ad-c57e9fbd7da3.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/54d8ce85-8ca3-454d-bbf2-c68f749fb29e.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/4b32cfc6-0c86-4635-982d-636c865e1ee5.jpg"
+    }
+  },
+  "origin-series-maple": {
+    "page": "https://owntru.com/models/trt28483mh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/64b9bc4a-e972-4ca3-aa66-06f018681b7c.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/e266b6a2-0521-4ee0-bee7-97d118f69db4.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/164b33d4-8519-4a0e-a2c9-44e7a0a89825.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/b6ef15d2-2479-42fb-bb74-5eb28f91b3fd.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/a5d47c39-ac50-4aa5-8383-a3c13254d915.jpg"
+    }
+  },
+  "origin-series-oak": {
+    "page": "https://owntru.com/models/trt28564ah/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/7d157bb5-cc38-4d67-8219-a5b361a2ad5c.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/37d056c7-63cd-41d6-8a97-d8cc0ffdb541.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/d215c445-6842-49f8-9b8d-8080309c7511.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/e8554bf5-5e7e-46fa-859d-3eb420e8bb1c.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/653070ee-4bab-4a61-83ff-c08612461f86.jpg"
+    }
+  },
+  "origin-series-redwood": {
+    "page": "https://owntru.com/models/trt28765rh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/9937f075-87f0-4b72-a4af-d4a13dab35ac.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/bcd698fc-5ded-485b-a292-f9398925231d.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/e98874be-63c7-47f6-9bd9-5d82fd3878b9.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/f96593c5-898a-4178-85de-f8faa55a27c5.jpg"
+    },
+    "captions": {
+      "living": "dining area"
+    }
+  },
+  "origin-series-spruce": {
+    "page": "https://owntru.com/models/trt28563sh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/547cbf97-2fc3-4e88-9078-bfab591544b3.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/5019f945-c37a-4fc5-a160-417e75a9009e.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/f1327c6b-1bb8-40f3-989d-0146c496f64f.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/da013d17-92c2-4f3d-a530-d3d0c0d4e2c4.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/e428e6d5-e553-4814-abb6-d2b3ddb42127.jpg"
+    }
+  },
+  "origin-series-sycamore": {
+    "page": "https://owntru.com/models/trt28684sh/",
+    "scenes": {
+      "exterior": "https://api.claytonhomes.com/images/mfg/ext/2705e914-a5d5-47db-974a-afcd4f74204f.jpg",
+      "living": "https://api.claytonhomes.com/images/mfg/int/9d38537f-be4b-4d54-beeb-f5dfa605ed8a.jpg",
+      "kitchen": "https://api.claytonhomes.com/images/mfg/int/436a7ac7-bf7e-4fc2-934b-4f8acbc0f992.jpg",
+      "bedroom": "https://api.claytonhomes.com/images/mfg/int/ba26458d-66fe-433d-a2bd-9c616ea8ee94.jpg",
+      "bath": "https://api.claytonhomes.com/images/mfg/int/cd472aca-77fa-419d-aa80-abf0fb0d2cbb.jpg"
+    }
+  }
+}
