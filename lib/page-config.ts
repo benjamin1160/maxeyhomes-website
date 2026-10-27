@@ -251,9 +251,9 @@ export const floatingCall = true;
  * exactly the `CHAT_WIDGET` case: set that variable to the snippet from the
  * sub-account and this site loads the same bubble, so a visitor gets one
  * chat and the conversations land in the CRM the business already reads.
- * Left unset, the built-in guided intake below answers instead.
+ * Left unset, no chat loads: the built-in guided intake is switched off.
  */
-export const chatWidget = true;
+export const chatWidget = false;
 
 /**
  * The phone strip above the header — the number, the hours and the licence,
