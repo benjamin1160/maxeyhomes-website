@@ -209,9 +209,9 @@ const lotState: Record<string, Partial<Listing>> = {
   "the-red-river": { status: "available", onLot: true, featured: true },
   "the-swisher": { status: "available", onLot: true, featured: true },
   "origin-series-aspen": { status: "available", onLot: true, featured: true },
+  "origin-series-sycamore": { status: "available", onLot: true, featured: true },
 
   /* On its way. */
-  "origin-series-sycamore": { status: "coming-soon" },
   "origin-series-oak": { status: "coming-soon" },
   "origin-series-dogwood": { status: "coming-soon", alsoSizeCategories: ["single"] },
 };
