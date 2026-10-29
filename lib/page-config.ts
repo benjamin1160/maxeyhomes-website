@@ -129,7 +129,11 @@ export type OptionalPage =
   | "promotions"
   | "prequalify"
   | "buildAHome"
-  | "address";
+  | "address"
+  | "sizePages"
+  | "homeAndLand"
+  | "pricingGuide"
+  | "locations";
 
 /**
  * Standalone routes. A `false` here makes the route redirect to `/` and drops
@@ -167,7 +171,7 @@ export const pages: Record<OptionalPage, boolean> = {
 
      Off is not deleted. Every page below is written, styled and one `true`
      from coming back — including the whole editorial argument for a
-     manufactured home on `/why-manufactured`, `/financing` and
+     manufactured home on `/why-manufactured`, the financing page and
      `/start-here`, which is the site's best organic-search surface and the
      thing most worth switching back on once somebody is ready to own it.
      Read the `voice` skill before you do: that copy ships identically on
@@ -209,6 +213,28 @@ export const pages: Record<OptionalPage, boolean> = {
   /* Off: Maxey has no separate location page — the landing page's
      `locationHours` band carries the address and the opening hours. */
   address: false,
+
+  /* ---- Written to be found --------------------------------------------
+     The pages a search for "double wide homes for sale" or "manufactured
+     home financing Oklahoma" should land on. Paths are in `lib/routes.ts`.
+     Each one reads only the catalogue and the facts in `lib/company.ts` and
+     `lib/market.ts`, so nothing here claims more than those files do.     */
+
+  /** `/single-wide-homes-for-sale` and `/double-wide-homes-for-sale` — the
+      catalogue narrowed to one width, with the copy a buyer of that width
+      needs. Their copy is `lib/size-pages.ts`. */
+  sizePages: true,
+  /** `/home-and-land` — owning land against needing it, and the steps
+      between a plan and a home set on ground. */
+  homeAndLand: true,
+  /** `/manufactured-home-prices-oklahoma` — every line of the cost, what moves
+      it and who quotes it. Prints example totals only when
+      `lib/pricing-guide.ts` holds real ones. */
+  pricingGuide: true,
+  /** `/manufactured-homes-for-sale/<city>` — one page per place in
+      `lib/locations.ts`. Three, written one at a time; do not stamp out more
+      from a template. */
+  locations: true,
 };
 
 /**

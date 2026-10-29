@@ -58,6 +58,20 @@ for (const [, slug] of projects.matchAll(/homeSlug: "([^"]+)"/g)) {
   }
 }
 
+/* A note written about a plan that is no longer in the catalogue. The note
+   is the dealership's own writing, so this asks for it to be moved rather
+   than silently dropped. */
+const notes = await read("lib/home-notes.ts");
+const notesBlock = notes.match(/export const homeNotes[^=]*= \{([\s\S]*?)\n\};/)?.[1] ?? "";
+for (const [, slug] of notesBlock.matchAll(/^\s{2}"([^"]+)":/gm)) {
+  if (!slugs.has(slug)) {
+    problems.push(
+      `lib/home-notes.ts: "${slug}" is not a plan in the catalogue. ` +
+        `Move the note to the plan's new slug or delete it.`,
+    );
+  }
+}
+
 /* A campaign page narrowed to a series that no home is in renders empty. */
 const custom = await read("lib/custom-pages.ts");
 for (const [, series] of custom.matchAll(/series: "([^"]+)"/g)) {

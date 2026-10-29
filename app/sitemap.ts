@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import { publishedPosts } from "@/lib/blog";
 import { publishedCustomPages } from "@/lib/custom-pages";
 import { listings } from "@/lib/homes";
+import { locations } from "@/lib/locations";
 import { pages, type OptionalPage } from "@/lib/page-config";
 import { publishedProjects } from "@/lib/projects";
+import { routes } from "@/lib/routes";
 import { livePromotions } from "@/lib/promotions";
 import { site } from "@/lib/site";
 
@@ -13,12 +15,16 @@ import { site } from "@/lib/site";
 const STATIC_ROUTES: { path: string; priority: number; page?: OptionalPage }[] = [
   { path: "", priority: 1 },
   { path: "/listings", priority: 0.9, page: "listings" },
+  { path: routes.doubleWides, priority: 0.9, page: "sizePages" },
+  { path: routes.singleWides, priority: 0.9, page: "sizePages" },
+  { path: routes.homeAndLand, priority: 0.85, page: "homeAndLand" },
+  { path: routes.pricingGuide, priority: 0.8, page: "pricingGuide" },
   { path: "/new-home", priority: 0.85, page: "buildAHome" },
   { path: "/communities", priority: 0.8, page: "communities" },
   { path: "/land-deals", priority: 0.85, page: "landDeals" },
   { path: "/start-here", priority: 0.85, page: "startHere" },
   { path: "/why-manufactured", priority: 0.8, page: "whyManufactured" },
-  { path: "/financing", priority: 0.7, page: "financing" },
+  { path: routes.financing, priority: 0.85, page: "financing" },
   { path: "/pre-qualify-no-ssn-required", priority: 0.75, page: "prequalify" },
   { path: "/faq", priority: 0.7, page: "faq" },
   { path: "/projects", priority: 0.8, page: "projects" },
@@ -60,5 +66,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((page) => listings.some((l) => l.series === page.series))
     .map((page) => entry(`/p/${page.slug}`, 0.7));
 
-  return [...staticRoutes, ...homes, ...work, ...notes, ...custom];
+  const places = pages.locations
+    ? locations.map((l) => entry(`${routes.locations}/${l.slug}`, 0.8))
+    : [];
+
+  return [...staticRoutes, ...places, ...homes, ...work, ...notes, ...custom];
 }

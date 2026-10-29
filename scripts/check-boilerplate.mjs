@@ -39,7 +39,7 @@ const PAGES = [
   "app/why-manufactured/page.tsx",
   "app/start-here/page.tsx",
   "app/land-deals/page.tsx",
-  "app/financing/page.tsx",
+  "app/manufactured-home-financing-oklahoma/page.tsx",
   "app/contact/page.tsx",
   "components/quote-form.tsx",
   "components/contact-band.tsx",

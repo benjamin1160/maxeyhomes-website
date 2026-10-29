@@ -45,7 +45,7 @@ export function PaymentCalculator({
 }: {
   price: number;
   compact?: boolean;
-  /** Standing alone on /financing there is no listing to take a price from,
+  /** Standing alone on the financing page there is no listing to take a price from,
    *  so the visitor supplies one rather than the page inventing a figure. */
   editablePrice?: boolean;
 }) {

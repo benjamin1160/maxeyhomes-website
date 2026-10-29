@@ -9,6 +9,7 @@ import { pages } from "@/lib/page-config";
 import { photoFor } from "@/lib/photos";
 import { site } from "@/lib/site";
 import {
+  homeTitle,
   sectionLabels,
   seriesLabel,
   statusLabels,
@@ -179,7 +180,7 @@ export function ListingCard({
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="font-display text-2xl leading-tight tracking-tight text-ink">
-              {listing.name}
+              {homeTitle(listing)}
             </h3>
             <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
               {metaLine(listing)}
@@ -259,7 +260,7 @@ export function ListingRow({ listing }: { listing: Listing }) {
       <div className="flex flex-col justify-between gap-4">
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <h3 className="font-display text-2xl tracking-tight text-ink">{listing.name}</h3>
+            <h3 className="font-display text-2xl tracking-tight text-ink">{homeTitle(listing)}</h3>
             <p
               className={cx(
                 "font-display tracking-tight text-ink",

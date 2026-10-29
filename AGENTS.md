@@ -118,6 +118,23 @@ lib/skin.ts         Skins: the whole palette, the brand gradient, the
 app/globals.css     Token structure and the fallback values. A skin
                     overrides whatever it names; edit here to restyle one
                     deployment without adding a skin.
+lib/routes.ts       The search-facing routes by name — size pages, home + land,
+                    financing (moved from /financing, which 308s), pricing
+                    guide, city pages. Link through this, not a typed path.
+lib/size-pages.ts   Copy for /single-wide-homes-for-sale and
+                    /double-wide-homes-for-sale; the homes and counts on
+                    them come from the catalogue. `sizeCategoryHref` is where
+                    every "browse by size" link goes.
+lib/locations.ts    The city pages, /manufactured-homes-for-sale/<slug> —
+                    Norman, Moore, Oklahoma City, each written for its city.
+                    Add one only with copy true of that place alone.
+lib/home-notes.ts   Maxey's own take on a home (why we like it, best for,
+                    standouts). Ships EMPTY: it is an opinion the business
+                    signs, never drafted from a spec sheet.
+lib/pricing-guide.ts
+                    The cost lines on /manufactured-home-prices-oklahoma, and
+                    `exampleTotals` — EMPTY until there are real deals.
+lib/seo.ts          `pageMetadata`: absolute title, canonical, full OG block.
 components/landing.tsx
                     The landing page, as an ordered list of switchable
                     bands. `/` and every `/p/<slug>` render it — edit the
