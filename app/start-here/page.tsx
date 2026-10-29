@@ -15,6 +15,7 @@ import {
 } from "@/components/ui";
 import { communities } from "@/lib/communities";
 import { listings } from "@/lib/homes";
+import { routes } from "@/lib/routes";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
 import { contactHref } from "@/lib/navigation";
@@ -151,7 +152,7 @@ const FAQ = [
         eligible homes at or near site-built rates. On a leased pad it is a chattel loan
         — a real loan, secured on the home rather than the ground, at a higher rate and a
         shorter term. Both are financing; one is cheaper.{" "}
-        <Link href="/financing" className="text-ember underline-offset-4 hover:underline">
+        <Link href={routes.financing} className="text-ember underline-offset-4 hover:underline">
           The financing page walks through each path.
         </Link>
       </p>

@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
       /* The pre-qualification page moved to the URL QualifyWizard asked for. */
       { source: "/prequalify", destination: "/pre-qualify-no-ssn-required", permanent: true },
       { source: "/model-search", destination: "/#listings", permanent: false },
+      /* Financing moved to a URL that says what it is about. Literal rather
+         than read from `lib/routes.ts` so this file imports nothing. */
+      { source: "/financing", destination: "/manufactured-home-financing-oklahoma", permanent: true },
+      /* The city pages have no index of their own; the catalogue is it. */
+      { source: "/manufactured-homes-for-sale", destination: "/listings", permanent: false },
     ];
   },
 };

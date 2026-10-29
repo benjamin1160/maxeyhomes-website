@@ -267,20 +267,59 @@ export function featuredListings(): Listing[] {
   return listings.filter((l) => l.featured).sort((a, b) => builderRank(a) - builderRank(b));
 }
 
-/** Homes that share a series or a community, minus the one being viewed. */
+/**
+ * The homes a buyer looking at this one would compare it with, minus the one
+ * being viewed.
+ *
+ * Width outranks everything: somebody on a single wide's page is shopping
+ * single wides, and a double from the same series is a different purchase.
+ * Then the bedroom count, then the series and the builder, then the size.
+ * A home standing on the lot wins a tie, because it is the one they can
+ * drive over and compare in person.
+ */
 export function relatedListings(listing: Listing, count = 3): Listing[] {
+  const size = sizeCategoryOf(listing);
   const scored = listings
-    .filter((l) => l.slug !== listing.slug)
+    .filter((l) => l.slug !== listing.slug && l.status !== "sold")
     .map((l) => ({
       listing: l,
       score:
-        (l.series && l.series === listing.series ? 3 : 0) +
+        (inSizeCategory(l, size) ? 4 : 0) +
+        (l.beds === listing.beds ? 3 : 0) +
+        (l.series && l.series === listing.series ? 2 : 0) +
+        (l.builder && l.builder === listing.builder ? 1 : 0) +
         (l.communitySlug && l.communitySlug === listing.communitySlug ? 2 : 0) +
-        (l.beds === listing.beds ? 1 : 0) +
-        (Math.abs(l.sqft - listing.sqft) < 400 ? 1 : 0),
+        (listing.sqft > 0 && Math.abs(l.sqft - listing.sqft) < 250 ? 2 : 0) +
+        (l.onLot ? 0.5 : 0),
     }))
     .sort((a, b) => b.score - a.score);
   return scored.slice(0, count).map((s) => s.listing);
+}
+
+/**
+ * The name a buyer would say out loud.
+ *
+ * The feeds name homes the way a manufacturer files them — "Origin Series /
+ * MAPLE", "Prime Series / Barkley 1656H22P01" — which is accurate and reads
+ * like a part number in a page title. Where the name after the slash is a
+ * word, it becomes "The Maple"; where it is only a model code, the series
+ * stays on the front so the code still means something. Names that are
+ * already words ("The Swisher") pass through untouched.
+ *
+ * The series and the model code are not lost: both are on every card and
+ * in every specification table.
+ */
+export function homeTitle(listing: Listing): string {
+  const m = listing.name.match(/^(.+?) Series \/ (.+)$/);
+  if (!m) return listing.name;
+  const word = m[2].trim().match(/^([A-Za-z]+)(?:\s|$)/);
+  if (word) return `The ${word[1][0].toUpperCase()}${word[1].slice(1).toLowerCase()}`;
+  return `${m[1]} ${m[2].trim()}`;
+}
+
+/** "3 bed, 2 bath double wide" — the line under a home's name. */
+export function homeSpecLine(listing: Listing): string {
+  return `${listing.beds} bed, ${listing.baths} bath ${sizeCategoryNouns[sizeCategoryOf(listing)]}`;
 }
 
 export const statusLabels: Record<ListingStatus, string> = {
@@ -427,6 +466,15 @@ export const sizeCategoryLabels: Record<SizeCategory, string> = {
   double: "Double wide",
   triple: "Triple wide",
   modular: "Mods",
+};
+
+/** The bucket as a noun in a sentence — "a 3 bed, 2 bath double wide". */
+export const sizeCategoryNouns: Record<SizeCategory, string> = {
+  tiny: "tiny home",
+  single: "single wide",
+  double: "double wide",
+  triple: "triple wide",
+  modular: "modular home",
 };
 
 /** The longer label, for the page heading a bucket links to. */

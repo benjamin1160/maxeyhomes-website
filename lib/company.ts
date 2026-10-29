@@ -112,6 +112,15 @@ export type Company = {
   transportIncludedMiles?: number;
   /** Deposit schedule for a cash purchase, as a sentence. */
   cashDepositSchedule?: string;
+  /**
+   * The financing this dealership actually arranges — the programs and the
+   * lenders it writes through, in its own words. The financing page lists
+   * them under "What we can set up"; absent, that section is not there and
+   * the page describes the loan types in general terms only. Write each one
+   * from what the business really does this year, and take it out the week
+   * a lender stops writing.
+   */
+  financingPrograms?: { name: string; body: string }[];
 };
 
 export const company: Company = {
@@ -166,12 +175,12 @@ export const company: Company = {
   /* Deliberately absent, because Maxey does not publish them: `founded`,
      `homesSoldWords`, `teamSize`, `homesOpenOnLot`, `team`, `teamNote`,
      `licenseId`, `reviewsUrl`, `reviewsLabel`, `warrantyMonths`,
-     `transportIncludedMiles` and `cashDepositSchedule`. Each one hides its
-     own section. Maxey's hero says "Licensed dealer" but publishes no licence
-     number, so the badge stands and `licenseId` does not — an unverifiable
-     licence number is the single worst field on this list to guess at. Do not
-     fill one in from a directory listing or an estimate; only from something
-     the business has put in writing itself. */
+     `transportIncludedMiles`, `cashDepositSchedule` and `financingPrograms`.
+     Each one hides its own section. Maxey's hero says "Licensed dealer" but
+     publishes no licence number, so the badge stands and `licenseId` does
+     not — an unverifiable licence number is the single worst field on this
+     list to guess at. Do not fill one in from a directory listing or an
+     estimate; only from something the business has put in writing itself. */
 };
 
 const SMALL_NUMBERS = [

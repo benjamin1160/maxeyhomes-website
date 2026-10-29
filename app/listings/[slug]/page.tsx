@@ -6,7 +6,9 @@ import { Accordion } from "@/components/accordion";
 import { FloorPlan } from "@/components/floor-plan";
 import { Gallery } from "@/components/gallery";
 import { InquiryForm } from "@/components/inquiry-form";
+import { breadcrumbJsonLd, JsonLd } from "@/components/json-ld";
 import { ListingCard, SpecStrip } from "@/components/listing-card";
+import { NextSteps } from "@/components/next-steps";
 import { PaymentCalculator } from "@/components/payment-calculator";
 import { Reveal } from "@/components/reveal";
 import { SaveButton } from "@/components/saved-homes";
@@ -25,16 +27,61 @@ import { feetInches, money, priceText, PRICE_ON_REQUEST, sqftText } from "@/lib/
 import {
   getListing,
   getPlan,
+  homeSpecLine,
+  homeTitle,
   listings,
   relatedListings,
   sectionLabels,
   seriesLabel,
+  sizeCategoryLabels,
+  sizeCategoryOf,
   statusLabels,
   styleLabels,
+  type Listing,
 } from "@/lib/homes";
+import { noteFor } from "@/lib/home-notes";
+import { homeLocation } from "@/lib/locations";
 import { pages } from "@/lib/page-config";
 import { photoFor } from "@/lib/photos";
+import { qwPages } from "@/lib/prequalify";
+import { routes } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
+import { sizeCategoryHref } from "@/lib/size-pages";
 import { site } from "@/lib/site";
+
+/** "Double Wide" — the bucket as it reads in a title. */
+const sizeTitle = (listing: Listing) =>
+  sizeCategoryLabels[sizeCategoryOf(listing)].replace(/\b\w/g, (c) => c.toUpperCase());
+
+/**
+ * The links from one home out into the rest of the catalogue: its width, its
+ * bedroom count, its builder, and the guides. Every one is a page a buyer
+ * looking at this home would plausibly want next, and every one is built
+ * from the listing's own fields, so a hundred pages get them without anybody
+ * writing a hundred lists.
+ *
+ * A price link ("Under $100k") appears only when the site prints prices —
+ * `SHOW_PRICES` in `lib/homes.ts` — because a price filter over homes that
+ * say "Call for pricing" leads nowhere.
+ */
+function browseLinks(listing: Listing): { href: string; label: string }[] {
+  const size = sizeCategoryOf(listing);
+  const label = sizeCategoryLabels[size];
+  const links = [
+    { href: sizeCategoryHref(size), label: `${label}s` },
+    { href: `/listings?size=${size}&beds=${listing.beds}`, label: `${listing.beds}+ bedroom ${label.toLowerCase()}s` },
+    ...(listing.builder
+      ? [{ href: `/listings?brand=${encodeURIComponent(listing.builder)}`, label: `${listing.builder} homes` }]
+      : []),
+    ...(listing.price !== undefined && listing.price < 100000
+      ? [{ href: "/listings?max=100000", label: "Under $100k" }]
+      : []),
+    ...(pages.locations && homeLocation
+      ? [{ href: `${routes.locations}/${homeLocation.slug}`, label: `Homes in ${homeLocation.city}` }]
+      : []),
+  ];
+  return links;
+}
 
 export function generateStaticParams() {
   return listings.map((l) => ({ slug: l.slug }));
@@ -47,27 +94,25 @@ export async function generateMetadata(
   const listing = getListing(slug);
   if (!listing) return { title: "Home not found" };
 
-  const build = listing.sections ? ` ${sectionLabels[listing.sections].toLowerCase()}` : "";
+  const title = homeTitle(listing);
   const price = listing.price === undefined ? PRICE_ON_REQUEST : `from ${money(listing.price)}`;
+  const where = listing.onLot
+    ? `On our lot in ${site.address.city}, ${site.address.region} — walk through it.`
+    : `Available to order from ${site.name} in ${site.address.city}, ${site.address.region}.`;
   const description = [
-    `${listing.beds} bed, ${listing.baths} bath${
+    `${title}${listing.builder ? ` by ${listing.builder}` : ""}: a ${homeSpecLine(listing)}${
       sqftText(listing.sqft) ? `, ${sqftText(listing.sqft)}` : ""
-    }${build} manufactured home — ${price}.`,
-    listing.tagline,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    }${listing.dimensions ? `, ${listing.dimensions}` : ""}.`,
+    where,
+    `${price}. Financing, delivery and setup available.`,
+  ].join(" ");
 
   return {
-    title: `${listing.name} — ${priceText(listing.price)}`,
-    description,
-    alternates: { canonical: `/listings/${listing.slug}` },
-    openGraph: {
-      title: `${listing.name} · ${site.short}`,
+    ...pageMetadata({
+      title: `${title} – ${listing.beds} Bed, ${listing.baths} Bath ${sizeTitle(listing)} for Sale in ${site.address.city}, ${site.address.region}`,
       description,
-      url: `/listings/${listing.slug}`,
-      type: "article",
-    },
+      path: `/listings/${listing.slug}`,
+    }),
   };
 }
 
@@ -88,13 +133,23 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
   const index = () => String(n++).padStart(2, "0");
   const community = listing.communitySlug ? getCommunity(listing.communitySlug) : undefined;
   const related = relatedListings(listing);
+  const title = homeTitle(listing);
+  const note = noteFor(listing.slug);
+  const size = sizeCategoryOf(listing);
+  const trail = [
+    { href: "/", label: "Home" },
+    { href: "/listings", label: "Homes" },
+    { href: sizeCategoryHref(size), label: `${sizeCategoryLabels[size]}s` },
+    { href: `/listings/${listing.slug}`, label: title },
+  ];
   const perSqFt =
     listing.price === undefined || listing.sqft <= 0 ? undefined : listing.price / listing.sqft;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SingleFamilyResidence",
-    name: listing.name,
+    name: title,
+    url: `${site.url}/listings/${listing.slug}`,
     description: listing.tagline,
     numberOfRooms: listing.beds,
     numberOfBathroomsTotal: listing.baths,
@@ -126,20 +181,14 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd(trail)} />
 
       <Container className="pb-16 pt-10 sm:pt-12">
         {/* ---------------- Header ---------------- */}
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
-            {[
-              { href: "/", label: "Home" },
-              { href: "/listings", label: "Homes" },
-              { href: `/listings/${listing.slug}`, label: listing.name },
-            ].map((b, i) => (
+            {trail.map((b, i) => (
               <li key={b.href} className="flex items-center gap-2">
                 {i > 0 && <Icon.Chevron className="size-3" />}
                 <Link href={b.href} className="transition-colors hover:text-ink">
@@ -170,8 +219,15 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
               )}
             </div>
 
+            {/* The name a buyer says, then what it is — "The Maple / 3 bed,
+                2 bath double wide by Clayton" — so the heading carries the
+                search terms without reading like a part number. */}
             <h1 className="mt-6 font-display text-display text-balance text-ink">
-              {listing.name}
+              {title}
+              <span className="mt-3 block font-sans text-xl font-normal leading-snug tracking-normal text-ink-soft sm:text-2xl">
+                {homeSpecLine(listing).replace(/^./, (c) => c.toUpperCase())}
+                {listing.builder ? ` by ${listing.builder}` : ""}
+              </span>
             </h1>
             {listing.tagline && (
               <p className="mt-5 max-w-2xl text-xl leading-relaxed text-muted">
@@ -288,6 +344,51 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
                 </ul>
               )}
             </div>
+            )}
+
+            {/* Maxey's own take — `lib/home-notes.ts`. Written by the people
+                who have walked the home, never drafted from the spec sheet,
+                so most homes have none and the section simply is not here. */}
+            {note && (
+              <div className="mt-14">
+                <Eyebrow index={index()}>Why we like it</Eyebrow>
+                {note.whyWeLikeIt && (
+                  <div className="mt-6 space-y-5">
+                    {note.whyWeLikeIt.map((p, i) => (
+                      <p
+                        key={i}
+                        className={
+                          i === 0
+                            ? "font-display text-2xl leading-snug tracking-tight text-ink"
+                            : "text-lg leading-relaxed text-muted"
+                        }
+                      >
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                  {[
+                    { heading: "Best for", items: note.bestFor },
+                    { heading: "Standout features", items: note.standouts },
+                  ]
+                    .filter((g) => g.items && g.items.length > 0)
+                    .map((g) => (
+                      <div key={g.heading} className="rounded-card border border-line bg-surface p-6">
+                        <h3 className="eyebrow">{g.heading}</h3>
+                        <ul className="mt-4 space-y-3">
+                          {g.items!.map((item) => (
+                            <li key={item} className="flex gap-3 text-[0.95rem] leading-relaxed text-ink-soft">
+                              <Icon.Check className="mt-0.5 size-4 shrink-0 text-ember" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                </div>
+              </div>
             )}
 
             {/* Floor plan — the manufacturer's own drawing.
@@ -454,6 +555,45 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
                 </div>
               </div>
 
+              {/* The two questions every buyer reaches next — how to pay
+                  for it and where it is going — and the quickest way to an
+                  answer on the first one. */}
+              <div className="rounded-card border border-line bg-surface p-6">
+                <h2 className="eyebrow">Paying for it and placing it</h2>
+                <ul className="mt-4 divide-y divide-line">
+                  {[
+                    pages.prequalify && {
+                      href: qwPages.noSSN.path,
+                      label: "Pre-qualify — no SSN required",
+                    },
+                    pages.financing && {
+                      href: routes.financing,
+                      label: "Financing options",
+                    },
+                    pages.homeAndLand && {
+                      href: routes.homeAndLand,
+                      label: "Put it on your land — or find some",
+                    },
+                    pages.pricingGuide && {
+                      href: routes.pricingGuide,
+                      label: "What it costs, all in",
+                    },
+                  ]
+                    .filter((l): l is { href: string; label: string } => !!l)
+                    .map((l) => (
+                      <li key={l.href}>
+                        <Link
+                          href={l.href}
+                          className="group flex items-center justify-between gap-3 py-3 text-[0.9rem] text-ink-soft transition-colors hover:text-ember"
+                        >
+                          {l.label}
+                          <Icon.Arrow className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
               {community && (
                 <Link
                   href={`/communities#${community.slug}`}
@@ -492,8 +632,8 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
               eyebrow={listing.price === undefined ? "Pricing" : "The honest number"}
               title={
                 listing.price === undefined
-                  ? `Ask us what the ${listing.name.replace(/^The /, "")} costs.`
-                  : `What the ${listing.name.replace(/^The /, "")} actually costs to live in.`
+                  ? `Ask us what the ${title.replace(/^The /, "")} costs.`
+                  : `What the ${title.replace(/^The /, "")} actually costs to live in.`
               }
               lede={
                 listing.price === undefined
@@ -522,29 +662,95 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
         </Container>
       </section>
 
-      {/* ---------------- Related ---------------- */}
+      {/* ---------------- Related ----------------
+          Side by side first, because "how does it compare" is a question of
+          numbers, then as cards. The comparison is built from the same
+          fields as the spec table above, so it is there for every home,
+          not only the ones somebody has written about. */}
       <Container className="py-20 sm:py-24">
         <Reveal>
           <SectionHeading
             index={index()}
-            eyebrow="Close to this one"
+            eyebrow="Comparable homes"
             title="If you like this, look at these."
             action={
-              <ButtonLink href="/listings" variant="outline">
-                All homes
+              <ButtonLink href={sizeCategoryHref(size)} variant="outline">
+                All {sizeCategoryLabels[size].toLowerCase()}s
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>
             }
           />
         </Reveal>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+        {related.length > 0 && (
+          <Reveal className="mt-12">
+            <div className="overflow-x-auto rounded-card border border-line">
+              <table className="w-full min-w-[36rem] text-left text-sm">
+                <caption className="sr-only">
+                  {title} compared with {related.map(homeTitle).join(", ")}
+                </caption>
+                <thead className="bg-surface font-mono text-[0.68rem] uppercase tracking-[0.14em] text-muted">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-normal">Home</th>
+                    <th scope="col" className="px-4 py-3 font-normal">Beds</th>
+                    <th scope="col" className="px-4 py-3 font-normal">Baths</th>
+                    <th scope="col" className="px-4 py-3 font-normal">Living area</th>
+                    <th scope="col" className="px-4 py-3 font-normal">Built by</th>
+                    <th scope="col" className="px-4 py-3 font-normal">Where</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {[listing, ...related].map((l) => (
+                    <tr key={l.slug} className={l.slug === listing.slug ? "bg-ember-wash" : undefined}>
+                      <th scope="row" className="px-4 py-3 font-medium text-ink">
+                        {l.slug === listing.slug ? (
+                          <>
+                            {homeTitle(l)} <span className="font-normal text-muted">(this home)</span>
+                          </>
+                        ) : (
+                          <Link href={`/listings/${l.slug}`} className="underline-offset-4 hover:text-ember hover:underline">
+                            {homeTitle(l)}
+                          </Link>
+                        )}
+                      </th>
+                      <td className="px-4 py-3 font-mono text-ink-soft">{l.beds}</td>
+                      <td className="px-4 py-3 font-mono text-ink-soft">{l.baths}</td>
+                      <td className="px-4 py-3 font-mono text-ink-soft">{sqftText(l.sqft) ?? "—"}</td>
+                      <td className="px-4 py-3 text-ink-soft">{l.builder ?? "—"}</td>
+                      <td className="px-4 py-3 text-ink-soft">
+                        {l.onLot ? "On our lot" : statusLabels[l.status]}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Reveal>
+        )}
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {related.map((l, i) => (
             <Reveal key={l.slug} delay={i * 90}>
               <ListingCard listing={l} className="h-full" />
             </Reveal>
           ))}
         </div>
+
+        <nav aria-label="Browse more homes" className="mt-12 flex flex-wrap items-center gap-2.5">
+          <span className="mr-1 text-sm text-muted">Browse:</span>
+          {browseLinks(listing).map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="rounded-full border border-line-strong px-4 py-1.5 text-[0.85rem] text-ink-soft transition-colors hover:border-ember hover:text-ember"
+            >
+              {l.label}
+            </Link>
+          ))}
+        </nav>
       </Container>
+
+      <NextSteps exclude={["homes"]} />
     </>
   );
 }

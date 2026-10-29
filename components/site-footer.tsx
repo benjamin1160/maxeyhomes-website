@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container, Icon } from "./ui";
-import { legalNav } from "@/lib/navigation";
+import { footerNav, legalNav } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
 /* A business name that already ends in a full stop must not take a second one
@@ -21,6 +21,10 @@ const mapQuery = encodeURIComponent(
  * actually wants are already directly above, in `components/location-hours.tsx`.
  * Everything reachable only from here was already reachable from the header
  * and the drawer.
+ *
+ * The one exception is `footerNav`: a single quiet row linking the size
+ * pages, the guides and the city pages, which are found from search rather
+ * than from the header and need a link from every page to rank.
  */
 export function SiteFooter() {
   return (
@@ -51,6 +55,19 @@ export function SiteFooter() {
             </a>
           </div>
         </div>
+
+        {footerNav.length > 0 && (
+          <nav
+            aria-label="Homes and guides"
+            className="mx-auto mb-5 flex max-w-3xl flex-wrap justify-center gap-x-5 gap-y-2"
+          >
+            {footerNav.map((item) => (
+              <Link key={item.href} href={item.href} className="hover:text-ink hover:underline">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         <div className="flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4">
           <span>

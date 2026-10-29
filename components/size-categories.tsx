@@ -5,6 +5,7 @@ import {
   type Listing,
   type SizeCategory,
 } from "@/lib/homes";
+import { sizeCategoryHref } from "@/lib/size-pages";
 
 /**
  * The buckets a buyer shops by — tiny, single, double, triple, mods — as a row
@@ -24,8 +25,9 @@ import {
  * also exactly how maxeycustomhomes.com draws the same row.
  *
  * Two modes. Given `active`/`onSelect` it behaves as a filter control; given
- * neither it renders links to `/listings?size=<id>`, which is what the
- * landing page wants.
+ * neither it renders links — to the bucket's own page where it has one
+ * (`lib/size-pages.ts`), to `/listings?size=<id>` otherwise — which is what
+ * the landing page wants.
  */
 export function SizeCategories({
   from,
@@ -100,7 +102,7 @@ export function SizeCategories({
         ) : (
           <Link
             key={facet.id}
-            href={`/listings?size=${facet.id}`}
+            href={sizeCategoryHref(facet.id)}
             className={cx(shell, off)}
           >
             {body}

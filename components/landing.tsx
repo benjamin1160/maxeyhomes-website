@@ -253,9 +253,12 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
                 {/* Maxey's own headline, and it is deliberately about the
                     reader rather than about the dealership — no superlative,
                     no ranking claim, nothing that would need substantiating.
-                    That is a good headline to inherit. */}
+                    The place is on the end because it is the page's one H1:
+                    it is what tells a search engine this is a Norman,
+                    Oklahoma dealership and not a national listings site. */}
                 <h1 className="mb-4 text-4xl font-bold uppercase leading-tight text-white md:text-5xl lg:text-6xl">
-                  Find your perfect manufactured home
+                  Find your perfect manufactured home in {site.address.city},{" "}
+                  {site.stateName}
                 </h1>
 
                 <p className="mx-auto mb-8 max-w-xl text-lg text-white/85 md:mx-0 md:text-xl">

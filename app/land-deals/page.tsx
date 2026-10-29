@@ -17,6 +17,7 @@ import {
 import { money, shortMoney } from "@/lib/format";
 import { AREAS, BY_PRICE, CHEAPEST, PAYMENT_ASSUMPTIONS, SAMPLE_DATA } from "@/lib/land/areas";
 import { HQ, SERVICE_RADIUS_MI } from "@/lib/land/geo";
+import { routes } from "@/lib/routes";
 import { site } from "@/lib/site";
 import { pages } from "@/lib/page-config";
 
@@ -363,7 +364,7 @@ export default function LandDealsPage() {
             <p className="mt-6 text-sm text-muted">
               The lending itself — chattel against a mortgage, what each costs, and why the
               title decides it — is laid out on{" "}
-              <Link href="/financing" className="text-ink underline underline-offset-4">
+              <Link href={routes.financing} className="text-ink underline underline-offset-4">
                 financing
               </Link>
               .

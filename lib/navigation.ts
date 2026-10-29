@@ -13,6 +13,8 @@
 
 import { pages, sections, type OptionalPage } from "./page-config";
 import { qwPages } from "./prequalify";
+import { locations } from "./locations";
+import { routes } from "./routes";
 
 /**
  * The icon beside a link in the header bar. Names index `Icon` in
@@ -47,7 +49,7 @@ export type NavItem = {
 const PRIMARY: NavItem[] = [
   { href: "/listings", label: "Homes", page: "listings", icon: "House" },
   { href: "/land-deals", label: "Land", page: "landDeals", icon: "Pin" },
-  { href: "/financing", label: "Financing", page: "financing", icon: "Dollar" },
+  { href: routes.financing, label: "Financing", page: "financing", icon: "Dollar" },
   { href: "/about", label: "About us", page: "about", icon: "Info" },
   /* Worded and pointed as QualifyWizard asked. Its two sibling pages in
      `qwPages` are deliberately not linked anywhere. */
@@ -57,6 +59,10 @@ const PRIMARY: NavItem[] = [
 
 /** Drawer and footer only — the bar has no room, and these are second visits. */
 const SECONDARY: NavItem[] = [
+  { href: routes.singleWides, label: "Single wides", page: "sizePages" },
+  { href: routes.doubleWides, label: "Double wides", page: "sizePages" },
+  { href: routes.homeAndLand, label: "Home + land", page: "homeAndLand" },
+  { href: routes.pricingGuide, label: "What it costs", page: "pricingGuide" },
   { href: "/new-home", label: "Build a home", page: "buildAHome", icon: "Plan" },
   { href: "/projects", label: "Past projects", page: "projects", icon: "Grid" },
   { href: "/videos", label: "Videos", page: "videos", icon: "Info" },
@@ -73,6 +79,32 @@ const enabled = (items: NavItem[]) => items.filter((item) => pages[item.page]);
 
 export const primaryNav = enabled(PRIMARY);
 export const secondaryNav = enabled(SECONDARY);
+/**
+ * The places with a page of their own, for the footer. From
+ * `lib/locations.ts`, so a city added there is linked here without an edit.
+ */
+export const areaNav = pages.locations
+  ? locations.map((l) => ({ href: `${routes.locations}/${l.slug}`, label: l.city }))
+  : [];
+
+/**
+ * The footer's one row of links: the pages written to be found, and the
+ * places. The footer is otherwise only the business and the legal links —
+ * see `components/site-footer.tsx` — but these pages are reached mostly from
+ * search and from each other, and a link from every page on the site is
+ * what tells a search engine they matter.
+ */
+export const footerNav: { href: string; label: string }[] = [
+  ...enabled([
+    { href: routes.singleWides, label: "Single wide homes", page: "sizePages" },
+    { href: routes.doubleWides, label: "Double wide homes", page: "sizePages" },
+    { href: routes.homeAndLand, label: "Home + land", page: "homeAndLand" },
+    { href: routes.financing, label: "Financing", page: "financing" },
+    { href: routes.pricingGuide, label: "Pricing guide", page: "pricingGuide" },
+  ]),
+  ...areaNav.map((a) => ({ ...a, label: `Homes in ${a.label}` })),
+];
+
 /** The mobile drawer lists both, in that order. */
 export const drawerNav = [...primaryNav, ...secondaryNav];
 
