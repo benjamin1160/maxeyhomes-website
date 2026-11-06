@@ -20,10 +20,10 @@
  *   prime-series-2856h32p01   prime-series-2876h53p01
  *   prime-3276h42p03          the-red-river
  *   the-swisher               origin-series-aspen
- *   origin-series-sycamore
+ *   origin-series-sycamore    origin-series-oak
+ *   origin-series-dogwood
  *
- * — then the two on their way (`origin-series-oak`, `origin-series-dogwood`),
- * then whichever plans people ask about most. Twenty or thirty good notes are
+ * — then whichever plans people ask about most. Twenty or thirty good notes are
  * worth more than a hundred thin ones.
  *
  * A note looks like this:
